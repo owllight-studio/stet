@@ -30,8 +30,8 @@ Teacher, The Manual, Field Notes, The Catalogue.
 **Marketing**, the registers that ask for something. Direct Response, The Pitch. Planned: The
 Launch, The Case, The Founder Letter.
 
-**Genre**, fiction registers, for anyone whose product has a world in it. Noir. Planned: Epic
-Fantasy, The Bridge, Hard SF, The Locked Room, and the drama register.
+**Genre**, fiction registers, for anyone whose product has a world in it. Noir, The Locked Room,
+The Bridge, Hard SF. Planned: Epic Fantasy, and the drama register.
 
 **Fun**, invoked on purpose, for delight or for a joke that has to hold a whole page. Patch Notes,
 Nature Documentary, The Sportscaster. Planned: The Chronicle, The Bureaucrat.
