@@ -66,7 +66,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
-| `critique` | Evaluate | A scored review of one piece | reference/critique.md |
+| `critique` | Evaluate | A scored review of one piece | [reference/critique.md](reference/critique.md) |
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
