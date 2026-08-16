@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stet voices</title>
+<meta name="description" content="13 measured writing registers, each counted off real texts, each carrying the specific ways imitation of it gives itself away.">
+<meta property="og:title" content="Stet voices">
+<meta property="og:description" content="13 writing registers, measured off real texts rather than described from memory.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='25' x='2' font-size='22' font-family='monospace' fill='%232c6d9e'>s</text></svg>">
+<link rel="stylesheet" href="stet.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="mark"><a href="./"><b>stet</b></a></span>
+    <nav>
+      <a href="#core">Core</a>
+      <a href="#marketing">Marketing</a>
+      <a href="#fun">Fun</a>
+      <a href="#tells">The tells</a>
+      <a href="./">Back</a>
+    </nav>
+  </header>
+
+  <div class="hero hero-voices">
+    <h1 class="measure">Writing that does not read as written by a machine.</h1>
+    <p class="lede measure">
+      That is the whole job. 13 registers, each one counted off the actual texts rather
+      than described from memory, and each carrying the specific ways an imitation of it gives itself
+      away.
+    </p>
+
+    <div class="finding">
+      <p>
+        Readers told a headline was AI-generated rated it less accurate and were less willing to
+        share it. That held whether or not the headline was true, and whether or not a machine
+        actually wrote it.
+      </p>
+      <p class="cite">Altay and Gilardi, <i>PNAS Nexus</i>, 2024. Preregistered, n=4,976.</p>
+    </div>
+    <p class="proof-note">
+      The penalty attaches to how the writing reads, not to who wrote it. Which means prose that
+      merely sounds generated pays it, with no label attached and no way to appeal.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="core">
+    <p class="eyebrow">Core &middot; 7 voices</p>
+    <h2 class="measure">The registers most writing actually needs. Start here.</h2>
+    <div class="voices">
+    <article class="voice" id="field-notes">
+      <header>
+        <h3>Field Notes</h3>
+        <p class="desc">Observational and dated. First person, specific, and deliberately unfinished.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>14</dd></div><div><dt>you</dt><dd>5%</dd></div><div><dt>hedges</dt><dd>18%</dd></div></dl>
+      <p class="onerule"><b>Write it down before you understand it.</b> The value of a note is that it was taken at the time. Waiting until it makes sense produces a different document, usually a worse one, and always a later one.</p>
+      <p class="unresearched">Written from instinct. Nobody has counted this one against real
+             texts, so its figures are estimates and it names no failure modes. Treat it as a
+             sketch.</p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Date everything</li><li>First person, and say what you did</li><li>Record the wrong turn</li><li>Hedge honestly</li><li>Leave it rough</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Retconning. Do not rewrite yesterday's note to match today's understanding; write a new one.</li><li>A conclusion the evidence does not support yet.</li><li>Deleting the thing that turned out wrong.</li></ul></div>
+          
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/field-notes.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="plainspoken">
+      <header>
+        <h3>Plainspoken</h3>
+        <p class="desc">Concrete nouns, working verbs, no throat-clearing. Varied hard, because uniform length is the tell.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>15</dd></div><div><dt>sd / mean</dt><dd>0.55</dd></div><div><dt>longest</dt><dd>45</dd></div><div><dt>under 6 words</dt><dd>30%</dd></div><div><dt>hedges</dt><dd>10%</dd></div></dl>
+      <p class="onerule"><b>Vary hard.</b> Variance is the register, not shortness.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Concrete over abstract</li><li>Let the meaning choose the word</li><li>Keep the hedge that carries a fact</li><li>Do not chop at the conjunction</li><li>No throat-clearing</li><li>The short sentence is the verdict</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Em dashes.</li><li>&quot;Not X, it is Y.&quot; Say Y.</li><li>A summary of what the reader just read.</li><li>Adjectives standing in as instructions.</li><li>Explaining to readers what they obviously are, or why they are here.</li><li>Restating a claim in different words to be sure it landed. See below: that is where condescension actually comes from.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>The variance collapse.</li><li>One subject, one shape, three times.</li><li>Mechanical de-Latinising</li><li>Hedge-stripping</li></ul><p class="detect"><span>Detection</span> standard deviation over mean, below 0.35. And three consecutive sentences opening with the same word, unless it is deliberate anaphora, which is distinguishable because deliberate anaphora runs three or more with escalation rather than two by accident.</p></div>
+          <p class="sources"><span>Measured from</span> Orwell, Hemingway, GOV.UK content guidance, digital.gov, Butterick, Paul Graham, and Pullum's criticism of Strunk and White</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/plainspoken.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-argument">
+      <header>
+        <h3>The Argument</h3>
+        <p class="desc">Essayistic. Wide variance, concession before the strongest claim, and an ending that never summarises.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>18</dd></div><div><dt>mean sentence</dt><dd>21</dd></div><div><dt>sd / mean</dt><dd>0.7</dd></div><div><dt>longest</dt><dd>90</dd></div><div><dt>under 6 words</dt><dd>28%</dd></div><div><dt>hedges</dt><dd>15%</dd></div></dl>
+      <p class="onerule"><b>Make claims as strong as they can be made without becoming false.</b> Graham's dial, and the whole register in a sentence. Weaker than that and the essay is not worth reading. Stronger and it is not worth trusting.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Variance carries the argument</li><li>Keep the qualifier, and pick the right one</li><li>Concede before the strongest claim, never after</li><li>The thesis may move, and that movement is the essay</li><li>Move downward, from the general to the particular</li><li>Brevity is the diction of command</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never restate the argument at the end. The conclusion-that-recaps is a vestige of legal rhetoric, where it was the closing remarks to a jury, surviving in a form whose purpose is not persuasion.</li><li>Never peter out. The failure Graham names is starting on the most radioactive question and then recoiling from it, ending on &quot;one thing is certain: the question is a complex one.&quot;</li><li>Never ask a rhetorical question you do not then answer with a fact.</li><li>Never say &quot;clearly&quot; or &quot;obviously&quot;. If it were, the sentence would be unnecessary.</li><li>Never build a strawman. It costs more credibility than it wins.</li><li>Never digress without paying for it. Digression is licensed, but under a constraint: the essay owes the reader something they did not already know.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>claim-altitude with no evidence under it</li><li>The aphorism with no referent.</li><li>The unearned &quot;we&quot;.</li><li>The colon that promises depth</li><li>&quot;Not X but Y&quot;, saturated.</li><li>The escalating tricolon.</li><li>The summary ending in disguise.</li></ul><p class="detect"><span>Detection</span> count the sentences making a general claim with no number, name, date or object in them. In the measured essays that ratio is low and clusters at section ends. Uniform across the text, the piece is intoning rather than arguing. Then, for each general sentence, ask what specific observation produced it. If there is none, it is decoration.</p></div>
+          <p class="sources"><span>Measured from</span> Orwell, Didion, Baldwin, Paul Graham, McPhee, Pullum, Zadie Smith, Hitchens</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-argument.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-broadsheet">
+      <header>
+        <h3>The Broadsheet</h3>
+        <p class="desc">Wire news. Most important fact first, every claim sourced, and &quot;said&quot; is the only verb.</p>
+      </header>
+      <dl class="measured"><div><dt>lede ceiling</dt><dd>30</dd></div><div><dt>adjectives / noun</dt><dd>2</dd></div><div><dt>median sentence</dt><dd>18</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>hedges</dt><dd>2%</dd></div></dl>
+      <p class="onerule"><b>Every claim is sourced, and the sourcing verb is &quot;said&quot;.</b> Not &quot;according to&quot;, not &quot;revealed&quot;, not &quot;noted&quot;. Reuters: those verbs &quot;all contain an element of judgment by the reporter.&quot;</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Count the words in the first sentence</li><li>News first, source second, unless it is contentious</li><li>Two adjectives, then rewrite</li><li>Days of the week, never yesterday</li><li>Give the actor</li><li>Never adopt the subject's framing</li><li>Numbers, and repeat the surprising ones</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never put opinion in a news story. Features get no exemption.</li><li>Never leave a claim unattributed. Contentious statements are re-sourced every time they appear, and &quot;alleged&quot; is not a substitute for a source.</li><li>Never use a judging adjective or adverb: a hard-line speech, a glowing tribute, a staunch conservative.</li><li>Never use an unverifiable superlative: unique, unprecedented, first, only, largest, record. If somebody else claims it, attribute the claim to them.</li><li>Never read minds. &quot;To write that someone hinted, implied, indicated, suggested, or signaled is to interpret someone's thoughts. This is rarely acceptable.&quot;</li><li>Never qualify a denial. No &quot;flatly denied&quot;, no &quot;categorically denied&quot;, unless it is inside a quote.</li><li>Never use journalese: reportedly, probe, dubbed, slammed, massive, embattled, oil-rich, looks set to, hit by fears that.</li><li>Never use euphemism. &quot;Died of cancer&quot;, not &quot;passed away after a fight with cancer&quot;.</li><li>Never alter a quotation, even to fix grammar.</li><li>Never boast about your own reporting.</li><li>Never begin with a question. &quot;The audience wants to be informed, not take part in a quiz.&quot;</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Journalese standing in for reporting.</li><li>The sympathetic attribution verb.</li><li>The unattributed background paragraph.</li><li>The lede that summarises rather than reports.</li><li>Adopting the subject's own name for the thing.</li><li>The unverifiable superlative, unattributed.</li><li>Mind reading.</li><li>The pyramid shape with an argument inside it.</li></ul><p class="detect"><span>Detection</span> count the adjectives and adverbs that could not be checked by a third party, then count the sentences with no attribution. In wire copy the first number is near zero and the second is near zero. Either one rising is the writer becoming visible.</p></div>
+          <p class="sources"><span>Measured from</span> Reuters Handbook of Journalism, AP Statement of News Values, BBC News Styleguide, The Economist Style Guide</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-broadsheet.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-catalogue">
+      <header>
+        <h3>The Catalogue</h3>
+        <p class="desc">Dense. Every sentence a fact, no connective tissue, nothing said twice.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>hedges</dt><dd>0%</dd></div></dl>
+      <p class="onerule"><b>Every sentence is a fact, and no fact appears twice.</b> This register is a reference to be scanned, not read. Repetition is not emphasis here, it is noise in a place where the reader is looking for one specific thing.</p>
+      <p class="unresearched">Written from instinct. Nobody has counted this one against real
+             texts, so its figures are estimates and it names no failure modes. Treat it as a
+             sketch.</p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Facts, not sentences about facts</li><li>Parallel structure, always</li><li>No connective tissue</li><li>Absent is a value</li><li>Order by what is looked up</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>A sentence whose only job is transition.</li><li>An adjective standing in for a measurement.</li><li>Prose paragraphs. If it needs one, it belongs on a different page.</li><li>Personality of any kind.</li></ul></div>
+          
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-catalogue.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-manual">
+      <header>
+        <h3>The Manual</h3>
+        <p class="desc">Reference writing. Imperative, second person, no personality, complete before readable.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>12</dd></div><div><dt>you</dt><dd>45%</dd></div><div><dt>hedges</dt><dd>2%</dd></div></dl>
+      <p class="onerule"><b>Complete beats readable.</b> A reference page is not read, it is consulted, by somebody who already has a problem. Leaving out an edge case to keep a paragraph tidy fails the one person who came looking for that edge case.</p>
+      <p class="unresearched">Written from instinct. Nobody has counted this one against real
+             texts, so its figures are estimates and it names no failure modes. Treat it as a
+             sketch.</p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Tell them what to do</li><li>One instruction per step</li><li>Say what happens next</li><li>Name the failure and the fix together</li><li>No voice</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>A preamble before the steps.</li><li>&quot;Simply&quot;, &quot;just&quot;, &quot;easy&quot;. If it were, they would not be reading this.</li><li>A cross-reference where the answer would fit. Say it twice rather than send them away.</li><li>Explaining why before saying what. The why goes after, for the reader who wants it.</li></ul></div>
+          
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-manual.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-teacher">
+      <header>
+        <h3>The Teacher</h3>
+        <p class="desc">Explains. Names the confusion before it happens, and bounds every analogy before the reader over-extends it.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>22</dd></div><div><dt>variance</dt><dd>high</dd></div><div><dt>you</dt><dd>14%</dd></div><div><dt>we</dt><dd>38%</dd></div><div><dt>hedges</dt><dd>20%</dd></div></dl>
+      <p class="onerule"><b>Describe the material, never the reader's mind.</b> This is the whole diagnostic for condescension, and it fits in a sentence.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Long sentences, varied hard</li><li>Three pronouns, three jobs</li><li>The name arrives after the thing</li><li>Name the confusion as a fact, not a question</li><li>Predict the wrong inference, then cancel it</li><li>Every analogy carries its own expiry</li><li>Reassurance must be attached to a fact</li><li>Say where every claim stands</li><li>Retract the scope at the end</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>&quot;Just&quot;.</b> A filler that presumes a background. Usually deletable with no loss of meaning.</li><li><b>&quot;Simply&quot;, &quot;easy&quot;, &quot;trivially&quot;, &quot;of course&quot;, &quot;everyone knows&quot;, &quot;as you'd expect&quot;.</b> All share one mechanic: they assert the reader's mental state, so a reader who is stuck is told in passing that being stuck is anomalous.</li><li><b>&quot;Obviously&quot; and &quot;clearly&quot; aimed at the reader.</b> One licensed exception, from Halmos: you may call something obvious to place it in perspective, and if you do, make sure the obvious thing is true. Nielsen's only real use of it is aimed at his own model. <b>Point it at your own claim, never at the reader's comprehension.</b></li><li><b>Tag questions.</b> &quot;Makes sense?&quot;, &quot;See?&quot;, &quot;Pretty simple, right?&quot; Each demands assent and offers no way to withhold it.</li><li><b>A rhetorical question you answer yourself in the next clause.</b> It stages a dialogue the reader is not in.</li><li><b>Bluffing.</b> Halmos: readers sense concealment, and they blame neither the facts nor themselves. They blame the author, correctly.</li><li><b>An unbounded analogy</b>, or one quietly doing a second job it was not introduced for.</li><li><b>Simplifying the vocabulary below the reader's level.</b> It buys nothing, measurably.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>no more accurate</li><li>The collective pronoun misused.</li><li>Reassurance with no content.</li><li>Uniform short sentences.</li><li>Enthusiasm standing in for structure.</li><li>The analogy that is never taken away.</li><li>Warm tone, expert sequencing.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Feynman, Sagan, Bartosz Ciechanowski, Michael Nielsen, Grant Sanderson, Bret Victor, Paul Halmos, Julia Galef</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-teacher.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article></div>
+  </section>
+
+  <section id="marketing">
+    <p class="eyebrow">Marketing &middot; 2 voices</p>
+    <h2 class="measure">Written to move someone, and measured on whether they trust it.</h2>
+    <div class="voices">
+    <article class="voice" id="direct-response">
+      <header>
+        <h3>Direct Response</h3>
+        <p class="desc">One reader, one checkable number, proof before the claim, and an ask with the apparatus to obey it.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>mean sentence</dt><dd>12</dd></div><div><dt>under 6 words</dt><dd>40%</dd></div><div><dt>sentences / para</dt><dd>2</dd></div><div><dt>numbers / 100 words</dt><dd>2</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl>
+      <p class="onerule"><b>Every claim carries a number somebody could go and check.</b></p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Proof arrives before the claim</li><li>Select the reader, do not attract them</li><li>Find out what the reader already knows before deciding what to say</li><li>Every joint gets a short sentence</li><li>Volunteer the flaw, and only if it is real</li><li>The ask is an instruction plus the apparatus</li><li>Plain language, and this one has a number on it</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never fabricate a testimonial, review, customer or screenshot of one.</b> This stopped being a taste question on 21 October 2024. 16 CFR Part 465 makes it a deceptive practice to write, sell or disseminate a testimonial misrepresenting that the reviewer exists, that they used the product, or what happened. §465.4 also bans paying for a review conditioned on its sentiment. Civil penalties attach.</li><li><b>Never manufacture urgency or scarcity.</b> No resetting countdown, no invented stock level, no closing-tonight that reopens tomorrow. The FTC names False Low Stock, False Activity, False High Demand and Baseless Countdown Timer as distinct dark patterns. And it does not work: tested in isolation, scarcity cues and countdown timers produced no significant lift, 14.3 percent against 11.3 percent control, while aggressive dark patterns produced 65 dropouts against 9 and measurably more frustration (Luguri and Strahilevitz, 2021, n=3,777). Sites without scarcity cues rate more trustworthy. Note that this one is in the canon and not only in the imitators: Caples closes with &quot;before it's too late to gain the special benefits of this offer&quot; and no deadline is ever stated. There is nothing to be too late for. That is the most-copied line shape in the register and it is a lie by implication.</li><li><b>Never use the preemptive claim.</b> Hopkins' Schlitz method describes an industry-standard process as though it were exclusive, and he admits it: &quot;All claims were such as any brewer might have made.&quot; It is a lie by implication even when every sentence is true, and it does not survive a reader who can search.</li><li><b>Never simulate intimacy.</b> Merged first names in a headline, fake handwriting, the spontaneous postscript, the I-am-writing-this-at-2am aside. Halbert's best attention device was printing the recipient's name in the headline of a mailed letter, which is manufactured intimacy at industrial scale. The machinery is visible to everyone now.</li><li><b>Never use an unfalsifiable superlative.</b> Hopkins: they cause readers &quot;to discount the statements you make from that point on.&quot;</li><li><b>Never entertain.</b> Hopkins twice: &quot;No one reads ads for amusement&quot;, and &quot;Ads are not written to entertain.&quot; Fine writing &quot;reveals the hook&quot;.</li><li><b>Never let the selling show.</b> &quot;Any studied attempt to sell, if apparent, creates corresponding resistance.&quot;</li><li><b>Never shout.</b> Hopkins objects to oversized type on the grounds that nobody admires a salesman who talks in a loud voice.</li><li><b>Never pad to length.</b> &quot;Long copy outsells short copy&quot; is folklore with no dataset under it. The classics earned their length by having that much information.</li><li><b>Never give a number without saying what it is a number of.</b></li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Specificity inverts into invented precision.</li><li>The proof order reverses</li><li>The shape itself is now a signal.</li><li>The personality is templated.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Hopkins (Scientific Advertising, 1923), Caples, Ogilvy, Schwartz (Breakthrough Advertising), Halbert, Sugarman, plus FTC 16 CFR 465, Eisend 2006, Luguri and Strahilevitz 2021, Oppenheimer 2006</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/direct-response.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-pitch">
+      <header>
+        <h3>The Pitch</h3>
+        <p class="desc">A landing page. One claim, its proof, the obvious objection, and what to do next.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>11</dd></div><div><dt>you</dt><dd>35%</dd></div><div><dt>hedges</dt><dd>4%</dd></div></dl>
+      <p class="onerule"><b>One claim, and everything else serves it.</b> A page making three claims makes none. Decide which sentence the reader should be able to repeat to somebody else, and cut anything that competes.</p>
+      <p class="unresearched">Written from instinct. Nobody has counted this one against real
+             texts, so its figures are estimates and it names no failure modes. Treat it as a
+             sketch.</p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Lead with what it does, not what it is</li><li>Name the reader's problem in their words</li><li>Proof immediately after the claim</li><li>Proof a stranger can evaluate</li><li>Handle the obvious objection before they leave</li><li>One action</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Superlatives without a measurement behind them. Best, leading, revolutionary, seamless.</li><li>A feature list where a claim belongs.</li><li>Words that mean nothing when negated. Nobody ships an unscalable, insecure product, so neither word is doing any work.</li><li>Fake urgency. A deadline that is not real teaches the reader to distrust the real ones.</li><li>A testimonial doing the job of a fact.</li></ul></div>
+          
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-pitch.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article></div>
+  </section>
+
+  <section id="fun">
+    <p class="eyebrow">Fun &middot; 4 voices</p>
+    <h2 class="measure">For when the constraint is the point.</h2>
+    <div class="voices">
+    <article class="voice" id="nature-documentary">
+      <header>
+        <h3>Nature Documentary</h3>
+        <p class="desc">Third person, present tense, no &quot;I&quot; at all. The awe is a measurement, never an adjective.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>13</dd></div><div><dt>frontedAdverbials</dt><dd>0.24</dd></div><div><dt>firstPersonSingular</dt><dd>0.0</dd></div><div><dt>numeralsPerThousand</dt><dd>7.8</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl>
+      <p class="onerule"><b>The awe is the measurement.</b> Real narration is dense with numbers, 7.8 numerals per thousand words, because the fact is what produces the feeling. Pastiche reaches for &quot;magnificent&quot;. The real thing reaches for &quot;200 tons&quot;.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Never say &quot;I&quot;</li><li>Present tense, and short</li><li>Locate, then reveal</li><li>Lengths cluster, they do not alternate</li><li>Add, never caption</li><li>Hedge the animal, not yourself</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never &quot;I&quot;</b> in the absent-witness register. Zero, in 13,500 words.</li><li><b>Never exclaim.</b> One exclamation mark across three full classic episodes.</li><li><b>Never &quot;Yet&quot; as an opener.</b> Effectively zero in the corpus, and the first word pastiche reaches for.</li><li><b>Never ask rhetorical questions in bulk.</b> Zero to five question marks per episode, and most are genuine setups answered by the next shot.</li><li><b>Never use the past tense for what is happening now.</b></li><li><b>Never restate the image.</b></li><li><b>Never use an intensifier where a number belongs.</b></li><li><b>Never name the narrator's feelings.</b> Awe is produced by the fact, not asserted about the speaker.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>&quot;Here we see&quot; in the first sentence.</li><li>Deliberate long-short alternation.</li><li>Unrelenting irony.</li><li>Mixing the three registers.</li><li>Anthropomorphising with intent rather than with grammar.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Attenborough (Blue Planet 2001, Planet Earth 2006, Planet Earth II 2016, Blue Planet II 2017), Herzog, National Geographic house voice, Marlin Perkins</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/nature-documentary.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="noir">
+      <header>
+        <h3>Noir</h3>
+        <p class="desc">Past tense, first person, flat declaratives. The famous simile is the rarest move in it.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>10</dd></div><div><dt>longest</dt><dd>97</dd></div><div><dt>similes / 1k words</dt><dd>1.8</dd></div><div><dt>subordinate openers</dt><dd>1%</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl>
+      <p class="onerule"><b>The simile is rare.</b> One per 545 words in Chandler, one per 1,969 in Hammett. Once every two pages, and once every seven. The most imitated feature of this register is, inside the register, its scarcest move, and pastiche runs it twenty to forty times too often.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Flat declaratives, and let the range be wide</li><li>Past tense, first person, and the narrator already knows</li><li>Never open on a subordinate clause</li><li>Feeling arrives as a physical fact</li><li>Weather sets a clock, not a mood</li><li>Rooms are inventoried, not evoked</li><li>The narrator loses</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never present tense.</li><li>Never name an emotion as it happens.</li><li>Never explain the joke. The deadpan line is followed by the next piece of business.</li><li>Never use an exclamation mark in narration. One appears in all of <i>The Big Sleep</i>.</li><li>Never stack adjectives. Hammett introduces Spade in nouns and geometry and spends one adjective phrase at the end.</li><li>Never let the narrator state his own decency. Chandler's own rule: honour &quot;by instinct, by inevitability, without thought of it, and certainly without saying it.&quot;</li><li>Never let the narrator come out clean.</li><li>Never use the genre's furniture as scenery. The fedora, the neon and the venetian blinds belong to the adaptations. The prose names dairy trucks, a stamp collection, Twin Oaks Tavern.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Simile inflation, twenty to forty times over.</li><li>No baseline, so no rhythm.</li><li>Vehicle drift.</li><li>Mood substituted for event.</li><li>Costume nouns instead of world nouns.</li><li>Deadpan with no straight man.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Hammett (Red Harvest, The Maltese Falcon), Chandler (The Big Sleep, The High Window, The Little Sister), Cain, Double Indemnity, Sunset Boulevard, Mosley, Keillor</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/noir.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="patch-notes">
+      <header>
+        <h3>Patch Notes</h3>
+        <p class="desc">A changelog. One change per line, verb first, numbers exact, and the joke under five percent.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>5%</dd></div><div><dt>hedges</dt><dd>0%</dd></div></dl>
+      <p class="onerule"><b>The utility carries the voice, never the other way round.</b> A joke reads as funny only against a wall of flat, useful lines. Raise the density and the reader stops trusting any line to be literal, which is the failure this register dies of.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>One change per line</li><li>One grammatical shape per line type</li><li>Numbers exactly, in one convention</li><li>The direction verb carries the nerf</li><li>The order never changes</li><li>Deadpan beats a joke</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never joke on a security, data-loss or breaking-change entry. The funny products are silent exactly where the stakes are highest.</li><li>Never joke on a nerf. It reads as gloating at the player it affects.</li><li>Never write a fake entry. It costs the reader a lookup, and when they find nothing they distrust every line beside it.</li><li>Never explain the joke, and never signal it with an emoji or a wink.</li><li>Never announce enthusiasm. No &quot;we're excited to&quot;, no &quot;thrilled&quot;, no exclamation marks outside a deliberate aside.</li><li>Never use marketing adjectives on your own work: powerful, seamless, revamped, game-changing.</li><li>Never hedge a number.</li><li>Never put justification inside an entry.</li><li>Never use first person for the fix. &quot;Fixed X&quot;, not &quot;we went in and fixed X&quot;.</li><li>Never joke about the team. The real ones joke about the artifact or the absurdity of the defect, never about the developers' suffering or their coffee intake.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>The ratio inverts.</li><li>The joke replaces the fact.</li><li>Length inflation.</li><li>In-jokes needing context the reader lacks.</li><li>Puns on the product name.</li><li>Applied where nothing changed.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Valve (Team Fortress 2, Counter-Strike 2), Blizzard (World of Warcraft, Overwatch), Supergiant (Hades), Slack, Apple, 37signals</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/patch-notes.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="the-sportscaster">
+      <header>
+        <h3>The Sportscaster</h3>
+        <p class="desc">Present tense, flat for a long time, then grammar falls away. Escalates by subtraction.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>2%</dd></div><div><dt>hedges</dt><dd>3%</dd></div></dl>
+      <p class="onerule"><b>Escalation is subtraction.</b> The register does not get bigger at the peak, it gets smaller. Grammar sheds parts in a fixed order: the subject goes, then the copula, then the article, then the verb, until what is left is a noun and a stress. &quot;It is gone.&quot; &quot;They're all gone.&quot;</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Present tense is the spine</li><li>Hold a long flat baseline</li><li>Withhold the name, then spend it</li><li>The release carries the meaning, not the peak</li><li>One first person, once</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never explain the thing you just said. The release adds context; it does not paraphrase.</li><li>Never narrate what the reader already has. Restating the table above the paragraph is the cardinal error.</li><li>Never hedge at the moment. No &quot;seems to&quot;, no &quot;arguably&quot;, no &quot;one of the&quot;. Hedges belong in the flat stretches, where they are honest and cost nothing.</li><li>Never stack adjectives at the peak. Two superlatives in one sentence cancel.</li><li>Never joke at the peak. Scully's jokes came a full minute later, in the reset.</li><li>Never predict. The register is present tense and consequence-driven.</li><li>Never be at maximum for long. Sustained peak is not intensity, it is flatness at a higher volume.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>No clock forces the compression.</li><li>The reader controls the pace.</li><li>There is no crowd.</li><li>Preparation shows more in writing, not less.</li><li>The vocative tic is the tell.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Vin Scully, Richie Benaud, Martin Tyler, Peter Drury, Howard Cosell, Jim McKay, Murray Walker, Al Michaels, Barry Davies</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-sportscaster.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article></div>
+  </section>
+
+  <section id="tells">
+    <p class="eyebrow">Cross-cutting &middot; 52 named failures</p>
+    <h2 class="measure">Read together, the failure modes are one catalogue.</h2>
+    <p class="measure">
+      Every voice file ends by naming how imitation of it fails. Collected out of their contexts,
+      they stop being notes on 13 registers and start being a list of the things
+      generated prose does. Each links back to the voice that measured it.
+    </p>
+    <ul class="telldex">
+      <li><span>&quot;Here we see&quot; in the first sentence.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>&quot;Not X but Y&quot;, saturated.</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>Adopting the subject's own name for the thing.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>Anthropomorphising with intent rather than with grammar.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>Applied where nothing changed.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>claim-altitude with no evidence under it</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>Costume nouns instead of world nouns.</span> <a href="#noir">Noir</a></li>
+      <li><span>Deadpan with no straight man.</span> <a href="#noir">Noir</a></li>
+      <li><span>Deliberate long-short alternation.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>Enthusiasm standing in for structure.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>Hedge-stripping</span> <a href="#plainspoken">Plainspoken</a></li>
+      <li><span>In-jokes needing context the reader lacks.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>Journalese standing in for reporting.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>Length inflation.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>Mechanical de-Latinising</span> <a href="#plainspoken">Plainspoken</a></li>
+      <li><span>Mind reading.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>Mixing the three registers.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>Mood substituted for event.</span> <a href="#noir">Noir</a></li>
+      <li><span>No baseline, so no rhythm.</span> <a href="#noir">Noir</a></li>
+      <li><span>No clock forces the compression.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>no more accurate</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>One subject, one shape, three times.</span> <a href="#plainspoken">Plainspoken</a></li>
+      <li><span>Preparation shows more in writing, not less.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>Puns on the product name.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>Reassurance with no content.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>Simile inflation, twenty to forty times over.</span> <a href="#noir">Noir</a></li>
+      <li><span>Specificity inverts into invented precision.</span> <a href="#direct-response">Direct Response</a></li>
+      <li><span>The analogy that is never taken away.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>The aphorism with no referent.</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>The collective pronoun misused.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>The colon that promises depth</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>The escalating tricolon.</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>The joke replaces the fact.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>The lede that summarises rather than reports.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The personality is templated.</span> <a href="#direct-response">Direct Response</a></li>
+      <li><span>The proof order reverses</span> <a href="#direct-response">Direct Response</a></li>
+      <li><span>The pyramid shape with an argument inside it.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The ratio inverts.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>The reader controls the pace.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>The shape itself is now a signal.</span> <a href="#direct-response">Direct Response</a></li>
+      <li><span>The summary ending in disguise.</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>The sympathetic attribution verb.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The unattributed background paragraph.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The unearned &quot;we&quot;.</span> <a href="#the-argument">The Argument</a></li>
+      <li><span>The unverifiable superlative, unattributed.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The variance collapse.</span> <a href="#plainspoken">Plainspoken</a></li>
+      <li><span>The vocative tic is the tell.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>There is no crowd.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>Uniform short sentences.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>Unrelenting irony.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>Vehicle drift.</span> <a href="#noir">Noir</a></li>
+      <li><span>Warm tone, expert sequencing.</span> <a href="#the-teacher">The Teacher</a></li>
+    </ul>
+  </section>
+
+  <section id="define">
+    <p class="eyebrow">Your own</p>
+    <h2 class="measure">Four ways to have a voice, and a preset is only the first.</h2>
+    <div class="cmds">
+      <div class="cmd">
+        <h3>pick one</h3>
+        <p>Any file above, by name. It arrives whole: rules, counts, and the tells.</p>
+      </div>
+      <div class="cmd">
+        <h3>describe one</h3>
+        <p>In your words, fresh or derived from a preset. "A PhD mathematician who has stopped trying to impress anyone." Stet turns the description into countable rules and tells you which it could not measure.</p>
+      </div>
+      <div class="cmd">
+        <h3>point at writing</h3>
+        <p>Documents, a Drive folder, a site, anything you already wrote. It gets measured the same way these were, and the numbers come back with it.</p>
+      </div>
+      <div class="cmd">
+        <h3>let it read the project</h3>
+        <p>Run it where you work and it derives the house voice from what is already there, because nobody can describe their own.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Stet</span>
+    <span>An <a href="https://github.com/owllight-studio">Owllight Studio</a> project</span>
+    <span class="right"><a href="https://github.com/owllight-studio/stet">Source</a></span>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "site",
+  "buildCommand": "node site/build-voices.mjs",
   "headers": [
     {
       "source": "/(.*)",

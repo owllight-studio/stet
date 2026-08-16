@@ -157,3 +157,51 @@ a second pair of eyes is required.
 
 **And the tone is fixed.** AP: mistakes are corrected "fully, quickly and ungrudgingly". That last
 adverb is the whole convention. A correction that argues with itself is not a correction.
+
+## How pastiche fails
+
+The register's whole effect is the *absence* of a writer. Imitation puts one back in without
+noticing, because every failure below is a place where a judgment leaked into a sentence that was
+supposed to carry only a fact.
+
+**Journalese standing in for reporting.** Slammed, probe, dubbed, embattled, sparked fears, looks
+set to. These are not neutral words that happen to sound punchy. Each one asserts something the
+reporter did not establish: that the criticism was forceful, that the investigation is adversarial,
+that the person is under threat. The tell is that the sentence gets shorter and less informative at
+the same time.
+
+**The sympathetic attribution verb.** The imitated failure is always the sceptical one, alleged and
+claimed, because that one is famous. Pastiche then writes noted, pointed out, emphasised and
+stressed, believing it has been fair. It has put a thumb on the same scale in the other direction.
+Both are banned and only one gets caught.
+
+**The unattributed background paragraph.** The quoted parts get sourced and the connective tissue
+does not, so the paragraph explaining why any of it matters is written in the institution's voice
+with nothing behind it. Contentious claims are re-sourced every time they appear, and pastiche
+sources them once.
+
+**The lede that summarises rather than reports.** A first sentence that says a thing is significant,
+complex or contested, rather than saying what happened. Reuters' word count catches this
+mechanically: count the words before the first indispensable one, and if it is past three or four,
+the lede is throat-clearing.
+
+**Adopting the subject's own name for the thing.** An operation's official name, a company's term
+for its own layoffs, a bill's title. Pastiche uses them because they are what the sources say, which
+is exactly why the rule exists.
+
+**The unverifiable superlative, unattributed.** First, only, largest, unprecedented, record. Almost
+always somebody's claim rather than a checked fact, and pastiche states it flat.
+
+**Mind reading.** Hinted, implied, signalled, indicated, suggested, appeared to. The most common
+single failure, because it feels like careful hedging and is actually interpretation presented as
+observation.
+
+**The pyramid shape with an argument inside it.** The deepest failure and the hardest to see. The
+inverted pyramid puts the conclusion before the evidence, which is correct for news and fatal for
+persuasion, because a conclusion stated before its support is an assertion. Copy that borrows the
+shape to sound authoritative while actually arguing a case ends up sounding like a press release,
+which is precisely what a press release is.
+
+**Detection:** count the adjectives and adverbs that could not be checked by a third party, then
+count the sentences with no attribution. In wire copy the first number is near zero and the second
+is near zero. Either one rising is the writer becoming visible.
