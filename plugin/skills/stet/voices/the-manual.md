@@ -7,6 +7,9 @@ measured:
   sentenceP95: 24
   secondPerson: 0.45
   hedgesPerSentence: 0.02
+stet:
+  state: draft
+  author: agent
 ---
 
 # The Manual

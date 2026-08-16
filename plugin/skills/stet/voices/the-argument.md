@@ -7,6 +7,9 @@ measured:
   sentenceP95: 42
   secondPerson: 0.08
   hedgesPerSentence: 0.12
+stet:
+  state: draft
+  author: agent
 ---
 
 # The Argument

@@ -7,6 +7,9 @@ measured:
   sentenceP95: 18
   secondPerson: 0.0
   hedgesPerSentence: 0.0
+stet:
+  state: draft
+  author: agent
 ---
 
 # The Catalogue

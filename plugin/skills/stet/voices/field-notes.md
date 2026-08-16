@@ -7,6 +7,9 @@ measured:
   sentenceP95: 30
   secondPerson: 0.05
   hedgesPerSentence: 0.18
+stet:
+  state: draft
+  author: agent
 ---
 
 # Field Notes
