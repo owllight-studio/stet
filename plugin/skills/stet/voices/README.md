@@ -70,6 +70,39 @@ a mood.
 **A preset with no `sources` line was written from instinct**, which means its figures are estimates.
 That is a real state and the library says so rather than hiding it. Four are currently in it.
 
+## Feeling is the target. The rules are how it lands.
+
+A register is not a set of measurements with the emotion removed. **Every preset here is a machine
+for producing a particular feeling**, and what it contributes is the part nobody can supply from
+instinct: how that feeling actually gets onto the page.
+
+The distinction is between naming an emotion and delivering one.
+
+- **Noir** never lets the narrator say he is frightened. "I couldn't hear my own footsteps. It was
+  the walk of a dead man." The rule is *never name an emotion at the moment it is felt*, and the
+  register's whole atmosphere comes out of obeying it.
+- **The Teacher** is a warm register, and its warmth reduces to one instruction: *describe the
+  material, never the reader's mind.* "This is easy" and "you'll love this" are assertions about the
+  reader. "The algebraic form may seem opaque if you're not already familiar with it" is an
+  assertion about the algebra. Same warmth, no contempt.
+- **Nature Documentary** is among the most affecting registers on television and contains zero
+  instances of "I" across 13,500 measured words. The feeling is carried entirely by what is
+  described and when.
+- **The Broadsheet** withholds feeling on purpose, and that is itself an emotional choice with a
+  mechanism: every sourcing verb is "said", because *noted* and *emphasised* smuggle approval in
+  exactly as *alleged* smuggles doubt.
+
+So a voice brief should carry the feeling. "It should sound like somebody who has done this and is
+telling you what it was actually like" is a usable brief, and the research turns it into rules.
+
+**The adjective on its own is what fails.** "Warm", "confident", "authoritative", "friendly". Those
+cannot be followed and cannot be violated, so they generate nothing and forbid nothing. They fail
+because they stop at naming the feeling, and naming a feeling has never once put it on a page.
+
+Le Guin put the reason in one line: *"Speech expresses character. It does so whether the speaker or
+the author knows it or not."* Feeling arrives through the sentences whether you planned it or not,
+which is precisely why it is worth planning.
+
 ## Two rules the research imposed on this library
 
 **Count, do not characterise.** Six presets were rebuilt after being measured, and every one of them
