@@ -19,7 +19,10 @@ import { findContent } from "./lib/find.mjs";
 
 const TELLS = [
   { id: "em-dash", re: /—|(?<=\w)\s–\s(?=\w)/g, say: "em dash. Use a colon, a full stop or brackets." },
+  // Both shapes: "it is not X, it is Y" and the bare "Not a guideline, a hook". The second form
+  // slipped through and shipped in a voice preset's own example, in the file that bans it.
   { id: "not-x-but-y", re: /\b(?:is|are|was|were|it'?s)\s+not\s+[^.,;:]{3,40},?\s+it'?s\s+/gi, say: '"not X, it is Y". Just say Y.' },
+  { id: "not-x-but-y", re: /(?:^|(?<=[.!?]\s))Not\s+(?:a|an|the)\s+[^.,;:]{3,45},\s+(?:a|an|the)\s/g, say: '"Not a X, a Y". Just say Y.' },
   { id: "delve", re: /\b(delve|dive in|deep dive|unpack this|let'?s explore)\b/gi, say: "the exploration preamble. Start with the answer." },
   { id: "corporate", re: /\b(leverage|utilize|robust|seamless|streamline|elevate|unlock|empower|holistic|synergy)\b/gi, say: "corporate filler. Use the plain word." },
   { id: "landscape", re: /\b(landscape|realm|tapestry|testament to|in today'?s world|ever.evolving)\b/gi, say: "essay filler." },
