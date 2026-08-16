@@ -10,13 +10,62 @@
  */
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, extname } from "node:path";
 
 const FRONTMATTER = /^---\r?\n[\s\S]*?\r?\n---\r?\n?/;
+
+/* --- HTML ---------------------------------------------------------------- */
+
+/** Elements that carry prose somebody wrote, as opposed to structure somebody generated. */
+const PROSE_TAGS = ["title", "h1", "h2", "h3", "h4", "p", "li", "dd", "summary", "figcaption"];
+/** Regions whose contents are code or styling and are nobody's prose. */
+const OPAQUE = /<(script|style|pre|code)\b[\s\S]*?<\/\1>/gi;
+
+/**
+ * Prose blocks in an HTML file, addressed by their exact byte range in the source.
+ *
+ * Offsets rather than an index into a rebuilt document, which makes writing back strictly safer
+ * than the markdown path: everything outside the one range is untouched by construction, including
+ * markup, indentation and blank lines.
+ */
+function splitHtml(text) {
+  const opaque = [];
+  for (const m of text.matchAll(OPAQUE)) opaque.push([m.index, m.index + m[0].length]);
+  const hidden = (i) => opaque.some(([a, b]) => i >= a && i < b);
+
+  const blocks = [];
+  const re = new RegExp(`<(${PROSE_TAGS.join("|")})(\\s[^>]*)?>([\\s\\S]*?)</\\1>`, "gi");
+
+  for (const m of text.matchAll(re)) {
+    if (hidden(m.index)) continue;
+    const inner = m[3];
+
+    // An element wrapping other prose elements is a container, not a block. Its children get their
+    // own turn, and presenting both would ask the author to review the same words twice.
+    if (new RegExp(`<(${PROSE_TAGS.join("|")})\\b`, "i").test(inner)) continue;
+    if (!inner.replace(/<[^>]+>/g, "").trim()) continue;
+
+    const lead = inner.match(/^\s*/)[0].length;
+    const tail = inner.match(/\s*$/)[0].length;
+    const start = m.index + m[0].indexOf(inner) + lead;
+    const end = m.index + m[0].indexOf(inner) + inner.length - tail;
+
+    blocks.push({
+      index: blocks.length,
+      line: text.slice(0, start).split("\n").length,
+      kind: /^h[1-4]$/i.test(m[1]) ? "heading" : m[1].toLowerCase() === "li" ? "list" : "prose",
+      text: text.slice(start, end),
+      start,
+      end,
+    });
+  }
+  return { head: "", blocks };
+}
 
 /** Blocks in document order. Headings are included, since a heading is content and often wrong. */
 export function split(root, file) {
   const text = readFileSync(join(root, file), "utf8");
+  if (/^\.x?html?$/i.test(extname(file))) return splitHtml(text);
   const fm = text.match(FRONTMATTER);
   const head = fm ? fm[0] : "";
   const body = text.slice(head.length);
@@ -66,6 +115,14 @@ export function replace(root, file, index, text) {
   const { head, blocks } = split(root, file);
   const target = blocks[index];
   if (!target) throw new Error(`no block ${index} in ${file}`);
+
+  // A block that knows its own byte range is spliced in place. Everything outside it is untouched
+  // by construction rather than by careful rebuilding, which is the stronger version of this
+  // function's promise.
+  if (target.start !== undefined) {
+    writeFileSync(full, original.slice(0, target.start) + text + original.slice(target.end));
+    return;
+  }
 
   const body = original.slice(head.length);
   const before = blocks.slice(0, index).map((b) => b.text);
