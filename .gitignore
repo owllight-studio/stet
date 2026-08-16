@@ -4,3 +4,6 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Per-project working state: the proof sheet spec and the choice it wrote back.
+.stet/

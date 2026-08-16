@@ -81,6 +81,12 @@ function write(variant, note) {
     "original must survive. You are changing how it sounds and nothing else. Inventing a fact, or",
     "dropping one, makes the comparison worthless.",
     "",
+    "COMMIT TO THE REGISTER. This passage sits beside other versions of itself and the author is",
+    "choosing between them, so a version that could be mistaken for the original, or for one of the",
+    "others, is a failed answer. Go as far into this reading as you can go while every fact survives",
+    "and the prose stays good. If the register wants a 40-word sentence, write one. If it wants a",
+    "four-word one, write that. Hedging toward the middle is the one outcome that helps nobody.",
+    "",
     `THE VOICE THE AUTHOR ASKED FOR:\n${persona}`,
     findings.length
       ? `\nWHAT THE RESEARCH ACTUALLY FOUND. These are counted off real texts, so they outrank your\nimpression of how this voice sounds:\n${findings.map((f) => `- ${f}`).join("\n")}`

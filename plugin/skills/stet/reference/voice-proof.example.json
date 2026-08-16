@@ -1,0 +1,66 @@
+{
+  "_": "A real sheet, kept as a template. Copy it to .stet/voice-proof.json and run scripts/voice-proof.mjs. Every finding here was counted off real texts; findings written from an impression are the failure this step exists to prevent. Leave variant text empty and the sheet writes it on the first roll.",
+  "persona": "How stet.style itself should sound",
+  "findings": [
+    "Variance is the register, not shortness. Every measured text sits at a standard deviation between half and four fifths of its mean, and sd over mean below 0.35 reads as pastiche.",
+    "Direct response runs a median of 9 words with roughly 40 percent of sentences under six. Plainspoken sits at 15. The essay register sits at 18 with a standard deviation of 0.7 of the mean.",
+    "Proof before the claim. Ogilvy attributed his own headline to a magazine's technical editor rather than asserting it; Sugarman spent the first third of a sunglasses ad unconvinced by sunglasses.",
+    "Keep the hedge that carries a fact. Stripping 'in the two runs that recorded it' for flow is a truth failure wearing a style improvement.",
+    "A concession placed before your strongest claim is armour. The same concession after it is retreat.",
+    "Endings do one of five things and summarising is not one of them. The test is to delete the last paragraph and see whether anything was lost."
+  ],
+  "sample": {
+    "file": "site/index.html, the hero and the first failure",
+    "text": "Content that knows who owns it.\n\nA Claude Code plugin that stops agents rewriting your words, and keeps the rest true.\n\nIt writes too much. A sentence and a half doing the work of a sentence. A preamble before every list. You spend longer unwinding it than writing would have taken, and that time comes out of the work only you can do."
+  },
+  "axes": [
+    {
+      "key": "variance",
+      "label": "Sentence variance",
+      "low": "even, near the mean",
+      "high": "wide, 4 words to 45",
+      "value": 70
+    },
+    {
+      "key": "numbers",
+      "label": "Numbers on the page",
+      "low": "none, prose only",
+      "high": "a checkable figure per claim",
+      "value": 40
+    },
+    {
+      "key": "hedges",
+      "label": "Qualifiers",
+      "low": "stripped, flat assertion",
+      "high": "kept wherever they carry a fact",
+      "value": 60
+    },
+    {
+      "key": "person",
+      "label": "Address",
+      "low": "third person, about the thing",
+      "high": "second person, about your work",
+      "value": 55
+    }
+  ],
+  "variants": [
+    {
+      "id": "a",
+      "label": "Direct Response",
+      "brief": "Median 9 words, roughly 40 percent under six. Proof lands before the claim, every claim carries a number somebody could check, and the ask is an instruction rather than an implication. The risk is that the register's own cadence now reads as a scam signal.",
+      "text": ""
+    },
+    {
+      "id": "b",
+      "label": "Plainspoken",
+      "brief": "Median 15, standard deviation 0.55 of the mean, ceiling around 45. Concrete nouns, working verbs, no throat-clearing, and the short sentence carries the verdict. Varied hard, because uniform length is the tell rather than the target.",
+      "text": ""
+    },
+    {
+      "id": "c",
+      "label": "The Argument",
+      "brief": "Median 18, standard deviation 0.7 of the mean, longest around 90. Claims made as strong as they can be without becoming false, the concession placed before the strongest one, and an ending that refuses to summarise.",
+      "text": ""
+    }
+  ]
+}
