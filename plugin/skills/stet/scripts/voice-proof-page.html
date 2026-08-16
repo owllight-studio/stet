@@ -111,8 +111,17 @@ header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
 }
 .origin .stats { margin-bottom: .7rem; }
 .body { white-space: pre-wrap; }
-.body[contenteditable="true"] { outline: none; }
-.body[contenteditable="true"]:focus { background: var(--wash); box-shadow: 0 0 0 .5rem var(--wash); border-radius: 2px; }
+.body[contenteditable="true"] { outline: none; border-radius: 2px; transition: box-shadow 160ms ease; }
+.body[contenteditable="true"]:hover { box-shadow: 0 0 0 .5rem var(--edge); background: var(--edge); }
+.body[contenteditable="true"]:focus { box-shadow: 0 0 0 .5rem var(--wash); background: var(--wash); }
+.variant.is-mine .body { border-left: 2px solid var(--mine); padding-left: .9rem; margin-left: -1.1rem; }
+.undo { display: none; }
+.variant.is-mine .undo { display: inline-block; color: var(--mine); border-color: var(--mine); }
+.mine-note {
+  display: none; font-family: var(--mono); font-size: .66rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--mine); margin: .5rem 0 0;
+}
+.variant.is-mine .mine-note { display: block; }
 
 .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; align-items: center; }
 button {
@@ -131,6 +140,15 @@ button:disabled { opacity: .4; cursor: default; }
 }
 .note:focus { outline: none; border-color: var(--pencil); }
 .said { font-size: .82rem; color: var(--strike); margin: .5rem 0 0; display: none; }
+
+/* The marks a copy editor would make, so a change is impossible to miss. */
+.body del { color: var(--strike); text-decoration: line-through; text-decoration-thickness: 1px; }
+.body ins { color: var(--pencil); text-decoration: none; border-bottom: 1px solid var(--pencil); }
+.stamp {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--pencil); margin: .5rem 0 0; display: none; align-items: center; gap: .75rem;
+}
+.stamp button { padding: .2rem .5rem; font-size: .6rem; }
 
 /* The working state draws the mark itself: a row of dots laid under the text, left to right, which
    is how stet is written on paper. */
@@ -168,24 +186,28 @@ button:disabled { opacity: .4; cursor: default; }
     <div class="mark"><b>stet</b> &nbsp;voice</div>
     <p class="asked"><span>You asked for</span> <em id="persona"></em></p>
     <p class="lede">
-      The same passage from your own writing, read several ways. Nobody can describe the voice they
-      want, so this is the version of the question you can actually answer. Move the dials, send back
-      whatever is close, and pick the one that sounds like you.
+      Below is a piece of your own writing, rewritten a few different ways. Read them and pick the
+      one that sounds right. That is the whole job here.
+    </p>
+    <p class="lede">
+      If one is close but not there, type what is wrong with it and press <b>Send it back</b>. It
+      gets rewritten in about ten seconds and the changes are marked. You can also just type over any
+      of them: anything you write by hand stays yours.
     </p>
     <div class="findings" id="findings" hidden>
-      <h2>What the research found</h2>
+      <h2>What we found out about this voice</h2>
       <ul id="findlist"></ul>
     </div>
   </header>
 
   <div class="dials" id="dials" hidden>
-    <h2>Dials</h2>
+    <h2>Turn these up or down, then send one back</h2>
     <div class="axes" id="axes"></div>
-    <button class="rollall" id="rollall">Re-roll all at these settings</button>
+    <button class="rollall" id="rollall">Rewrite all three with these settings</button>
   </div>
 
   <div class="origin">
-    <p class="tag" id="origintag">The passage as it stands</p>
+    <p class="tag" id="origintag">Your writing now</p>
     <div class="stats" id="m-origin"></div>
   <div class="body" id="origin"></div>
   </div>
@@ -195,9 +217,9 @@ button:disabled { opacity: .4; cursor: default; }
 
 <div class="bar" id="bar">
   <div class="barin">
-    <span class="count" id="count">Nothing picked yet</span>
-    <input class="note blend" id="blend" placeholder="Anything to carry over from the ones you did not pick">
-    <button class="primary" id="done" disabled>Use this voice</button>
+    <span class="count" id="count">Pick one to finish</span>
+    <input class="note blend" id="blend" placeholder="Anything you liked in the ones you did not pick">
+    <button class="primary" id="done" disabled>Write this voice down</button>
   </div>
 </div>
 
@@ -205,6 +227,7 @@ button:disabled { opacity: .4; cursor: default; }
 const $ = (id) => document.getElementById(id);
 let sheet = null;
 let chosen = null;
+const generated = new Map();
 
 const post = (url, body) =>
   fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
@@ -247,11 +270,14 @@ function renderVariants() {
         <div class="stats" id="m-${v.id}"></div>
         <div class="working"><div class="dots"></div><span id="w-${v.id}">Laying the stet mark</span></div>
         <div class="body" id="t-${v.id}" contenteditable="true" spellcheck="false"></div>
+        <p class="mine-note">Edited by you. These are your words now and nothing will rewrite them.</p>
         <p class="said" id="s-${v.id}"></p>
+        <p class="stamp" id="k-${v.id}"></p>
         <div class="actions">
           <button class="primary" data-act="pick">This one</button>
-          <input class="note" data-act="note" placeholder="What is wrong with it">
+          <input class="note" data-act="note" placeholder="Say what is wrong with it">
           <button data-act="roll">Send it back</button>
+          <button class="undo" data-act="undo">Undo my edit</button>
         </div>
       </article>`
     )
@@ -259,6 +285,7 @@ function renderVariants() {
 
   for (const v of sheet.variants) {
     $("t-" + v.id).textContent = v.text ?? "";
+    generated.set(v.id, v.text ?? "");
     showStats(v.id, v.text ?? "");
   }
 
@@ -270,8 +297,18 @@ function renderVariants() {
 
     if (btn.dataset.act === "pick") return pick(id);
 
+    if (btn.dataset.act === "undo") {
+      const back = generated.get(id) ?? "";
+      $("t-" + id).textContent = back;
+      card.classList.remove("is-mine");
+      showStats(id, back);
+      return post("/api/edit", { id, text: back });
+    }
+
     const note = card.querySelector('[data-act="note"]').value.trim();
+    const before = $("t-" + id).textContent;
     card.classList.add("busy");
+    $("k-" + id).style.display = "none";
     $("s-" + id).style.display = "none";
     const started = Date.now();
     const tick = setInterval(() => {
@@ -284,8 +321,25 @@ function renderVariants() {
     card.classList.remove("busy");
 
     if (r.ok) {
-      $("t-" + id).textContent = r.text;
+      const was = before;
+      const d = diff(was, r.text);
+      $("t-" + id).innerHTML = d.html;
       showStats(id, r.text);
+
+      /* Show it marked up first, because "nothing happened" is what a silent success looks like.
+         The clean version is one click away and the button says how much moved. */
+      generated.set(id, r.text);
+      card.classList.remove("is-mine");
+      const stamp = $("k-" + id);
+      stamp.style.display = "flex";
+      stamp.innerHTML = `<span>Rewritten in ${r.took}s &middot; ${d.changed} ${d.changed === 1 ? "word" : "words"} changed</span>`;
+      const clean = document.createElement("button");
+      clean.textContent = "Hide the marks";
+      clean.addEventListener("click", () => {
+        $("t-" + id).textContent = r.text;
+        stamp.style.display = "none";
+      });
+      stamp.append(clean);
     } else {
       const said = $("s-" + id);
       said.textContent = r.reason ?? "Nothing came back.";
@@ -297,10 +351,39 @@ function renderVariants() {
   $("variants").addEventListener("focusout", (e) => {
     const body = e.target.closest(".body[contenteditable]");
     if (!body) return;
-    const id = body.closest(".variant").dataset.id;
-    showStats(id, body.textContent);
-    post("/api/edit", { id, text: body.textContent });
+    const card = body.closest(".variant");
+    const id = card.dataset.id;
+    const text = body.textContent;
+    if (text === generated.get(id)) return;
+
+    const stamp = $("k-" + id);
+    if (stamp) stamp.style.display = "none";
+    card.classList.add("is-mine");
+    showStats(id, text);
+    post("/api/edit", { id, text });
   });
+}
+
+/* Word-level diff, so a rewrite is visible rather than merely true. Longest common subsequence over
+   whitespace tokens: plenty for a paragraph, and no dependency. */
+function diff(before, after) {
+  const a = before.split(/(\s+)/), b = after.split(/(\s+)/);
+  const n = a.length, m = b.length;
+  const grid = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--)
+      grid[i][j] = a[i] === b[j] ? grid[i + 1][j + 1] + 1 : Math.max(grid[i + 1][j], grid[i][j + 1]);
+
+  const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  let out = "", i = 0, j = 0, changed = 0;
+  while (i < n && j < m) {
+    if (a[i] === b[j]) { out += esc(a[i]); i++; j++; }
+    else if (grid[i + 1][j] >= grid[i][j + 1]) { if (a[i].trim()) { out += `<del>${esc(a[i])}</del>`; changed++; } i++; }
+    else { if (b[j].trim()) { out += `<ins>${esc(b[j])}</ins>`; changed++; } j++; }
+  }
+  while (i < n) { if (a[i].trim()) { out += `<del>${esc(a[i])}</del>`; changed++; } i++; }
+  while (j < m) { if (b[j].trim()) { out += `<ins>${esc(b[j])}</ins>`; changed++; } j++; }
+  return { html: out, changed };
 }
 
 /* Rough, and deliberately so: the author is comparing three numbers with each other, not citing
@@ -316,7 +399,7 @@ function measure(text) {
   return {
     median,
     longest: lengths[lengths.length - 1],
-    spread: mean ? (sd / mean).toFixed(2) : "0",
+    spread: mean ? sd / mean : 0,
     short: Math.round((lengths.filter((l) => l < 6).length / lengths.length) * 100),
   };
 }
@@ -327,10 +410,10 @@ function showStats(id, text) {
   const m = measure(text);
   if (!m) return (el.innerHTML = "");
   el.innerHTML = [
-    ["median", m.median],
-    ["longest", m.longest],
-    ["sd / mean", m.spread],
-    ["under 6", m.short + "%"],
+    ["typical sentence", m.median + " words"],
+    ["longest", m.longest + " words"],
+    ["length varies", m.spread < 0.35 ? "little" : m.spread < 0.55 ? "some" : "a lot"],
+    ["very short ones", m.short + "%"],
   ]
     .map(([k, v]) => `<span><i>${k}</i>${v}</span>`)
     .join("");
@@ -363,8 +446,8 @@ $("done").addEventListener("click", async () => {
     <div class="finished">
       <div class="mark"><b>stet</b></div>
       <p style="margin-top:1.5rem">
-        <b>${v.label}</b> it is. Everything you saw went back, including the ones you turned down,
-        because what you rejected says as much about the voice as what you kept.
+        <b>${v.label}</b> it is. Everything you saw went back, including the ones you turned down.
+        What you said no to is as useful as what you kept.
       </p>
       <p style="margin-top:1rem">Go back to the terminal. Close this tab whenever.</p>
     </div>`;

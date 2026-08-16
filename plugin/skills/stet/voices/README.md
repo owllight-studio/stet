@@ -31,7 +31,7 @@ Teacher, The Manual, Field Notes, The Catalogue.
 Launch, The Case, The Founder Letter.
 
 **Genre**, fiction registers, for anyone whose product has a world in it. Noir, The Locked Room,
-The Bridge, Hard SF. Planned: Epic Fantasy, and the drama register.
+The Bridge, Hard SF, The Kitchen. Planned: Epic Fantasy, and the drama register.
 
 **Fun**, invoked on purpose, for delight or for a joke that has to hold a whole page. Patch Notes,
 Nature Documentary, The Sportscaster. Planned: The Chronicle, The Bureaucrat.

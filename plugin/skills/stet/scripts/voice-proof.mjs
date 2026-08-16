@@ -51,6 +51,21 @@ if (!sample.text) {
 
 const page = readFileSync(join(here, "voice-proof-page.html"), "utf8");
 
+/**
+ * The bans that survive a change of voice.
+ *
+ * Exploring a new voice is not licence to break the house rules, and the ones written as Never are
+ * exactly the ones that hold whatever the register turns out to be. Only that section is carried:
+ * the rest of VOICE.md describes the voice being replaced and would fight the thing on the sheet.
+ */
+function houseBans() {
+  const path = join(root, "VOICE.md");
+  if (!existsSync(path)) return "";
+  const m = readFileSync(path, "utf8").match(/^## Never\s*$([\s\S]*?)(?=^## |$(?![\s\S]))/mi);
+  return m ? m[1].trim() : "";
+}
+const BANS = houseBans();
+
 /** Live state. The author moves dials and re-rolls; the server keeps whatever came back last. */
 const current = new Map(variants.map((v) => [v.id, v.text]));
 const notes = new Map();
@@ -77,19 +92,32 @@ function write(variant, note) {
     "should sound like. Return ONLY the rewritten passage. No preamble, no explanation, no code",
     "fences, no commentary, no quotation marks around it.",
     "",
-    "Keep the same Markdown shape and the same factual content. Every claim, number and name in the",
-    "original must survive. You are changing how it sounds and nothing else. Inventing a fact, or",
-    "dropping one, makes the comparison worthless.",
+    "DO NOT EDIT THE PASSAGE. Write it again from nothing, in this voice, saying the same things.",
     "",
-    "COMMIT TO THE REGISTER. This passage sits beside other versions of itself and the author is",
-    "choosing between them, so a version that could be mistaken for the original, or for one of the",
-    "others, is a failed answer. Go as far into this reading as you can go while every fact survives",
-    "and the prose stays good. If the register wants a 40-word sentence, write one. If it wants a",
-    "four-word one, write that. Hedging toward the middle is the one outcome that helps nobody.",
+    "That distinction is the whole task and it is the one thing that goes wrong. Editing means",
+    "keeping the sentences and swapping a few words, and it produces a version indistinguishable",
+    "from the original, which is useless to somebody trying to choose between voices. Cover the",
+    "original, work out what it actually says, and say that. Different sentences, different order if",
+    "the voice wants one, different rhythm.",
+    "",
+    "The hard test: if more than a third of your sentences appear word for word in the original, you",
+    "edited it. Start again.",
+    "",
+    "What must survive is the FACTS. Every claim, number, name and product detail in the original has",
+    "to be in your version, and you may not add one that is not. Same Markdown shape: a heading stays",
+    "a heading, a list stays a list, a paragraph stays a paragraph, and the same number of paragraphs.",
+    "",
+    "COMMIT TO THE VOICE. This sits beside other versions of itself and somebody is choosing between",
+    "them, so a version mistakable for the original or for one of the others is a failed answer. Go",
+    "as far into this reading as the facts allow. If the voice wants a 40-word sentence, write one. If",
+    "it wants a four-word one, write that. Hedging toward the middle helps nobody.",
     "",
     `THE VOICE THE AUTHOR ASKED FOR:\n${persona}`,
     findings.length
       ? `\nWHAT THE RESEARCH ACTUALLY FOUND. These are counted off real texts, so they outrank your\nimpression of how this voice sounds:\n${findings.map((f) => `- ${f}`).join("\n")}`
+      : "",
+    BANS
+      ? `\nHOUSE RULES THAT HOLD NO MATTER WHICH VOICE WINS. These outrank the voice and outrank your\ninstincts. Breaking one is a failed answer however good the prose is:\n\n${BANS}`
       : "",
     `\nTHIS PARTICULAR READING OF IT:\n${variant.brief}`,
     axes.length ? `\nWHERE THE AUTHOR HAS SET THE DIALS:\n${dialLines}` : "",
@@ -113,6 +141,15 @@ function write(variant, note) {
       resolve(clean || null);
     });
   });
+}
+
+/** How much of a candidate is the original, sentence for sentence. */
+function overlap(candidate, original) {
+  const split = (t) => t.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/).map((x) => x.trim()).filter(Boolean);
+  const was = new Set(split(original).map((x) => x.toLowerCase()));
+  const now = split(candidate);
+  if (!now.length) return 0;
+  return now.filter((x) => was.has(x.toLowerCase())).length / now.length;
 }
 
 const server = createServer(async (req, res) => {
@@ -158,6 +195,19 @@ const server = createServer(async (req, res) => {
     if (!text) return send(200, { ok: false, took, reason: "Nothing came back. Try again." });
     if (text === current.get(id)?.trim()) {
       return send(200, { ok: false, took, unchanged: true, reason: `Came back unchanged after ${took}s. Move a dial, or say what is wrong with it.` });
+    }
+
+    /* An edit wearing a rewrite's clothes. Reported here rather than shown as a choice, because
+       three versions that all sound like the source are not a choice and reading them to discover
+       that is the author's time. */
+    const shared = overlap(text, sample.text);
+    if (shared > 0.6) {
+      console.log(`  ${id}: came back ${Math.round(shared * 100)}% the original. Edited rather than rewritten.`);
+      return send(200, {
+        ok: false,
+        took,
+        reason: `That came back ${Math.round(shared * 100)}% identical to your original, which means it was edited rather than rewritten. Press it again, or say what should be different.`,
+      });
     }
     current.set(id, text);
     console.log(`  ${id}: rewritten in ${took}s`);
