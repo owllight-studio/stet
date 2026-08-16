@@ -2,6 +2,7 @@
 stet:
   state: draft
   author: agent
+  policy: refresh
 ---
 
 # Voice

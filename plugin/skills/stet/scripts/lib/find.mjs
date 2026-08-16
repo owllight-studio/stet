@@ -8,6 +8,7 @@
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, extname, relative, basename } from "node:path";
+import { matchesAny } from "./glob.mjs";
 
 const CONTENT_DIRS = ["content", "docs", "posts", "pages", "src/content", "_posts", "data/content"];
 const CONTENT_EXT = new Set([".md", ".mdx", ".mdoc", ".json", ".yaml", ".yml", ".html"]);
@@ -56,13 +57,19 @@ function walk(dir, root, out) {
 export function findContent(root = process.cwd()) {
   const cfg = config(root);
   if (cfg?.content?.length) {
-    const files = [];
-    for (const dir of cfg.content.map((p) => p.replace(/\/?\*\*.*$/, ""))) {
-      const full = join(root, dir);
-      if (existsSync(full) && statSync(full).isDirectory()) walk(full, root, files);
-      else if (existsSync(full)) files.push(relative(root, full));
+    // Walk the widest directory each glob could reach, then keep only what the glob really matches.
+    // Truncating a glob at its first wildcard and matching on the prefix is how a script living in
+    // a content directory came to be treated as content.
+    const found = [];
+    for (const glob of cfg.content) {
+      const base = glob.replace(/^\.\//, "").split(/[*?]/)[0].replace(/\/[^/]*$/, "").replace(/\/$/, "");
+      const start = base ? join(root, base) : root;
+      if (!existsSync(start)) continue;
+      if (statSync(start).isDirectory()) walk(start, root, found);
+      else found.push(relative(root, start));
     }
-    return { files: [...new Set(files)].sort(), guessed: false, roots: cfg.content };
+    const files = [...new Set(found)].filter((f) => matchesAny(f, cfg.content));
+    return { files: files.sort(), guessed: false, roots: cfg.content };
   }
 
   const roots = CONTENT_DIRS.filter((d) => existsSync(join(root, d)));

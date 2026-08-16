@@ -111,8 +111,13 @@ direction, which is a gap in the ownership model rather than a bug in the code.
 
 ## Status
 
-Early. The Establish group is built. Everything else is designed and not written yet.
-Being proved against a real site before it is recommended to anyone.
+Early, and honest about it.
+
+Built: the Establish group (`ingest`, `init`, `voice`, `ia`), the Authorship model, and the hook
+that enforces it. Designed and not written: everything else.
+
+Stet's own content is marked `draft`, not `approved`, because the author has directed it and not
+read it line by line. Marking it approved would be the exact failure the model exists to prevent.
 
 ## Licence
 

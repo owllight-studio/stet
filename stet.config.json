@@ -2,8 +2,8 @@
   "content": [
     "README.md",
     "VOICE.md",
-    "docs",
-    "plugin/skills/stet"
+    "docs/**/*.md",
+    "plugin/skills/stet/**/*.md"
   ],
   "format": "auto",
   "voice": "VOICE.md",

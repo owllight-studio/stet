@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \"${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/hook-before-edit.mjs\" ] || node \"${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/hook-before-edit.mjs\"",
+            "timeout": 5,
+            "statusMessage": "Checking who owns this"
+          }
+        ]
+      }
+    ]
+  }
+}
