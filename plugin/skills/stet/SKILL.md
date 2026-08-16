@@ -62,7 +62,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `ingest` | Establish | Read existing content, claim it, report what is there | [reference/ingest.md](reference/ingest.md) |
 | `outline` | Compose | Plan a piece before writing it | [reference/outline.md](reference/outline.md) |
 | `write` | Compose | Author in the voice, to the IA | [reference/write.md](reference/write.md) |
-| `expand` | Compose | A stub into a finished piece | reference/expand.md |
+| `expand` | Compose | A stub into a finished piece | [reference/expand.md](reference/expand.md) |
 | `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | reference/policy.md |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
