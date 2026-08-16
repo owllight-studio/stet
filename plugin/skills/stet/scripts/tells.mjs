@@ -44,19 +44,30 @@ for (const file of files) {
   } catch {
     continue;
   }
-  // Code is not prose and is allowed its own punctuation. Quoted text is skipped for a subtler
-  // reason, found by running this over Stet's own writing: a file that lists the tells has to name
-  // them, and naming one is not committing it. The first hit this checker ever produced was itself
-  // quoting "let's dive in" in a list of things never to write.
-  const prose = text
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/`[^`]*`/g, "")
-    .replace(/"[^"]{0,80}"/g, '""')
-    .replace(/\u201c[^\u201d]{0,80}\u201d/g, "");
+  // Naming a construction is not committing it, and this checker has now been fooled by that three
+  // times: a list of tells quoting "let's dive in", a voice preset banning "seamless", and a rule
+  // file demonstrating "not X, it is Y". Each fix was narrower than the problem.
+  //
+  // So the rule is general. Code, quoted text, and any section headed Never or Do not are exempt,
+  // because a section that exists to forbid something has to be able to say what it is. An explicit
+  // <!-- stet-allow --> exempts anything else, per line or for a whole file.
+  if (/<!--\s*stet-allow\s*-->/.test(text)) continue;
+
+  const stripBanSections = (t) =>
+    t.replace(/^#{1,6}\s*(never|do not|don't|avoid|banned)\b[\s\S]*?(?=^#{1,6}\s|$(?![\s\S]))/gim, "");
+
+  const prose = stripBanSections(
+    text
+      .replace(/```[\s\S]*?```/g, "")
+      .replace(/`[^`]*`/g, "")
+      .replace(/"[^"]{0,120}"/g, '""')
+      .replace(/\u201c[^\u201d]{0,120}\u201d/g, ""),
+  );
   const lines = prose.split("\n");
 
   const hits = [];
   lines.forEach((line, i) => {
+    if (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line)) return;
     for (const tell of TELLS) {
       tell.re.lastIndex = 0;
       const found = [...line.matchAll(tell.re)];
