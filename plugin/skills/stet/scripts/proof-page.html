@@ -41,6 +41,8 @@ header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; max-width: 
 .block.is-kept { background: linear-gradient(90deg, var(--wash), transparent 55%); }
 .block.is-edited { background: linear-gradient(90deg, rgba(30,122,82,.10), transparent 55%); }
 .block.is-queried { background: linear-gradient(90deg, rgba(192,57,43,.08), transparent 55%); }
+.block.is-rewritten { background: linear-gradient(90deg, rgba(44,109,158,.08), transparent 55%); }
+.block.is-rewritten .stamp { color: var(--pencil); }
 .block.busy .text, .block.busy .raw, .block.busy .actions { opacity: .45; }
 
 /* The working state draws the mark itself. On paper, stet is written by laying a row of dots under
@@ -152,9 +154,14 @@ button:disabled { opacity: .4; cursor: default; }
   margin-left: auto; background: var(--pencil); color: var(--paper); border-color: var(--pencil);
   padding: .5rem 1.1rem;
 }
-.finished { padding: 4rem 0; }
-.finished h2 { font-weight: 400; font-size: 1.5rem; margin: 0 0 .75rem; }
+.finished { padding: 4rem 0; max-width: 34rem; }
+.finished h2 { font-weight: 400; font-size: 1.6rem; margin: 0 0 1rem; }
 .finished p { color: var(--soft); }
+.tally { list-style: none; margin: 0 0 1.5rem; padding: 0; border-top: 1px solid var(--rule); }
+.tally li {
+  padding: .7rem 0; border-bottom: 1px solid var(--rule); color: var(--soft); font-size: .98rem;
+}
+.tally b { font-family: var(--mono); font-size: .9rem; color: var(--pencil); margin-right: .5rem; }
 </style>
 </head>
 <body>
@@ -198,6 +205,7 @@ function counts() {
     if (s.action === "keep") k++;
     if (s.action === "edit") e++;
     if (s.action === "query") q++;
+    if (s.action === "rewrite") e++;
   }
   document.getElementById("n-keep").textContent = k;
   document.getElementById("n-edit").textContent = e;
@@ -216,9 +224,11 @@ function paint(el, action) {
   el.classList.toggle("is-edited", action === "edit");
   el.classList.toggle("is-queried", action === "query");
   el.classList.toggle("decided", Boolean(action));
+  el.classList.toggle("is-rewritten", action === "rewrite");
   el.querySelector(".stamp").textContent =
     action === "keep" ? "stet"
     : action === "edit" ? "mine"
+    : action === "rewrite" ? "new"
     : action === "query" ? "retry"
     : `L${el.dataset.line}`;
   for (const b of el.querySelectorAll(".actions [data-action]")) {
@@ -395,18 +405,38 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
       if (el.querySelector(".raw")) el.querySelector(".raw").value = res.text;
       else el.querySelector(".text").innerHTML = toHtml(res.text);
       el.classList.add("changed");
-      // A rewrite is still the agent's work. The block goes back to undecided rather than being
-      // recorded as the author's, because they have not accepted it yet.
-      clear(b.id, el);
+      // Recorded, not discarded. A first version cleared the decision here, so a rewrite the author
+      // was happy with vanished when they pressed Done: the words were on screen and in nothing
+      // else. It is filed as a rewrite rather than an edit, which writes the text back but claims
+      // no sentences, because the agent wrote it and nobody has accepted it yet.
+      state.set(b.id, { id: b.id, action: "rewrite", text: res.text, note });
+      paint(el, "rewrite");
+      post("/api/decide", { id: b.id, action: "rewrite", text: res.text, note });
+      counts();
     });
   }
   counts();
 });
 
 document.getElementById("done").addEventListener("click", async () => {
-  await post("/api/done", {});
-  document.body.innerHTML =
-    '<div class="wrap finished"><h2>Done.</h2><p>Decisions are back in the terminal. You can close this tab.</p></div>';
+  const summary = await post("/api/done", {});
+  const line = (n, word) => (n ? `<li><b>${n}</b> ${word}</li>` : "");
+  const left = blocks.length - state.size;
+  // Say what was written, not just that the tab can be closed. The first version said nothing about
+  // what had happened, and an author who had spent twenty minutes on a page had no way to tell
+  // whether any of it survived.
+  document.body.innerHTML = `
+    <div class="wrap finished">
+      <h2>Applied.</h2>
+      <ul class="tally">
+        ${line(summary.kept, "saved and closed")}
+        ${line(summary.edited, "corrected by you, and those sentences are yours")}
+        ${line(summary.rewritten, "rewritten and written back, still open")}
+        ${line(summary.queries, "sent back to the terminal")}
+        ${line(left, "left alone, still draft")}
+      </ul>
+      <p>Written to disk. The same summary is in your terminal. You can close this tab.</p>
+    </div>`;
 });
 </script>
 </body>

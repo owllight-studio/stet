@@ -160,7 +160,14 @@ const server = createServer(async (req, res) => {
 
   if (req.url === "/api/done" && req.method === "POST") {
     done = true;
-    send(200, { ok: true });
+    const tally = { kept: 0, edited: 0, rewritten: 0, queries: 0 };
+    for (const d of decisions.values()) {
+      if (d.action === "keep") tally.kept++;
+      else if (d.action === "edit") tally.edited++;
+      else if (d.action === "rewrite") tally.rewritten++;
+      else if (d.action === "query") tally.queries++;
+    }
+    send(200, { ok: true, ...tally });
     setTimeout(() => server.close(), 150);
     return;
   }
@@ -194,48 +201,62 @@ for (const [id, decision] of decisions) {
 let kept = 0;
 let edited = 0;
 let claimed = 0;
+let rewritten = 0;
 const queries = [];
+const partial = [];
 
 for (const [file, list] of byFile) {
-  // Highest index first, so replacing one block cannot shift the index of another not yet applied.
-  const edits = list
-    .filter((d) => d.action === "edit" && typeof d.text === "string")
+  // Highest index first, so writing one block cannot shift the index of another not yet written.
+  const writes = list
+    .filter((d) => (d.action === "edit" || d.action === "rewrite") && typeof d.text === "string")
     .sort((a, b) => Number(b.id.split("#")[1]) - Number(a.id.split("#")[1]));
 
   const spans = [];
-  for (const edit of edits) {
-    const index = Number(edit.id.split("#")[1]);
+  for (const w of writes) {
+    const index = Number(w.id.split("#")[1]);
     const before = split(root, file).blocks[index]?.text ?? "";
-    // Only the sentences the author actually typed. A correction to one line does not make them
-    // the author of the paragraph around it, and recording it that way would be a lie the tool
-    // told on their behalf.
-    spans.push(...changed(before, edit.text));
-    replace(root, file, index, edit.text);
-    edited++;
+    // Only an author's edit claims sentences. A rewrite is still the agent's work: the words go in
+    // the file, and nobody owns them until somebody accepts them. Losing that distinction would
+    // have the tool record the agent's prose as the author's.
+    if (w.action === "edit") spans.push(...changed(before, w.text));
+    replace(root, file, index, w.text);
+    if (w.action === "edit") edited++;
+    else rewritten++;
   }
 
-  for (const d of list) {
-    if (d.action === "keep") kept++;
-    if (d.action === "query") queries.push({ id: d.id, note: d.note ?? "" });
-  }
+  const keeps = list.filter((d) => d.action === "keep").length;
+  kept += keeps;
+  for (const d of list) if (d.action === "query") queries.push({ id: d.id, note: d.note ?? "" });
 
   const meta = read(root, file) ?? {};
+  const next = { ...meta };
+
   if (spans.length) {
-    const owned = [...new Set([...(meta.owned ?? []), ...spans])];
+    next.owned = [...new Set([...(meta.owned ?? []), ...spans])];
     claimed += spans.length;
-    // The file's own state does not change. Ownership is per sentence, and the rest of the file is
-    // still whatever it was.
-    write(root, file, { ...meta, owned });
-  } else if (list.some((d) => d.action === "keep") && !list.some((d) => d.action === "query")) {
-    write(root, file, { ...meta, state: "approved", author: meta.author ?? "agent" });
   }
+
+  // A file becomes approved only when every block on the sheet was saved. Approving a whole file
+  // because one paragraph in it was kept would close blocks nobody read, which is the exact
+  // over-claiming this tool exists to prevent. It did that once, here, to its own README.
+  const onSheet = drafts.filter((d) => d.file === file).length;
+  if (keeps === onSheet && !queries.length && !writes.length) {
+    next.state = "approved";
+    next.author = meta.author ?? "agent";
+  } else if (keeps > 0) {
+    partial.push({ file, keeps, onSheet });
+  }
+
+  write(root, file, next);
 }
 
 const left = drafts.length - decisions.size;
+const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 console.log("\nDECISIONS");
 console.log(`  kept     ${kept}`);
-console.log(`  edited   ${edited} blocks, ${claimed} sentences now yours`);
+console.log(`  edited   ${plural(edited, "block")}, ${plural(claimed, "sentence")} now yours`);
+console.log(`  rewritten ${plural(rewritten, "block")} written back, still draft`);
 console.log(`  queried  ${queries.length}`);
 console.log(`  left     ${left}   (still draft. Silence is not approval.)`);
 
@@ -243,6 +264,12 @@ if (claimed) {
   console.log("\nThose sentences are the author's now and closed to you permanently.");
   console.log("Character for character. Do not tidy them, do not make them consistent with the");
   console.log("voice, do not fix a typo in them. Everything around them is still yours.");
+}
+
+if (partial.length) {
+  console.log("\nSaved, but not enough to close a file. A file is approved only when every block on");
+  console.log("the sheet was saved, so these stay draft and the rest of their blocks are still open:");
+  for (const p of partial) console.log(`  ${p.file}  ${p.keeps} of ${p.onSheet} saved`);
 }
 
 if (queries.length) {
