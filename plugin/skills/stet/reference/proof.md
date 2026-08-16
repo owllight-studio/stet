@@ -28,6 +28,12 @@ they wrote things they never touched.
 they can keep working without leaving the page. The block goes back to undecided, because a rewrite
 is still the agent's work until somebody accepts it.
 
+**Save and Publish are different acts.** Save applies only what the author decided and leaves
+everything else a draft, because silence is not approval. Publish approves everything they did not
+send back, because pressing a button that says Publish is exactly what approval looks like. A block
+they queried is never published: they asked for it to change, so they cannot have meant to approve
+it in the same breath.
+
 **Every decision can be taken back.** Clicking an action again clears it, and Revert restores the
 block exactly as it arrived and drops the decision with it. A choice you cannot undo is a choice
 nobody makes freely, and a review surface people are wary of is one nobody finishes.

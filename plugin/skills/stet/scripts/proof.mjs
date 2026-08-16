@@ -58,6 +58,7 @@ if (!drafts.length) {
 const page = readFileSync(join(here, "proof-page.html"), "utf8");
 const decisions = new Map();
 let done = false;
+let publishing = false;
 
 const server = createServer(async (req, res) => {
   const send = (code, body, type = "application/json") => {
@@ -159,7 +160,29 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.url === "/api/done" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) body += chunk;
+    publishing = Boolean(JSON.parse(body || "{}").publish);
     done = true;
+
+    /**
+     * Publish approves everything on the sheet that was not sent back.
+     *
+     * This is not the over-claiming that saving one block used to do. That closed blocks the author
+     * never opened, on their behalf and without being asked. Pressing Publish is being asked: it is
+     * a deliberate act that says all of this is approved. Silence is not approval; a button press
+     * is exactly what approval looks like.
+     *
+     * A block the author queried is excluded. They asked for it to change, so they cannot have
+     * meant to approve it in the same breath.
+     */
+    if (publishing) {
+      for (const block of drafts) {
+        const existing = decisions.get(block.id);
+        if (existing && existing.action !== "keep") continue;
+        decisions.set(block.id, { action: "keep", text: block.text });
+      }
+    }
     const tally = { kept: 0, edited: 0, rewritten: 0, queries: 0 };
     for (const d of decisions.values()) {
       if (d.action === "keep") tally.kept++;
@@ -167,7 +190,7 @@ const server = createServer(async (req, res) => {
       else if (d.action === "rewrite") tally.rewritten++;
       else if (d.action === "query") tally.queries++;
     }
-    send(200, { ok: true, ...tally });
+    send(200, { ok: true, published: publishing, ...tally });
     setTimeout(() => server.close(), 150);
     return;
   }
@@ -240,7 +263,9 @@ for (const [file, list] of byFile) {
   // because one paragraph in it was kept would close blocks nobody read, which is the exact
   // over-claiming this tool exists to prevent. It did that once, here, to its own README.
   const onSheet = drafts.filter((d) => d.file === file).length;
-  if (keeps === onSheet && !queries.length && !writes.length) {
+  // Publishing closes the file even where blocks were rewritten on the way, because the author
+  // approved what they were looking at, which included the rewrites.
+  if ((keeps === onSheet && !queries.length && !writes.length) || (publishing && !queries.length)) {
     next.state = "approved";
     next.author = meta.author ?? "agent";
   } else if (keeps > 0) {
@@ -253,18 +278,16 @@ for (const [file, list] of byFile) {
 const left = drafts.length - decisions.size;
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
-console.log("\nDECISIONS");
-console.log(`  kept     ${kept}`);
-console.log(`  edited   ${plural(edited, "block")}, ${plural(claimed, "sentence")} now yours`);
-console.log(`  rewritten ${plural(rewritten, "block")} written back, still draft`);
-console.log(`  queried  ${queries.length}`);
-console.log(`  left     ${left}   (still draft. Silence is not approval.)`);
-
-if (claimed) {
-  console.log("\nThose sentences are the author's now and closed to you permanently.");
-  console.log("Character for character. Do not tidy them, do not make them consistent with the");
-  console.log("voice, do not fix a typo in them. Everything around them is still yours.");
-}
+console.log(publishing ? "\nPUBLISHED" : "\nSAVED");
+// Only the lines that happened. A summary padded with zeroes reads as a form rather than a report,
+// and the one line that matters gets lost among four that do not.
+const say = (n, text) => n && console.log(`  ${String(n).padStart(4)}  ${text}`);
+say(kept, publishing ? "approved and closed" : "saved and closed");
+say(edited, `corrected by you${claimed ? `, claiming ${plural(claimed, "sentence")}` : ""}`);
+say(rewritten, "rewritten and written back");
+say(queries.length, "sent back, still draft");
+if (!publishing) say(left, "left alone, still draft. Silence is not approval.");
+if (!kept && !edited && !rewritten && !queries.length) console.log("  nothing was decided. Nothing changed.");
 
 if (partial.length) {
   console.log("\nSaved, but not enough to close a file. A file is approved only when every block on");

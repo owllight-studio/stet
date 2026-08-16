@@ -30,6 +30,7 @@ header { padding: 2rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
 .mark { font-family: var(--mono); font-size: .95rem; letter-spacing: .22em; text-transform: uppercase; }
 .mark b { font-weight: 400; border-bottom: 2px solid var(--pencil); padding-bottom: 2px; }
 header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; max-width: 44rem; }
+header p b { font-weight: 400; color: var(--ink); border-bottom: 1px solid var(--pencil); }
 
 .file {
   font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
@@ -150,8 +151,9 @@ button:disabled { opacity: .4; cursor: default; }
   font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; color: var(--soft);
 }
 .bar b { font-weight: 400; color: var(--ink); }
+#save { margin-left: auto; }
 .bar .done {
-  margin-left: auto; background: var(--pencil); color: var(--paper); border-color: var(--pencil);
+  background: var(--pencil); color: var(--paper); border-color: var(--pencil);
   padding: .5rem 1.1rem;
 }
 .finished { padding: 4rem 0; max-width: 34rem; }
@@ -184,7 +186,8 @@ button:disabled { opacity: .4; cursor: default; }
     <span><b id="n-edit">0</b> corrected</span>
     <span><b id="n-query">0</b> retried</span>
     <span><b id="n-left">0</b> left</span>
-    <button class="done" id="done">Done</button>
+    <button id="save">Save</button>
+    <button class="done" id="publish">Publish</button>
   </div>
 </div>
 
@@ -210,7 +213,12 @@ function counts() {
   document.getElementById("n-keep").textContent = k;
   document.getElementById("n-edit").textContent = e;
   document.getElementById("n-query").textContent = q;
-  document.getElementById("n-left").textContent = blocks.length - state.size;
+  const left = blocks.length - state.size;
+  document.getElementById("n-left").textContent = left;
+  const publish = document.getElementById("publish");
+  // The count is on the button rather than behind a confirmation dialog. Approval should be
+  // deliberate, and knowing what you are approving is what makes it deliberate.
+  if (publish) publish.textContent = left ? `Publish all ${blocks.length}` : "Publish";
 }
 
 /** Whatever the block currently says, as Markdown, whichever editor it is using. */
@@ -418,8 +426,8 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
   counts();
 });
 
-document.getElementById("done").addEventListener("click", async () => {
-  const summary = await post("/api/done", {});
+async function finish(publish) {
+  const summary = await post("/api/done", { publish });
   const line = (n, word) => (n ? `<li><b>${n}</b> ${word}</li>` : "");
   const left = blocks.length - state.size;
   // Say what was written, not just that the tab can be closed. The first version said nothing about
@@ -427,17 +435,24 @@ document.getElementById("done").addEventListener("click", async () => {
   // whether any of it survived.
   document.body.innerHTML = `
     <div class="wrap finished">
-      <h2>Applied.</h2>
+      <h2>${publish ? "Published." : "Saved."}</h2>
       <ul class="tally">
-        ${line(summary.kept, "saved and closed")}
+        ${line(summary.kept, publish ? "approved and closed" : "saved and closed")}
         ${line(summary.edited, "corrected by you, and those sentences are yours")}
-        ${line(summary.rewritten, "rewritten and written back, still open")}
-        ${line(summary.queries, "sent back to the terminal")}
-        ${line(left, "left alone, still draft")}
+        ${line(summary.rewritten, "rewritten and written back")}
+        ${line(summary.queries, "sent back to the terminal, still draft")}
+        ${publish ? "" : line(left, "left alone, still draft")}
       </ul>
-      <p>Written to disk. The same summary is in your terminal. You can close this tab.</p>
+      <p>${
+        publish
+          ? "Everything you did not send back is approved and closed to the agent."
+          : "Only what you decided was applied. Everything else is still a draft and will be on the next sheet."
+      } The same summary is in your terminal. You can close this tab.</p>
     </div>`;
-});
+}
+
+document.getElementById("save").addEventListener("click", () => finish(false));
+document.getElementById("publish").addEventListener("click", () => finish(true));
 </script>
 </body>
 </html>
