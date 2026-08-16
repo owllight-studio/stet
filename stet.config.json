@@ -3,9 +3,10 @@
     "README.md",
     "VOICE.md",
     "docs/**/*.md",
-    "plugin/skills/stet/**/*.md"
+    "plugin/skills/stet/**/*.md",
+    "site/index.html"
   ],
   "format": "auto",
   "voice": "VOICE.md",
-  "note": "Stet's own content, governed by Stet. The skill and reference files are content: they are read by an agent and their wording decides what it does, which makes them the highest-stakes prose in the project."
+  "note": "Stet's own content, governed by Stet. The skill and reference files are content: they are read by an agent and their wording decides what it does, which makes them the highest-stakes prose in the project. The site is here too, because a tool that governs everybody else's marketing copy and not its own is not being used."
 }

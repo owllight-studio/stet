@@ -112,6 +112,9 @@ export function read(root, file) {
  * ingest nobody runs twice, so this appends to an existing frontmatter block, creates one only when
  * there is none, and never touches a byte of the body.
  */
+/** Formats that genuinely carry front matter. Everything else gets a sidecar. */
+const FRONTMATTER_OK = new Set([".md", ".markdown", ".mdx"]);
+
 export function write(root, file, meta) {
   const full = join(root, file);
   const text = readFileSync(full, "utf8");
@@ -122,6 +125,14 @@ export function write(root, file, meta) {
     const indent = text.match(/\n(\s+)"/)?.[1]?.length ?? 2;
     writeFileSync(full, JSON.stringify({ ...doc, stet: meta }, null, indent) + "\n");
     return "json";
+  }
+
+  /* A format that does not carry front matter gets a sidecar rather than a YAML block bolted to the
+     top of it. Writing `---` above a doctype produces a file the browser will not render, and the
+     contract of this function is that it changes nothing else in the file. */
+  if (!FRONTMATTER_OK.has(extname(file))) {
+    writeFileSync(join(root, `${file}.stet.yaml`), `${block}\n`);
+    return "sidecar";
   }
 
   const fm = text.match(FRONTMATTER);

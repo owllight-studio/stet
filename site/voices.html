@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stet voices</title>
-<meta name="description" content="16 measured writing registers, each counted off real texts, each carrying the specific ways imitation of it gives itself away.">
+<meta name="description" content="17 measured writing registers, each counted off real texts, each carrying the specific ways imitation of it gives itself away.">
 <meta property="og:title" content="Stet voices">
-<meta property="og:description" content="16 writing registers, measured off real texts rather than described from memory.">
+<meta property="og:description" content="17 writing registers, measured off real texts rather than described from memory.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='25' x='2' font-size='22' font-family='monospace' fill='%232c6d9e'>s</text></svg>">
 <link rel="stylesheet" href="stet.css">
@@ -29,7 +29,7 @@
   <div class="hero hero-voices">
     <h1 class="measure">Writing that does not read as written by a machine.</h1>
     <p class="lede measure">
-      That is the whole job. 16 registers, each one counted off the actual texts rather
+      That is the whole job. 17 registers, each one counted off the actual texts rather
       than described from memory, and each carrying the specific ways an imitation of it gives itself
       away.
     </p>
@@ -225,9 +225,26 @@
   </section>
 
   <section id="genre">
-    <p class="eyebrow">Genre &middot; 3 voices</p>
+    <p class="eyebrow">Genre &middot; 4 voices</p>
     <h2 class="measure">Fiction registers, for people whose product has a world in it.</h2>
     <div class="voices">
+    <article class="voice" id="epic-fantasy">
+      <header>
+        <h3>Epic Fantasy</h3>
+        <p class="desc">Plainer and shorter than anyone believes. The elevation is rhythm and word order, never vocabulary.</p>
+      </header>
+      <dl class="measured"><div><dt>median sentence</dt><dd>14</dd></div><div><dt>mean sentence</dt><dd>17.3</dd></div><div><dt>under 6 words</dt><dd>37%</dd></div><div><dt>germanicShare</dt><dd>0.766</dd></div><div><dt>latinateSuffixesPerThousand</dt><dd>5.9</dd></div><div><dt>thouTokens</dt><dd>80</dd></div></dl>
+      <p class="onerule"><b>A plain language is the noblest of all.</b> Le Guin's line, and the measurements agree with her.</p>
+      
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>The constructions everybody imitates are the ones he does not use</li><li>The inversion he does use is not archaic at all</li><li>Sentence-initial &quot;For&quot; is the genuine signature</li><li>Prefer the Germanic word. Do not ban the Latinate one.</li><li>The lexical stratum says which culture is speaking</li><li>Register tracks the thread, not the page number</li><li>One consciousness per chapter, and the order is a separate pass</li><li>Lewis's five rules, which are the closest thing the genre has to a house style guide</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never &quot;Then said he.&quot;</b> Once in 477,518 words.</li><li><b>Never <i>thou</i> as decoration.</b> Eighty tokens in the whole novel.</li><li><b>Never <i>ichor</i>.</b> Once in 172,566 words of Eddison; zero across Dunsany, Morris and Malory. Zero in roughly 640,000 words of the four masters combined.</li><li><b>Never <i>tush, pish, zounds, marry</i>.</b> Zero in LOTR. Tolkien named these four as the definition of the vice and then never used one.</li><li><b>Never <i>eldritch, tenebrous, smaragd, chalcedony</i>.</b> Five occurrences across 640,000 words, all in Eddison.</li><li><b>Never long sentences as a proxy for grandeur.</b> Median 14 words; 36.5 percent at ten or fewer.</li><li><b>Never a Latinate abstract noun where the register is heroic.</b> The condemned passages score 47 Latinate suffixes per 1,000; the praised ones score 0.</li><li><b>Never head-hop.</b></li><li><b>Never an adjective that tells the reader how to feel.</b></li><li><b>Never vague scenery.</b> Le Guin's specific charge against the flat style: &quot;the rocks, the wind, the trees are not there, are not felt; the scenery is cardboard, or plastic.&quot;</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>And here is the mechanism in a single number.</li><li>The &quot;ye olde&quot; problem.</li><li>The thesaurus problem.</li><li>The map-and-appendix problem.</li><li>The tonal-coherence problem.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Tolkien (LOTR, 477,518 words), Dunsany, Eddison, Morris, Malory, Le Guin's &quot;From Elfland to Poughkeepsie&quot;, Lewis's five rules, Martin's POV structure, Clarke, Pratchett, Fowler on Wardour Street English</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/epic-fantasy.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
     <article class="voice" id="hard-sf">
       <header>
         <h3>Hard SF</h3>
@@ -356,11 +373,11 @@
   </section>
 
   <section id="tells">
-    <p class="eyebrow">Cross-cutting &middot; 72 named failures</p>
+    <p class="eyebrow">Cross-cutting &middot; 77 named failures</p>
     <h2 class="measure">Read together, the failure modes are one catalogue.</h2>
     <p class="measure">
       Every voice file ends by naming how imitation of it fails. Collected out of their contexts,
-      they stop being notes on 16 registers and start being a list of the things
+      they stop being notes on 17 registers and start being a list of the things
       generated prose does. Each links back to the voice that measured it.
     </p>
     <ul class="telldex">
@@ -368,6 +385,7 @@
       <li><span>&quot;Here we see&quot; in the first sentence.</span> <a href="#nature-documentary">Nature Documentary</a></li>
       <li><span>&quot;Not X but Y&quot;, saturated.</span> <a href="#the-argument">The Argument</a></li>
       <li><span>Adopting the subject's own name for the thing.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>And here is the mechanism in a single number.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
       <li><span>And the failure underneath all of them:</span> <a href="#the-locked-room">The Locked Room</a></li>
       <li><span>Anthropomorphising with intent rather than with grammar.</span> <a href="#nature-documentary">Nature Documentary</a></li>
       <li><span>Applied where nothing changed.</span> <a href="#patch-notes">Patch Notes</a></li>
@@ -401,6 +419,7 @@
       <li><span>Simile inflation, twenty to forty times over.</span> <a href="#noir">Noir</a></li>
       <li><span>Specificity inverts into invented precision.</span> <a href="#direct-response">Direct Response</a></li>
       <li><span>Technobabble built wrong, not merely invented.</span> <a href="#the-bridge">The Bridge</a></li>
+      <li><span>The &quot;ye olde&quot; problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
       <li><span>The analogy that is never taken away.</span> <a href="#the-teacher">The Teacher</a></li>
       <li><span>The aphorism with no referent.</span> <a href="#the-argument">The Argument</a></li>
       <li><span>The collective pronoun misused.</span> <a href="#the-teacher">The Teacher</a></li>
@@ -411,6 +430,7 @@
       <li><span>the imitation is imitating other imitations</span> <a href="#the-bridge">The Bridge</a></li>
       <li><span>The joke replaces the fact.</span> <a href="#patch-notes">Patch Notes</a></li>
       <li><span>The lede that summarises rather than reports.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
+      <li><span>The map-and-appendix problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
       <li><span>The over-clued mystery.</span> <a href="#the-locked-room">The Locked Room</a></li>
       <li><span>The personality is templated.</span> <a href="#direct-response">Direct Response</a></li>
       <li><span>The proof order reverses</span> <a href="#direct-response">Direct Response</a></li>
@@ -423,6 +443,8 @@
       <li><span>The summary ending in disguise.</span> <a href="#the-argument">The Argument</a></li>
       <li><span>The sympathetic attribution verb.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
       <li><span>The tech line as the resolution.</span> <a href="#the-bridge">The Bridge</a></li>
+      <li><span>The thesaurus problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
+      <li><span>The tonal-coherence problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
       <li><span>The unattributed background paragraph.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
       <li><span>The unearned &quot;we&quot;.</span> <a href="#the-argument">The Argument</a></li>
       <li><span>The unverifiable superlative, unattributed.</span> <a href="#the-broadsheet">The Broadsheet</a></li>

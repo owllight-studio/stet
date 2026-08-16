@@ -39,10 +39,15 @@ header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
 /* What the research found. On the page because a dial the author cannot justify is a dial they will
    not move, and because the whole promise is that this was counted rather than guessed. */
 .findings { margin: 1.5rem 0 0; padding: 1rem 1.2rem; background: var(--edge); border-left: 3px solid var(--pencil); }
-.findings h2 {
+.findings[hidden] { display: none; }
+.findings summary {
   font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--faint); font-weight: 400; margin: 0 0 .55rem;
+  color: var(--pencil); cursor: pointer; list-style: none;
 }
+.findings summary::-webkit-details-marker { display: none; }
+.findings summary::after { content: " \2013 read them"; color: var(--faint); }
+.findings[open] summary::after { content: " \2013 hide"; }
+.findings[open] summary { margin-bottom: .55rem; }
 .findings ul { margin: 0; padding: 0; list-style: none; }
 .findings li { font-size: .9rem; color: var(--soft); padding: .2rem 0 .2rem .9rem; position: relative; }
 .findings li::before { content: ""; position: absolute; left: 0; top: .78em; width: .4rem; height: 1px; background: var(--pencil); }
@@ -176,9 +181,27 @@ button:disabled { opacity: .4; cursor: default; }
   border-top: 1px solid var(--rule); padding: .85rem 1.5rem;
 }
 .barin { max-width: 58rem; margin: 0 auto; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+.barin[hidden] { display: none; }
 .count { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; color: var(--faint); }
 .count b { color: var(--ink); font-weight: 400; }
 .blend { flex: 1; min-width: 14rem; }
+
+/* Choosing the voice and choosing what it rewrites is one decision, so it is one bar. The counts
+   are real: agreeing to rewrite 28 files should mean having seen the number 28. */
+.scoping { margin-top: .7rem; padding-top: .7rem; border-top: 1px solid var(--rule); }
+.scopes { display: flex; gap: .5rem; flex-wrap: wrap; flex: 1; }
+.scope {
+  border: 1px solid var(--rule); border-radius: 2px; padding: .35rem .7rem; cursor: pointer;
+  background: transparent; text-align: left; font-family: var(--serif); text-transform: none;
+  letter-spacing: 0; font-size: .88rem; color: var(--soft);
+}
+.scope:hover { border-color: var(--pencil); color: var(--ink); }
+.scope.on { border-color: var(--pencil); background: var(--wash); color: var(--ink); }
+.scope b { display: block; font-weight: 400; }
+.scope span {
+  display: block; font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--faint); margin-top: .1rem;
+}
 .finished { text-align: center; padding: 5rem 1.5rem; }
 .finished p { color: var(--soft); max-width: 34rem; margin: 0 auto; }
 </style>
@@ -197,20 +220,20 @@ button:disabled { opacity: .4; cursor: default; }
       gets rewritten in about ten seconds and the changes are marked. You can also just type over any
       of them: anything you write by hand stays yours.
     </p>
-    <div class="findings" id="findings" hidden>
-      <h2>What we found out about this voice</h2>
+    <details class="findings" id="findings" hidden>
+      <summary><span id="findcount"></span> things we found out by going and reading the actual writing</summary>
       <ul id="findlist"></ul>
-    </div>
+    </details>
   </header>
 
   <div class="dials" id="dials" hidden>
-    <h2>Turn these up or down, then send one back</h2>
+    <h2>Move these, then send a version back to be rewritten</h2>
     <div class="axes" id="axes"></div>
     <button class="rollall" id="rollall">Rewrite all three with these settings</button>
   </div>
 
   <div class="origin">
-    <p class="tag" id="origintag">Your writing now</p>
+    <p class="tag" id="origintag">What is on your site now</p>
     <div class="stats" id="m-origin"></div>
   <div class="body" id="origin"></div>
   </div>
@@ -222,7 +245,12 @@ button:disabled { opacity: .4; cursor: default; }
   <div class="barin">
     <span class="count" id="count">Pick one to finish</span>
     <input class="note blend" id="blend" placeholder="Anything you liked in the ones you did not pick">
-    <button class="primary" id="done" disabled>Write this voice down</button>
+    <button class="primary" id="done" disabled>Lock this in</button>
+  </div>
+  <div class="barin scoping" id="scoping" hidden>
+    <span class="count">Apply it to</span>
+    <div class="scopes" id="scopes"></div>
+    <button class="primary" id="confirm">Confirm</button>
   </div>
 </div>
 
@@ -439,20 +467,52 @@ $("rollall").addEventListener("click", async () => {
   }
 });
 
-$("done").addEventListener("click", async () => {
+/* Locking in reveals the scope choice rather than finishing, because a voice nobody can apply is
+   not a decision, it is a preference. */
+let scope = null;
+$("done").addEventListener("click", () => {
   if (!chosen) return;
   $("done").disabled = true;
-  await post("/api/done", { id: chosen, note: document.querySelector(`#var-${chosen} [data-act="note"]`).value.trim(), blend: $("blend").value.trim() });
+  $("blend").disabled = true;
+  $("scoping").hidden = false;
+  $("scopes").innerHTML = sheet.scopes
+    .map((s, i) => `<button class="scope${i === 0 ? " on" : ""}" data-scope="${s.key}"><b>${s.label}</b><span>${s.detail}</span></button>`)
+    .join("");
+  scope = sheet.scopes[0].key;
+  $("scopes").addEventListener("click", (e) => {
+    const b = e.target.closest(".scope");
+    if (!b) return;
+    scope = b.dataset.scope;
+    for (const el of document.querySelectorAll(".scope")) el.classList.toggle("on", el === b);
+  });
+  $("scoping").scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+$("confirm").addEventListener("click", async () => {
+  $("confirm").disabled = true;
+  await post("/api/done", {
+    id: chosen,
+    note: document.querySelector(`#var-${chosen} [data-act="note"]`).value.trim(),
+    blend: $("blend").value.trim(),
+    scope,
+  });
   const v = sheet.variants.find((x) => x.id === chosen);
+  const s = sheet.scopes.find((x) => x.key === scope);
   $("bar").remove();
   $("wrap").innerHTML = `
     <div class="finished">
       <div class="mark"><b>stet</b></div>
       <p style="margin-top:1.5rem">
-        <b>${v.label}</b> it is. Everything you saw went back, including the ones you turned down.
-        What you said no to is as useful as what you kept.
+        <b>${v.label}</b> it is, applied to <b>${s.label.toLowerCase()}</b> (${s.detail}).
       </p>
-      <p style="margin-top:1rem">Go back to the terminal. Close this tab whenever.</p>
+      <p style="margin-top:1rem">
+        Everything you saw went back, including the ones you turned down. What you said no to is as
+        useful as what you kept.
+      </p>
+      <p style="margin-top:1rem">
+        The voice gets written down, then the rewriting happens, then it comes back to you on a proof
+        sheet so you can read it before any of it is final. Go back to the terminal.
+      </p>
     </div>`;
 });
 
@@ -465,6 +525,7 @@ fetch("/api/sheet")
     $("persona").textContent = sheet.persona;
     if (sheet.findings?.length) {
       $("findings").hidden = false;
+      $("findcount").textContent = sheet.findings.length;
       $("findlist").innerHTML = sheet.findings.map((f) => `<li>${f}</li>`).join("");
     }
     if (sheet.sample?.file) $("origintag").textContent = `The passage as it stands · ${sheet.sample.file}`;

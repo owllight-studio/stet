@@ -30,7 +30,7 @@ const TELLS = [
   { id: "hedge-stack", re: /\b(quite|rather|somewhat|fairly|relatively)\s+\w+\s+(and|but)\s+(quite|rather|somewhat|fairly|relatively)\b/gi, say: "stacked hedges." },
   { id: "in-conclusion", re: /^\s*(in conclusion|to summarize|to sum up|in summary|overall,)/gim, say: "a summary of something the reader just read." },
   { id: "not-only", re: /\bnot only\b[^.]{0,60}\bbut also\b/gi, say: '"not only, but also". Two sentences.' },
-  { id: "exclamation", re: /!(?!=)/g, say: "exclamation mark." },
+  { id: "exclamation", re: /(?<!<)!(?!=)/g, say: "exclamation mark." },
 ];
 
 const root = process.cwd();

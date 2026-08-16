@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
+import { findContent, words } from "./lib/find.mjs";
 
 const root = process.cwd();
 const here = dirname(fileURLToPath(import.meta.url));
@@ -52,6 +53,34 @@ if (!sample.text) {
 const page = readFileSync(join(here, "voice-proof-page.html"), "utf8");
 
 /**
+ * Where the chosen voice may be applied.
+ *
+ * Three real scopes with real counts, because "the entire site" means nothing until it says how
+ * many files and how many words that is. An author agreeing to rewrite 28 files should have seen
+ * the number 28.
+ */
+function scopes() {
+  const all = findContent(root).files;
+  const page = sample.file ? all.find((f) => sample.file.startsWith(f) || f === sample.file) : null;
+  const count = (files) => files.reduce((n, f) => n + (words(root, f) ?? 0), 0);
+
+  const out = [
+    { key: "passage", label: "Just this passage", detail: `${sample.text.split(/\s+/).length} words`, files: [] },
+  ];
+  if (page) {
+    out.push({ key: "page", label: `This page`, detail: `${page}, ${count([page]).toLocaleString()} words`, files: [page] });
+  }
+  out.push({
+    key: "site",
+    label: "Everything",
+    detail: `${all.length} files, ${count(all).toLocaleString()} words`,
+    files: all,
+  });
+  return out;
+}
+const SCOPES = scopes();
+
+/**
  * The bans that survive a change of voice.
  *
  * Exploring a new voice is not licence to break the house rules, and the ones written as Never are
@@ -72,6 +101,7 @@ const notes = new Map();
 let dials = Object.fromEntries(axes.map((a) => [a.key, a.value ?? a.default ?? 50]));
 let chosen = null;
 let done = false;
+let applyTo = null;
 
 /**
  * Write one variant, at the current dial settings.
@@ -172,6 +202,7 @@ const server = createServer(async (req, res) => {
       sample,
       axes,
       dials,
+      scopes: SCOPES.map(({ key, label, detail }) => ({ key, label, detail })),
       variants: variants.map((v) => ({ ...v, text: current.get(v.id) })),
     });
   }
@@ -228,14 +259,16 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.url === "/api/done" && req.method === "POST") {
-    const { id, note, blend } = await read();
+    const { id, note, blend, scope } = await read();
     if (id) chosen = { id, note: note ?? "" };
     done = true;
+    applyTo = SCOPES.find((s) => s.key === scope) ?? SCOPES[0];
 
     const picked = variants.find((v) => v.id === chosen?.id);
     const out = {
       persona,
       dials,
+      apply: { scope: applyTo.key, label: applyTo.label, detail: applyTo.detail, files: applyTo.files },
       chosen: picked ? { id: picked.id, label: picked.label, brief: picked.brief, text: current.get(picked.id) } : null,
       blend: blend ?? "",
       note: chosen?.note ?? "",
@@ -280,4 +313,13 @@ if (picked) {
 }
 for (const a of axes) console.log(`  ${a.label.padEnd(24)} ${dials[a.key]}`);
 if (chosen?.note) console.log(`\nThey said: ${chosen.note}`);
-console.log(`\nWritten to ${CHOICE}. Turn it into VOICE.md, with rules and counter-examples.`);
+
+console.log(`\nApply to: ${applyTo?.label} (${applyTo?.detail})`);
+if (applyTo?.files?.length) {
+  for (const f of applyTo.files.slice(0, 12)) console.log(`  ${f}`);
+  if (applyTo.files.length > 12) console.log(`  and ${applyTo.files.length - 12} more`);
+}
+
+console.log(`\nWritten to ${CHOICE}. Two things to do with it, in order:`);
+console.log("  1. Write VOICE.md from the choice, with rules and counter-examples.");
+console.log("  2. Rewrite the files above through it, then run proof.mjs so they can be read.");
