@@ -2,6 +2,7 @@
 name: Hard SF
 group: genre
 description: The world arrives sideways, never explained. Strange words at real density, mostly real.
+feeling: Wonder, delivered sideways and never announced.
 measured:
   sentenceMedian: 15
   sentenceMean: 16
@@ -44,6 +45,17 @@ And it names the failures. The **infodump** is a "large chunk of indigestible ex
 also called an expository lump. **"As You Know Bob"** is "a pernicious form of info-dump through
 dialogue, in which characters tell each other things they already know, for the sake of getting the
 reader up-to-speed."
+
+## The feeling, and how it gets there
+
+**Wonder, delivered sideways and never announced.**
+
+"The door dilated" carries an entire engineering culture in three words and does not pause to be
+impressed with itself. The feeling arrives because the reader assembles it, which is what incluing
+is for.
+
+Clarke's evenness is not coldness. It is a survey being conducted by somebody who has decided the
+object deserves to be described accurately, and the restraint is what makes the last line land.
 
 ## Rules
 

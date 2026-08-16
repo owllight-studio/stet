@@ -177,6 +177,7 @@ function card(v) {
       <header>
         <h3>${esc(v.name)}</h3>
         <p class="desc">${inline(v.description ?? "")}</p>
+        ${v.feeling ? `<p class="feeling"><span>The feeling</span> ${inline(v.feeling)}</p>` : ""}
       </header>
       ${strip}
       ${v.oneRule ? `<p class="onerule">${v.oneRule}</p>` : ""}
@@ -218,6 +219,7 @@ const voices = readdirSync(VOICES)
       description: fm.description ?? "",
       sources: fm.sources ?? "",
       measured: fm.measured ?? {},
+      feeling: fm.feeling ?? "",
       oneRule: lead(section(text, "The one rule")),
       rules: ruleNames(rulesBody),
       never: bullets(section(text, "Never")),
@@ -363,6 +365,14 @@ writeFileSync(join(here, "voices.html"), html);
 console.log(
   `voices.html: ${voices.length} voices, ${byGroup.length} groups, ${allTells.length} tells`
 );
+
+/* A register with no stated feeling is a register nobody can use. The rules describe how something
+   lands, and without saying what is supposed to land they read as a list of prohibitions. */
+const feelingless = voices.filter((v) => !v.feeling);
+if (feelingless.length) {
+  console.error(`no feeling stated: ${feelingless.map((v) => v.slug).join(", ")}`);
+  process.exit(1);
+}
 
 /* Two different gaps, and conflating them libels a researched file. No `sources` means nobody
    counted it. Sources but no tells means it was counted and never adversarially read. Both are real

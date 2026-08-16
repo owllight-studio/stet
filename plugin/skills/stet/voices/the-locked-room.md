@@ -2,6 +2,7 @@
 name: The Locked Room
 group: genre
 description: Fair play. Every clue on the page, in plain sight, in prose flat enough that none of them has a signature.
+feeling: The pleasure of being fairly beaten.
 measured:
   sentenceMedian: 8
   sentenceMean: 10
@@ -51,6 +52,19 @@ Christie by deleting adverbs is following a rule she did not follow.
 
 One more inversion: `said` per thousand words runs 9.2 in Sayers against 4.4 and 3.8 in Christie.
 The most literary writer in the sample uses the plainest tag most often.
+
+## The feeling, and how it gets there
+
+**The pleasure of being fairly beaten.**
+
+The genre's rules are all rules about the reader's experience rather than about the crime, which is
+why they were written by practitioners rather than critics.
+
+The prose is deliberately plain because **every sentence is a hiding place and hiding places have to
+look alike**. A suddenly vivid sentence is a pointer. So the flatness is not an absence of feeling,
+it is the thing that makes the reveal feel earned rather than announced.
+
+Christie uses nearly twice as many adverbs as Doyle. Plainness here was never about scrubbing.
 
 ## Rules
 

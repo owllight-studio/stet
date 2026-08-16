@@ -2,6 +2,7 @@
 name: Epic Fantasy
 group: genre
 description: Plainer and shorter than anyone believes. The elevation is rhythm and word order, never vocabulary.
+feeling: Grandeur, and Le Guin is the authority on why it fails.
 measured:
   sentenceMedian: 14
   sentenceMean: 17.3
@@ -53,6 +54,22 @@ top-1,000 word list: Malory 87.7, Morris 86.7, **Gatsby 72.7**.
 
 **The archaic register uses shorter words and a smaller, more repetitive vocabulary than naturalistic
 prose.** It gets its elevation from rhythm, word order and repetition instead.
+
+## The feeling, and how it gets there
+
+**Grandeur, and Le Guin is the authority on why it fails.**
+
+Lewis's rule, "never an adjective that tells the reader how to feel", is the opposite of a ban on
+feeling. Those words are "only like saying to your readers, 'Please will you do my job for me.'"
+
+Le Guin's charge against the flat style is explicitly that it has no feeling in it: "the rocks, the
+wind, the trees are not there, are not felt; the scenery is cardboard, or plastic." Her word for it
+is journalism, and her diagnosis of the writers who mock their own material is loss of nerve, not
+excess of it. Their heroes "keep turning aside to look out of the book at you and whisper, 'See,
+we're really just plain folks.'"
+
+The feeling is the whole point. Her line for it: "In fantasy there is nothing but the writer's
+vision of the world."
 
 ## Rules
 

@@ -2,6 +2,7 @@
 name: The Argument
 group: core
 description: Essayistic. Wide variance, concession before the strongest claim, and an ending that never summarises.
+feeling: The pleasure of watching somebody think, and change their mind on the page.
 measured:
   sentenceMedian: 18
   sentenceMean: 21
@@ -24,6 +25,21 @@ Measured across five essays: Orwell, Didion, Pullum and two of Graham's, 757 sen
 **Make claims as strong as they can be made without becoming false.** Graham's dial, and the whole
 register in a sentence. Weaker than that and the essay is not worth reading. Stronger and it is not
 worth trusting.
+
+## The feeling, and how it gets there
+
+**The pleasure of watching somebody think, and change their mind on the page.**
+
+The essay register is the most openly emotional thing in the core group, and its emotion is
+intellectual: the specific feeling of a mind moving.
+
+Didion's authority comes from having said "I" and meant it, calling writing "an aggressive, even a
+hostile act". The unearned "we" is the pastiche failure precisely because it borrows that warmth
+without the exposure.
+
+The concession rule is emotional in the same way. A concession before your strongest claim is
+generosity, and the reader feels it as such. The same concession after it is retreat, and they feel
+that too.
 
 ## Rules
 

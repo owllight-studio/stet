@@ -2,6 +2,7 @@
 name: Noir
 group: fun
 description: Past tense, first person, flat declaratives. The famous simile is the rarest move in it.
+feeling: Dread, and a grief the narrator will not admit to.
 measured:
   sentenceMedian: 10
   sentenceP10: 4
@@ -29,6 +30,26 @@ scarcest move, and pastiche runs it twenty to forty times too often.
 
 A figure is the payoff to a run of flat sentences. Remove the flat run and there is no debt to
 discharge, so the figures queue up and each devalues the last.
+
+## The feeling, and how it gets there
+
+**Dread, and a grief the narrator will not admit to.**
+
+The register is often mistaken for coldness. It is the opposite: it is a man feeling far too much
+and refusing to say so, and every rule here exists to get that onto the page without him saying it.
+
+**"Never name an emotion at the moment it is felt" is not a ban on emotion.** It is the delivery
+mechanism. "I was frightened" tells you nothing. *"I couldn't hear my own footsteps. It was the walk
+of a dead man"* puts you inside the fear, and it does it by describing a body rather than a mood.
+
+The simile is where the judgment lives, because the flat declarative is forbidden from
+editorialising. "The sunshine was as empty as a headwaiter's smile" is not about sunshine. It is
+about paid professional insincerity, which is the book's actual subject, and the whole opinion
+travels inside the figure.
+
+And the narrator loses. Every canonical one is dead, bleeding out, or implicated. That is the
+emotional load the deadpan is holding up, and without it the diction has nothing to defend against
+and reads as posturing.
 
 ## Rules
 

@@ -2,6 +2,7 @@
 name: The Manual
 group: core
 description: Reference writing. Imperative, second person, no personality, complete before readable.
+feeling: None, on purpose, and for a reader who is already frustrated.
 measured:
   sentenceMedian: 12
   sentenceP95: 24
@@ -19,6 +20,16 @@ stet:
 **Complete beats readable.** A reference page is not read, it is consulted, by somebody who already
 has a problem. Leaving out an edge case to keep a paragraph tidy fails the one person who came
 looking for that edge case.
+
+## The feeling, and how it gets there
+
+**None, on purpose, and for a reader who is already frustrated.**
+
+Reference writing is consulted by somebody who has a problem right now. The absence of personality
+is a kindness to that person: they are not reading, they are looking, and anything between them and
+the answer costs them.
+
+That is still an emotional design decision. The feeling it serves is relief.
 
 ## Rules
 

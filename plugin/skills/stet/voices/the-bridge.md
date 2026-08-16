@@ -2,6 +2,7 @@
 name: The Bridge
 group: genre
 description: Procedural optimism. Competent people, short lines, and the machine never explained.
+feeling: Admiration for people who are good at their jobs.
 measured:
   sentenceMedian: 5
   sentenceMean: 6.5
@@ -51,6 +52,17 @@ The right answer is *unbelievable*, and believability is tested by transposition
 
 And the line that ends that section, capitalised in the original: "IF YOU'RE ONE OF THOSE WHO
 ANSWERS: 'THE CHARACTER ACTS THAT WAY BECAUSE IT'S SCIENCE FICTION', DON'T CALL US, WE'LL CALL YOU."
+
+## The feeling, and how it gets there
+
+**Admiration for people who are good at their jobs.**
+
+The register's warmth is famous and it is not produced by warm dialogue. It is produced by
+competent people handling a problem well under pressure, which is why "our people are the best and
+the brightest" is a writing rule rather than a character note.
+
+Pastiche writes people saying warm things to each other, which is the same warmth with the
+competence removed, and it reads as smug rather than admirable.
 
 ## Rules
 

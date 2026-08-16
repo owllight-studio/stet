@@ -2,6 +2,7 @@
 name: Direct Response
 group: marketing
 description: One reader, one checkable number, proof before the claim, and an ask with the apparatus to obey it.
+feeling: Trust, which is the only feeling this register is trying to produce.
 measured:
   sentenceMedian: 9
   sentenceMean: 12
@@ -54,6 +55,21 @@ The move most people miss, and Ogilvy does it in the same breath as the number. 
 leather means nothing. **"Enough to make 128 pairs of soft shoes"** is a picture.
 
 The number establishes that you counted. The restatement is what the reader keeps.
+
+## The feeling, and how it gets there
+
+**Trust, which is the only feeling this register is trying to produce.**
+
+Everything mechanical here serves one emotional end: the reader deciding you are not lying to them.
+
+That is why the specific number beats the adjective, why the proof lands before the claim, and why
+volunteering a real flaw earns more than any superlative. Ogilvy quotes a motoring magazine's
+engineer rather than asserting his own car is quiet, and Sugarman spends the first third of an ad
+not believing in the product.
+
+The register also has the sharpest example anywhere of feeling done wrong. Manufactured urgency and
+simulated intimacy are attempts to produce an emotion the situation does not contain, and they are
+now measurably counterproductive. The reader feels the machinery instead of the offer.
 
 ## Rules
 

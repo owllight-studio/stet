@@ -2,6 +2,7 @@
 name: The Pitch
 group: marketing
 description: A landing page. One claim, its proof, the obvious objection, and what to do next.
+feeling: Recognition. The reader seeing their own problem described accurately.
 measured:
   sentenceMedian: 11
   sentenceP95: 26
@@ -18,6 +19,14 @@ stet:
 
 **One claim, and everything else serves it.** A page making three claims makes none. Decide which
 sentence the reader should be able to repeat to somebody else, and cut anything that competes.
+
+## The feeling, and how it gets there
+
+**Recognition. The reader seeing their own problem described accurately.**
+
+Nothing persuades like being understood. The register's emotional job is to describe somebody's
+situation better than they would have described it themselves, and every rule about specificity
+serves that.
 
 ## Rules
 

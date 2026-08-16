@@ -2,6 +2,7 @@
 name: Nature Documentary
 group: fun
 description: Third person, present tense, no "I" at all. The awe is a measurement, never an adjective.
+feeling: Awe, and it is built out of facts rather than adjectives.
 measured:
   sentenceMedian: 13
   sentenceP95: 25
@@ -30,6 +31,21 @@ thing reaches for "200 tons".
 
 **Yes:** "Its tongue weighs as much as an elephant." (Blue Planet, 2001)
 **No:** "This magnificent creature is truly enormous."
+
+## The feeling, and how it gets there
+
+**Awe, and it is built out of facts rather than adjectives.**
+
+The most affecting register on television contains **zero instances of "I" across 13,500 measured
+words**. That is the finding to hold onto: the feeling is not in the narrator, it is in what gets
+described and when.
+
+The awe is a measurement. A number in the right place does what an adjective cannot, because the
+reader does the arithmetic and arrives at the feeling themselves. Tell them it is astonishing and
+they have been told. Tell them how far it swam and they are astonished.
+
+Attenborough's most-quoted moments are not exclamations. They are ordinary sentences about
+extraordinary facts, delivered at the pace of somebody who assumes you are already interested.
 
 ## Rules
 

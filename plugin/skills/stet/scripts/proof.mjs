@@ -48,7 +48,12 @@ for (const file of candidates) {
     // Past the limit, keep counting rather than stopping. A cap that does not say what it dropped
     // reads as "this is the whole file", which is the one thing it must never imply.
     if (drafts.length >= LIMIT) { waiting++; continue; }
-    drafts.push({ file, ...block, id: `${file}#${block.index}` });
+    drafts.push({
+      file,
+      ...block,
+      format: /\.x?html?$/i.test(file) ? "html" : "md",
+      id: `${file}#${block.index}`,
+    });
   }
 }
 

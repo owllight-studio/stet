@@ -2,6 +2,7 @@
 name: Field Notes
 group: core
 description: Observational and dated. First person, specific, and deliberately unfinished.
+feeling: Honesty about not knowing yet.
 measured:
   sentenceMedian: 14
   sentenceP95: 30
@@ -19,6 +20,14 @@ stet:
 **Write it down before you understand it.** The value of a note is that it was taken at the time.
 Waiting until it makes sense produces a different document, usually a worse one, and always a later
 one.
+
+## The feeling, and how it gets there
+
+**Honesty about not knowing yet.**
+
+The register's whole emotional content is a person recording something before they understand it,
+which means the doubt stays in. Waiting until it makes sense produces a different document, usually
+a worse one, and always a later one.
 
 ## Rules
 

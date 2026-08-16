@@ -233,10 +233,12 @@ function counts() {
   if (publish) publish.textContent = left ? `Publish all ${blocks.length}` : "Publish";
 }
 
-/** Whatever the block currently says, as Markdown, whichever editor it is using. */
+/** Whatever the block currently says, in the format it came in. */
 function current(el) {
   const raw = el.querySelector(".raw");
-  return raw ? raw.value : toMd(el.querySelector(".text"));
+  if (raw) return raw.value;
+  const text = el.querySelector(".text");
+  return el.dataset.format === "html" ? text.innerHTML.trim() : toMd(text);
 }
 
 function paint(el, action) {
@@ -329,11 +331,13 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
       sheet.appendChild(heading);
     }
 
-    const rich = safe(b.text);
+    const html = b.format === "html";
+    const rich = html || safe(b.text);
     const el = document.createElement("div");
     el.className = "block";
     el.dataset.id = b.id;
     el.dataset.line = b.line;
+    el.dataset.format = b.format ?? "md";
     el.innerHTML = `
       <span class="stamp">L${b.line}</span>
       <div class="tools">
@@ -366,7 +370,8 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
         </div>
       </div>`;
 
-    if (rich) el.querySelector(".text").innerHTML = toHtml(b.text);
+    if (html) el.querySelector(".text").innerHTML = b.text;
+    else if (rich) el.querySelector(".text").innerHTML = toHtml(b.text);
     else el.querySelector(".raw").value = b.text;
     sheet.appendChild(el);
 
@@ -423,6 +428,7 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
       }
       status.textContent = `rewritten in ${res.took}s. Save it, edit it, or retry again.`;
       if (el.querySelector(".raw")) el.querySelector(".raw").value = res.text;
+      else if (el.dataset.format === "html") el.querySelector(".text").innerHTML = res.text;
       else el.querySelector(".text").innerHTML = toHtml(res.text);
       el.classList.add("changed");
       // Recorded, not discarded. A first version cleared the decision here, so a rewrite the author

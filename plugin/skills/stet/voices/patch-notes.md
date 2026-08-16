@@ -2,6 +2,7 @@
 name: Patch Notes
 group: fun
 description: A changelog. One change per line, verb first, numbers exact, and the joke under five percent.
+feeling: Respect, mostly. Occasionally delight, and never at somebody's expense.
 measured:
   sentenceMedian: 9
   sentenceP95: 20
@@ -29,6 +30,20 @@ which is the failure this register dies of.
 The working number, counted across the corpus: **under five percent of lines**, and never two
 adjacent. Hades runs several hundred entries with fewer than five asides. Team Fortress 2 averages
 under one funny line per patch across hundreds of patches.
+
+## The feeling, and how it gets there
+
+**Respect, mostly. Occasionally delight, and never at somebody's expense.**
+
+The joke ratio sits under 5 percent and no two adjacent, and that constraint is what makes the
+funny ones land. A page of jokes is a page nobody trusts with a security advisory.
+
+The emotional rules here are about **who the feeling is aimed at**. Never joke on a nerf, because it
+reads as gloating at the player it affects. Never joke about the team. The good ones joke about the
+artifact or the absurdity of the defect, which is affection rather than mockery.
+
+"Never announce enthusiasm" is not a ban on being pleased. It is that "we're excited to" is the
+writer's feeling, and the reader wants their own.
 
 ## Rules
 

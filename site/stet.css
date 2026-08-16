@@ -350,3 +350,10 @@ code { font-family: var(--mono); font-size: .88em; color: var(--pencil); }
 }
 .more:hover { border-bottom-color: var(--pencil); color: var(--ink); }
 .more::after { content: " \2192"; }
+
+/* What a register is for. Above the rules, because the rules only make sense as a means to it. */
+.feeling { font-size: .93rem; color: var(--ink); margin: .55rem 0 0; }
+.feeling span {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--pencil); margin-right: .45rem;
+}

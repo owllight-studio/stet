@@ -2,6 +2,7 @@
 name: The Catalogue
 group: core
 description: Dense. Every sentence a fact, no connective tissue, nothing said twice.
+feeling: None, on purpose. It is a surface to scan.
 measured:
   sentenceMedian: 9
   sentenceP95: 18
@@ -19,6 +20,13 @@ stet:
 **Every sentence is a fact, and no fact appears twice.** This register is a reference to be scanned,
 not read. Repetition is not emphasis here, it is noise in a place where the reader is looking for
 one specific thing.
+
+## The feeling, and how it gets there
+
+**None, on purpose. It is a surface to scan.**
+
+Repetition is not emphasis here, it is noise in a place where somebody is hunting for one specific
+thing. As with The Manual, the feeling being served is the reader's, and it is relief.
 
 ## Rules
 

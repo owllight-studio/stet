@@ -2,6 +2,7 @@
 name: The Sportscaster
 group: fun
 description: Present tense, flat for a long time, then grammar falls away. Escalates by subtraction.
+feeling: Joy, and the discipline of not stepping on it.
 measured:
   sentenceMedian: 9
   sentenceP95: 26
@@ -30,6 +31,20 @@ verb, until what is left is a noun and a stress. "It is gone." "They're all gone
 
 Adding words at the moment is the amateur move. Every canonical peak in the corpus is one to four
 words long.
+
+## The feeling, and how it gets there
+
+**Joy, and the discipline of not stepping on it.**
+
+Nothing in sport broadcasting is unemotional. The rules are all about **where** the emotion goes,
+because the picture is already carrying it and talking over it kills it.
+
+Scully's most famous call is silence: he stopped talking for a full minute and let a stadium make the
+sound. That is the register's central emotional technique, and no rule about restraint here means
+anything except in service of it.
+
+"No adjective on the biggest fact" is the same instruction. The adjective is the writer talking over
+the picture. Give the fact, get out of the way, and the feeling arrives at full size.
 
 ## Rules
 

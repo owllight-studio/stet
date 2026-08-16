@@ -2,6 +2,7 @@
 name: The Teacher
 group: core
 description: Explains. Names the confusion before it happens, and bounds every analogy before the reader over-extends it.
+feeling: Warmth, and the specific relief of being taken seriously.
 measured:
   sentenceMedian: 22
   sentenceP95: 44
@@ -31,6 +32,26 @@ and it fits in a sentence.
 "This is easy", "you'll love this", "obviously", "makes sense?" are all assertions about the reader.
 "The algebraic form may seem opaque if you're not already familiar with it" is an assertion about
 the algebra. Same warmth. No contempt.
+
+## The feeling, and how it gets there
+
+**Warmth, and the specific relief of being taken seriously.**
+
+This register is entirely about how somebody feels while failing to understand something, which is
+usually humiliated.
+
+**The whole diagnostic fits in one line: describe the material, never the reader's mind.** "This is
+easy" and "you'll love this" are assertions about the reader, and a reader who is stuck has just
+been told that being stuck is anomalous. "The algebraic form may seem opaque if you're not already
+familiar with it" is an assertion about the algebra. Same warmth. No contempt.
+
+The highest-value move in the register is emotional rather than technical: name the confusion before
+it happens, as a fact rather than a question. "You may wonder why we need this complicated mechanism
+in the first place." The reader's relief at that sentence is the entire product.
+
+And the reassurance has to be attached to something. "Don't worry, this is the easy part" is
+condescension. "Don't panic if you are not comfortable with partial derivatives" is not, and the
+difference is that the second one names the prerequisite and says what skipping it costs.
 
 ## Rules
 

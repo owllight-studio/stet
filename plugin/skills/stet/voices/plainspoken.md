@@ -2,6 +2,7 @@
 name: Plainspoken
 group: core
 description: Concrete nouns, working verbs, no throat-clearing. Varied hard, because uniform length is the tell.
+feeling: Conviction, and the calm of somebody who does not need to convince you.
 measured:
   sentenceMedian: 15
   sentenceSdOverMean: 0.55
@@ -34,6 +35,22 @@ good sits near its own average. The short sentences carry the claims; the long o
 working-out, and a cap flattens the distinction between them.
 
 The detection is arithmetic: **standard deviation over mean below about 0.35 is pastiche.**
+
+## The feeling, and how it gets there
+
+**Conviction, and the calm of somebody who does not need to convince you.**
+
+Plain is not flat. The short sentence carries the verdict and the long one carries the working out,
+and the feeling lives in that switch.
+
+The rule that matters most emotionally is the one about hedges. Graham: *"'I think x' is a weaker
+statement than simply 'x.' Which is exactly why you need 'I think.'"* A qualifier is not timidity, it
+is honesty about your own certainty, and stripping it makes the writing sound confident and be
+untrue.
+
+And the register's condescension failure is emotional rather than lexical. Simple words are not
+patronising. Restating a claim four different ways is, because it tells the reader you did not think
+they got it.
 
 ## Rules
 

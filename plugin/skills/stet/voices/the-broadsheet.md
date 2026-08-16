@@ -2,6 +2,7 @@
 name: The Broadsheet
 group: core
 description: Wire news. Most important fact first, every claim sourced, and "said" is the only verb.
+feeling: None, on purpose. Know that before choosing it.
 measured:
   ledeMaxWords: 30
   adjectivesBeforeNoun: 2
@@ -31,6 +32,20 @@ under loaded words.
 The finding that surprises people is the symmetry. *Alleged*, *claimed* and *conceded* imply
 disbelief. *Noted*, *pointed out*, *recalled* and *emphasised* imply endorsement. **Both are
 banned.** A sympathetic verb is as much a thumb on the scale as a sceptical one.
+
+## The feeling, and how it gets there
+
+**None, on purpose. Know that before choosing it.**
+
+This is the one register in the library that withholds feeling as its whole design, and it should
+be chosen deliberately or not at all.
+
+Even here the choice is emotional rather than mechanical. Reuters bans *noted*, *pointed out* and
+*emphasised* exactly as hard as *alleged* and *claimed*, because a sympathetic verb is as much a
+thumb on the scale as a sceptical one. The neutrality is an active discipline, not an absence.
+
+**Do not use this for anything that needs to move somebody.** A conclusion stated before its
+evidence is an assertion, and the pyramid shape fights persuasion by construction.
 
 ## Rules
 

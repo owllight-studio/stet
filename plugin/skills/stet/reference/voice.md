@@ -41,9 +41,18 @@ and nothing reads the preset file again afterwards.
 is." "A PhD mathematician." These are real and usable requests, and the way to honour them is not
 imitation.
 
-**Extract the qualities into rules.** What makes that voice recognisable? The concrete noun over the
-abstract one. The aside that undercuts the reverence. The short sentence after the long one. Write
-those as rules with examples, the same as any other source.
+**Ask what it should make the reader feel, and treat that as part of the brief.** Not an optional
+extra and not a softer version of the real question. Every register is a machine for producing a
+particular feeling, and the rules are how that feeling reaches the page. A brief with no feeling in
+it produces a voice that is technically correct and dead.
+
+"It should sound like somebody who has done this and is telling you what it was actually like" is a
+usable brief. "Warm" is not, and the objection is never that it is about feeling. It is that it
+stops at naming one, and naming a feeling has never put it on a page.
+
+**Then extract the qualities into rules.** What makes that voice recognisable? The concrete noun
+over the abstract one. The aside that undercuts the reverence. The short sentence after the long
+one. Write those as rules with examples, the same as any other source.
 
 Pastiche is a party trick that falls apart by the third paragraph. Rules are usable, transferable,
 and the author's own. When a persona names a real person, you are extracting technique, not
