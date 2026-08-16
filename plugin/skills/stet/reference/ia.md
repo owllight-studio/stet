@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # stet ia
 
 What exists, how it relates, and what each page is for. Writes `IA.md`.

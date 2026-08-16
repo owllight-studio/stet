@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # Stet: design
 
 Written 2026-08-16, from a conversation that changed shape three times before it settled. The
@@ -43,12 +49,38 @@ Every unit of content carries metadata:
 
 | Field | Meaning |
 |---|---|
-| `owner` | `human`, `agent`, or `shared`. Who the words belong to. |
-| `policy` | What may be done: `frozen`, `refresh-on-change`, `open`. |
+| `state` | `draft`, `approved`, or `authored`. Covered below. |
+| `author` | `human` or `agent`. Who produced the words. |
+| `policy` | What may still be done to closed content: `frozen`, `refresh`, `open`. |
 | `sources` | Named facts the content depends on. Empty means it depends on none. |
-| `voice` | Which house style applies, when an agent may write. |
 
 A unit is a file or a block inside one, depending on the format adapter.
+
+### Three states, because there are three behaviours
+
+The first draft of this design had `owner: human | agent | shared`, and pointing the tool at its own
+repository on day one broke it. Stet's files were written by an agent under a person's direction and
+accepted by that person. They are not the agent's, and `human` would claim the agent did not write
+them. `shared` says nothing about who may change what, which is the only question the field exists
+to answer.
+
+So the resolution, and the rule the author confirmed: **approval confers ownership.**
+
+| State | Who wrote it | Edit the words? | Regenerate it? |
+|---|---|---|---|
+| `draft` | an agent | yes | yes |
+| `approved` | an agent, accepted by a person | no | only if asked, each time |
+| `authored` | a person | no | never |
+
+An agent's draft belongs to the agent until a person reads it and accepts it. Nothing else transfers
+ownership: not time, not the content being good, not the agent having written every word.
+
+`approved` and `authored` are both closed, and the difference between them is provenance plus what a
+rebuild means. An approved page can be regenerated on request. An authored one cannot be regenerated
+at all, only replaced by its author.
+
+`policy` is orthogonal and applies to closed content. `authored` plus `refresh` is the combination
+the whole system exists to make expressible: these are my words, keep the numbers in them true.
 
 ### Ownership is enforced by a hook, not a rule
 

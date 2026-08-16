@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # stet voice
 
 Derive the house voice from writing that already exists, or define it from nothing. Writes

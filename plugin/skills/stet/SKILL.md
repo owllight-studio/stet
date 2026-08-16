@@ -1,6 +1,9 @@
 ---
 name: stet
 description: Use when writing, editing, auditing or refreshing content in a project - establishes who owns each piece of content and what may be done to it, derives and enforces a house voice, maps information architecture, and keeps claims true to their sources. Invoke for any content work, and always before editing prose you did not write.
+stet:
+  state: draft
+  author: agent
 ---
 
 # Stet
@@ -44,9 +47,10 @@ records where the figure came from, so nothing noticed, and the page states it w
    reports what is missing, and tells you which command to run first. Follow its directives and do
    not rerun it.
 2. Load the reference file for the command you are running. One file, the one that owns the request.
-3. **Before editing any content file, check ownership.** A hook will refuse the edit if the content
-   is human-owned, but arriving at a refusal means you already got it wrong. Run
-   `node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/owner.mjs <path>` first, or read the metadata.
+3. **Before editing any content file, check its state.** Run
+   `node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/owner.mjs <path>`. Exit 0 means you may, exit 1
+   means you may not. Unclaimed content answers no, because content with no record belongs to
+   whoever wrote it, and that was not you.
 
 ## Commands
 
@@ -59,7 +63,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `outline` | Compose | Plan a piece before writing it | reference/outline.md |
 | `write` | Compose | Author in the voice, to the IA | reference/write.md |
 | `expand` | Compose | A stub into a finished piece | reference/expand.md |
-| `claim` / `release` | Authorship | Whose words these are | reference/claim.md |
+| `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | reference/policy.md |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | reference/audit.md |
 | `critique` | Evaluate | A scored review of one piece | reference/critique.md |
@@ -85,8 +89,12 @@ Commands without a reference file yet are not built. Say so rather than improvis
 ## The rules that do not bend
 
 **Everything existing is the author's until they say otherwise.** `ingest` claims every file it
-finds as `owner: human`. That is the safe default and the honest one: those words were written by a
+finds as `authored`. That is the safe default and the honest one: those words were written by a
 person who did not ask you. Content becomes yours by being handed over, never by being found.
+
+**Approval confers ownership.** Your own draft is yours until a person reads it and accepts it, and
+then it is theirs and you may not change it. Not time, not the writing being good, not you having
+written every word of it: only approval. And only the author performs it. You record it.
 
 **Ownership beats instruction.** "Improve this page" is not permission to rewrite an owned section
 inside it. Improve what you may, and tell the author what you left and why. If the whole page is

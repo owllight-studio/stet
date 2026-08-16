@@ -1,0 +1,141 @@
+/**
+ * Reading and writing a file's Stet metadata, across the formats content lives in.
+ *
+ * Three states, because they produce three different behaviours rather than three different labels:
+ *
+ *   draft     an agent wrote it and nobody has approved it. An agent may rewrite it freely.
+ *   approved  an agent wrote it and a person accepted it. An agent may not touch the words.
+ *   authored  a person wrote it. An agent may not touch it, and may not regenerate it either.
+ *
+ * Approval is the transition from draft to approved, and it is what confers ownership. The
+ * distinction between approved and authored is provenance: both are closed to an agent, but only
+ * one of them was written by a person, and a project that wants to say who wrote what needs to
+ * keep that.
+ *
+ * `policy` is separate and orthogonal. It says what may still be done to closed content:
+ *
+ *   frozen    nothing, not even a figure
+ *   refresh   facts named in `sources` may be brought current. The prose around them may not.
+ *   open      anything, which is what draft already means and is here for completeness
+ *
+ * So "these are my words, keep the numbers in them true" is authored plus refresh, and that
+ * combination is the one this whole system exists to make expressible.
+ */
+
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { join, extname } from "node:path";
+
+export const STATES = ["draft", "approved", "authored"];
+export const POLICIES = ["frozen", "refresh", "open"];
+
+/** May an agent rewrite the words? Only in draft. Everything else is closed. */
+export const mayEdit = (meta) => meta?.state === "draft";
+
+/** May an agent bring a named fact current, despite the words being closed? */
+export const mayRefresh = (meta) =>
+  meta?.state === "draft" || meta?.policy === "refresh" || meta?.policy === "open";
+
+const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---/;
+
+/** A deliberately small YAML reader. Stet's block is flat scalars and one list; nothing more. */
+function parseBlock(text) {
+  const out = {};
+  let inStet = false;
+  let listKey = null;
+  for (const raw of text.split("\n")) {
+    const line = raw.replace(/\s+$/, "");
+    if (/^stet\s*:\s*$/.test(line)) { inStet = true; continue; }
+    if (inStet && /^\S/.test(line)) break;
+    if (!inStet) continue;
+
+    const item = line.match(/^\s+-\s+(.*)$/);
+    if (item && listKey) { (out[listKey] ??= []).push(item[1].trim().replace(/^["']|["']$/g, "")); continue; }
+
+    const pair = line.match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+    if (!pair) continue;
+    const [, key, value] = pair;
+    if (value === "") { listKey = key; out[key] = []; continue; }
+    listKey = null;
+    const inline = value.match(/^\[(.*)\]$/);
+    out[key] = inline
+      ? inline[1].split(",").map((v) => v.trim().replace(/^["']|["']$/g, "")).filter(Boolean)
+      : value.replace(/^["']|["']$/g, "");
+  }
+  return Object.keys(out).length ? out : null;
+}
+
+function render(meta) {
+  const lines = ["stet:"];
+  for (const key of ["state", "author", "approved", "policy"]) {
+    if (meta[key] !== undefined && meta[key] !== null) lines.push(`  ${key}: ${meta[key]}`);
+  }
+  if (meta.sources?.length) {
+    lines.push("  sources:");
+    for (const s of meta.sources) lines.push(`    - ${s}`);
+  }
+  return lines.join("\n");
+}
+
+export function read(root, file) {
+  const sidecar = join(root, `${file}.stet.yaml`);
+  if (existsSync(sidecar)) return parseBlock(readFileSync(sidecar, "utf8"));
+
+  const full = join(root, file);
+  if (!existsSync(full)) return null;
+  const text = readFileSync(full, "utf8");
+
+  if (extname(file) === ".json") {
+    try {
+      const doc = JSON.parse(text);
+      return doc?.stet ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  const fm = text.match(FRONTMATTER);
+  return fm ? parseBlock(fm[1]) : null;
+}
+
+/**
+ * Write metadata, changing nothing else in the file.
+ *
+ * That constraint is the whole contract of this function. An ingest that reformats content is an
+ * ingest nobody runs twice, so this appends to an existing frontmatter block, creates one only when
+ * there is none, and never touches a byte of the body.
+ */
+export function write(root, file, meta) {
+  const full = join(root, file);
+  const text = readFileSync(full, "utf8");
+  const block = render(meta);
+
+  if (extname(file) === ".json") {
+    const doc = JSON.parse(text);
+    const indent = text.match(/\n(\s+)"/)?.[1]?.length ?? 2;
+    writeFileSync(full, JSON.stringify({ ...doc, stet: meta }, null, indent) + "\n");
+    return "json";
+  }
+
+  const fm = text.match(FRONTMATTER);
+  if (!fm) {
+    writeFileSync(full, `---\n${block}\n---\n\n${text.replace(/^\n+/, "")}`);
+    return "created";
+  }
+
+  const existing = fm[1];
+  const stripped = existing
+    .split("\n")
+    .reduce((acc, line) => {
+      if (/^stet\s*:/.test(line)) { acc.skip = true; return acc; }
+      if (acc.skip && /^\s/.test(line)) return acc;
+      acc.skip = false;
+      acc.lines.push(line);
+      return acc;
+    }, { lines: [], skip: false })
+    .lines.join("\n")
+    .replace(/\n+$/, "");
+
+  const merged = stripped ? `${stripped}\n${block}` : block;
+  writeFileSync(full, text.replace(FRONTMATTER, `---\n${merged}\n---`));
+  return "merged";
+}

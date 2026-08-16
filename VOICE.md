@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # Voice
 
 Derived from Stet's own writing on 2026-08-16, across 8 files and 6,700 words, then corrected by

@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # stet init
 
 What this project is, who reads it, and what it has to do for them. Writes `CONTENT.md`.

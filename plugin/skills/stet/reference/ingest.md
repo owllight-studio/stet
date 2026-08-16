@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # stet ingest
 
 Read everything that is already there. Claim it for the author. Report what you found.

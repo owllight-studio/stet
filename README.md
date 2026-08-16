@@ -1,3 +1,9 @@
+---
+stet:
+  state: draft
+  author: agent
+---
+
 # Stet
 
 **Content that knows who owns it.** A Claude Code plugin that stops agents rewriting your words and
