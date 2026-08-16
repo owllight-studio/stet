@@ -9,14 +9,14 @@
    sheet should look like a proof sheet, and the marks should mean what they mean on paper. */
 :root {
   --paper: #fbfbf9; --edge: #f1f1ec; --ink: #16161a; --soft: #55555f; --faint: #8b8b95;
-  --rule: #e2e2db; --pencil: #2c6d9e; --wash: #eaf2f8; --strike: #c0392b; --keep: #1e7a52;
+  --rule: #e2e2db; --pencil: #2c6d9e; --wash: #eaf2f8; --strike: #c0392b; --mine: #1e7a52;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --paper: #14141a; --edge: #1b1b22; --ink: #eeeef0; --soft: #a9a9b4; --faint: #74747f;
-    --rule: #2b2b34; --pencil: #7db8e0; --wash: #1b2733; --strike: #e07a6e; --keep: #5fbf90;
+    --rule: #2b2b34; --pencil: #7db8e0; --wash: #1b2733; --strike: #e07a6e; --mine: #5fbf90;
   }
 }
 * { box-sizing: border-box; }
@@ -24,12 +24,12 @@ body {
   margin: 0; background: var(--paper); color: var(--ink);
   font-family: var(--serif); font-size: 17px; line-height: 1.6;
 }
-.wrap { max-width: 52rem; margin: 0 auto; padding: 0 1.5rem 8rem; }
+.wrap { max-width: 54rem; margin: 0 auto; padding: 0 1.5rem 9rem; }
 
 header { padding: 2rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
 .mark { font-family: var(--mono); font-size: .95rem; letter-spacing: .22em; text-transform: uppercase; }
 .mark b { font-weight: 400; border-bottom: 2px solid var(--pencil); padding-bottom: 2px; }
-header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; }
+header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; max-width: 44rem; }
 
 .file {
   font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
@@ -37,29 +37,60 @@ header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; }
   border-bottom: 1px solid var(--rule);
 }
 
-.block { position: relative; padding: 1.1rem 0 1.1rem 3.5rem; border-bottom: 1px solid var(--rule); }
-.block.is-kept { background: linear-gradient(90deg, var(--wash), transparent 60%); }
-.block.is-edited { background: linear-gradient(90deg, rgba(30,122,82,.10), transparent 60%); }
-.block.is-queried { background: linear-gradient(90deg, rgba(192,57,43,.08), transparent 60%); }
+.block { position: relative; padding: 1.1rem 0 1.1rem 3.75rem; border-bottom: 1px solid var(--rule); }
+.block.is-kept { background: linear-gradient(90deg, var(--wash), transparent 55%); }
+.block.is-edited { background: linear-gradient(90deg, rgba(30,122,82,.10), transparent 55%); }
+.block.is-queried { background: linear-gradient(90deg, rgba(192,57,43,.08), transparent 55%); }
+.block.busy { opacity: .55; }
 
 .stamp {
-  position: absolute; left: 0; top: 1.25rem; width: 3rem;
+  position: absolute; left: 0; top: 1.3rem; width: 3.25rem;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--faint);
 }
 .block.is-kept .stamp { color: var(--pencil); }
-.block.is-edited .stamp { color: var(--keep); }
+.block.is-edited .stamp { color: var(--mine); }
 .block.is-queried .stamp { color: var(--strike); }
 
-.text {
-  white-space: pre-wrap; outline: none; border-radius: 2px;
-  padding: .15rem .3rem; margin: -.15rem -.3rem;
-}
+/* The rendered editor. Markdown is a source format, and nobody should have to read it to fix a
+   typo in their own sentence. */
+.text { outline: none; border-radius: 2px; padding: .2rem .4rem; margin: -.2rem -.4rem; }
 .text:focus { background: var(--edge); box-shadow: 0 0 0 1px var(--pencil); }
-.text.k-heading { font-size: 1.15rem; }
-.text.k-list { font-family: var(--mono); font-size: .88rem; line-height: 1.75; }
+.text > :first-child { margin-top: 0; }
+.text > :last-child { margin-bottom: 0; }
+.text h1, .text h2, .text h3, .text h4 { font-weight: 400; margin: 0 0 .3rem; line-height: 1.25; }
+.text h1 { font-size: 1.5rem; }
+.text h2 { font-size: 1.3rem; }
+.text h3 { font-size: 1.12rem; }
+.text h4 { font-size: 1rem; }
+.text p { margin: 0 0 .6rem; }
+.text ul, .text ol { margin: 0; padding-left: 1.4rem; }
+.text li { margin-bottom: .3rem; }
+.text code { font-family: var(--mono); font-size: .86em; background: var(--edge); padding: .05em .3em; }
+.text a { color: var(--pencil); }
+.text blockquote { margin: 0; padding-left: 1rem; border-left: 2px solid var(--rule); color: var(--soft); }
 
-.actions { display: flex; gap: .5rem; margin-top: .7rem; align-items: center; flex-wrap: wrap; }
+/* Anything the converter cannot round trip is edited as source, and says so rather than pretending. */
+.raw {
+  width: 100%; min-height: 5rem; resize: vertical; padding: .6rem .7rem;
+  font-family: var(--mono); font-size: .84rem; line-height: 1.65;
+  background: var(--edge); color: var(--ink); border: 1px solid var(--rule); border-radius: 2px;
+}
+.raw-note { font-family: var(--mono); font-size: .66rem; color: var(--faint); margin-top: .35rem; }
+
+.tools {
+  display: none; gap: .25rem; margin-bottom: .5rem; width: max-content;
+  padding: .3rem; background: var(--edge); border: 1px solid var(--rule); border-radius: 2px;
+}
+.block.focused .tools { display: flex; }
+.tools button {
+  font-family: var(--mono); font-size: .72rem; min-width: 1.9rem; padding: .25rem .45rem;
+  border: 1px solid transparent; background: transparent; color: var(--soft); cursor: pointer;
+}
+.tools button:hover { color: var(--ink); border-color: var(--rule); background: var(--paper); }
+.tools .sep { width: 1px; background: var(--rule); margin: .15rem .25rem; }
+
+.actions { display: flex; gap: .5rem; margin-top: .75rem; align-items: center; flex-wrap: wrap; }
 button {
   font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
   background: transparent; color: var(--soft); border: 1px solid var(--rule);
@@ -68,22 +99,26 @@ button {
 }
 button:hover { color: var(--ink); border-color: var(--pencil); }
 button.on { color: var(--paper); background: var(--pencil); border-color: var(--pencil); }
-.hint { font-family: var(--mono); font-size: .68rem; color: var(--faint); letter-spacing: .04em; }
+button:disabled { opacity: .4; cursor: default; }
+.revert { display: none; margin-left: auto; }
+.block.changed .revert, .block.decided .revert { display: inline-block; }
+.hint { font-family: var(--mono); font-size: .66rem; color: var(--faint); letter-spacing: .04em; }
 
-.query { display: none; width: 100%; margin-top: .6rem; }
-.block.is-queried .query { display: block; }
-.query textarea {
-  width: 100%; min-height: 4.5rem; resize: vertical; padding: .6rem .7rem;
+.retry { display: none; margin-top: .65rem; }
+.block.is-queried .retry { display: block; }
+.retry textarea {
+  width: 100%; min-height: 3.5rem; resize: vertical; padding: .6rem .7rem;
   font-family: var(--serif); font-size: .95rem; line-height: 1.55;
   background: var(--edge); color: var(--ink); border: 1px solid var(--strike); border-radius: 2px;
 }
+.retry-row { display: flex; gap: .5rem; margin-top: .5rem; align-items: center; }
 
 .bar {
   position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
   border-top: 1px solid var(--rule); padding: .85rem 1.5rem;
 }
 .bar-in {
-  max-width: 52rem; margin: 0 auto; display: flex; gap: 1.25rem; align-items: center;
+  max-width: 54rem; margin: 0 auto; display: flex; gap: 1.25rem; align-items: center;
   font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; color: var(--soft);
 }
 .bar b { font-weight: 400; color: var(--ink); }
@@ -91,7 +126,6 @@ button.on { color: var(--paper); background: var(--pencil); border-color: var(--
   margin-left: auto; background: var(--pencil); color: var(--paper); border-color: var(--pencil);
   padding: .5rem 1.1rem;
 }
-.bar .done:hover { filter: brightness(1.1); }
 .finished { padding: 4rem 0; }
 .finished h2 { font-weight: 400; font-size: 1.5rem; margin: 0 0 .75rem; }
 .finished p { color: var(--soft); }
@@ -102,9 +136,10 @@ button.on { color: var(--paper); background: var(--pencil); border-color: var(--
   <header>
     <span class="mark"><b>stet</b> &nbsp;proof sheet</span>
     <p>
-      Keep it, correct it, or query it. Correct a sentence and that sentence becomes yours,
-      permanently, and only that sentence: everything around it stays the agent's to improve.
-      Anything you leave alone stays a draft, because silence is not approval.
+      Save it, correct it, or send it back for a rewrite. Correct a sentence and that sentence
+      becomes yours, permanently, and only that sentence: everything around it stays the agent's to
+      improve. Revert puts a block back and takes the decision with it. Anything you leave alone
+      stays a draft, because silence is not approval.
     </p>
   </header>
   <div id="sheet"></div>
@@ -112,21 +147,24 @@ button.on { color: var(--paper); background: var(--pencil); border-color: var(--
 
 <div class="bar">
   <div class="bar-in">
-    <span><b id="n-keep">0</b> kept</span>
+    <span><b id="n-keep">0</b> saved</span>
     <span><b id="n-edit">0</b> corrected</span>
-    <span><b id="n-query">0</b> queried</span>
+    <span><b id="n-query">0</b> retried</span>
     <span><b id="n-left">0</b> left</span>
     <button class="done" id="done">Done</button>
   </div>
 </div>
 
-<script>
+<script type="module">
+import { toHtml, toMd, safe } from "/proof-md.js";
+
 const sheet = document.getElementById("sheet");
 const state = new Map();
 let blocks = [];
 
 const post = (url, body) =>
-  fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
+    .then((r) => r.json());
 
 function counts() {
   let k = 0, e = 0, q = 0;
@@ -141,59 +179,181 @@ function counts() {
   document.getElementById("n-left").textContent = blocks.length - state.size;
 }
 
-function decide(id, action, extra = {}) {
-  const el = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
-  const text = el.querySelector(".text").innerText;
-  const note = el.querySelector("textarea")?.value ?? "";
-  const payload = { id, action, text, note, ...extra };
-  state.set(id, payload);
+/** Whatever the block currently says, as Markdown, whichever editor it is using. */
+function current(el) {
+  const raw = el.querySelector(".raw");
+  return raw ? raw.value : toMd(el.querySelector(".text"));
+}
+
+function paint(el, action) {
   el.classList.toggle("is-kept", action === "keep");
   el.classList.toggle("is-edited", action === "edit");
   el.classList.toggle("is-queried", action === "query");
-  el.querySelector(".stamp").textContent = action === "keep" ? "stet" : action === "edit" ? "mine" : "query";
-  for (const b of el.querySelectorAll("button")) b.classList.toggle("on", b.dataset.action === action);
+  el.classList.toggle("decided", Boolean(action));
+  el.querySelector(".stamp").textContent =
+    action === "keep" ? "stet"
+    : action === "edit" ? "mine"
+    : action === "query" ? "retry"
+    : `L${el.dataset.line}`;
+  for (const b of el.querySelectorAll(".actions [data-action]")) {
+    b.classList.toggle("on", b.dataset.action === action);
+  }
+}
+
+function clear(id, el) {
+  state.delete(id);
+  paint(el, null);
+  post("/api/undecide", { id });
+  counts();
+}
+
+function decide(id, action) {
+  const el = sheet.querySelector(`[data-id="${CSS.escape(id)}"]`);
+
+  // Clicking the same action again takes it back. A decision you cannot undo is a decision nobody
+  // makes freely, and a review surface people are wary of is a review surface nobody finishes.
+  if (!action || (state.get(id)?.action === action && action !== "edit")) return clear(id, el);
+
+  const payload = {
+    id,
+    action,
+    text: current(el),
+    note: el.querySelector(".retry textarea")?.value ?? "",
+  };
+  state.set(id, payload);
+  paint(el, action);
   post("/api/decide", payload);
   counts();
+}
+
+/** Put a block back exactly as it arrived, and drop the decision with it. */
+function revert(id) {
+  const el = sheet.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  const block = blocks.find((b) => b.id === id);
+  const raw = el.querySelector(".raw");
+  if (raw) raw.value = block.text;
+  else el.querySelector(".text").innerHTML = toHtml(block.text);
+  const note = el.querySelector(".retry textarea");
+  if (note) note.value = "";
+  el.classList.remove("changed");
+  clear(id, el);
+}
+
+function format(el, command) {
+  const text = el.querySelector(".text");
+  if (!text) return;
+  text.focus();
+  if (command === "link") {
+    const url = prompt("Link to where?");
+    if (url) document.execCommand("createLink", false, url);
+  } else if (command === "code") {
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) return;
+    const code = document.createElement("code");
+    code.textContent = sel.toString();
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(code);
+  } else {
+    document.execCommand(command, false, null);
+  }
+  el.dispatchEvent(new Event("stet:changed", { bubbles: true }));
 }
 
 fetch("/api/blocks").then((r) => r.json()).then((data) => {
   blocks = data.blocks;
   let currentFile = null;
+
   for (const b of blocks) {
     if (b.file !== currentFile) {
       currentFile = b.file;
-      const h = document.createElement("div");
-      h.className = "file";
-      h.textContent = b.file;
-      sheet.appendChild(h);
+      const heading = document.createElement("div");
+      heading.className = "file";
+      heading.textContent = b.file;
+      sheet.appendChild(heading);
     }
+
+    const rich = safe(b.text);
     const el = document.createElement("div");
     el.className = "block";
     el.dataset.id = b.id;
+    el.dataset.line = b.line;
     el.innerHTML = `
       <span class="stamp">L${b.line}</span>
-      <div class="text k-${b.kind}" contenteditable="plaintext-only" spellcheck="true"></div>
-      <div class="actions">
-        <button data-action="keep">Stet</button>
-        <button data-action="query">Query</button>
-        <span class="hint">edit the text to make it yours</span>
+      <div class="tools">
+        <button data-fmt="bold" title="Bold"><b>B</b></button>
+        <button data-fmt="italic" title="Italic"><i>I</i></button>
+        <button data-fmt="code" title="Code">&lt;&gt;</button>
+        <button data-fmt="link" title="Link">link</button>
+        <span class="sep"></span>
+        <button data-fmt="insertUnorderedList" title="Bulleted list">&bull;</button>
+        <button data-fmt="insertOrderedList" title="Numbered list">1.</button>
       </div>
-      <div class="query"><textarea placeholder="What should change, and why."></textarea></div>`;
-    el.querySelector(".text").textContent = b.text;
+      ${rich
+        ? '<div class="text" contenteditable="true" spellcheck="true"></div>'
+        : '<textarea class="raw" spellcheck="true"></textarea><div class="raw-note">edited as source: this block uses Markdown the editor will not round trip safely</div>'}
+      <div class="actions">
+        <button data-action="keep">Save</button>
+        <button data-action="query">Retry</button>
+        <span class="hint">${rich ? "edit it to make it yours" : ""}</span>
+        <button class="revert">Revert</button>
+      </div>
+      <div class="retry">
+        <textarea placeholder="What is wrong with it, and what you want instead."></textarea>
+        <div class="retry-row">
+          <button class="rewrite">Rewrite it</button>
+          <span class="hint status"></span>
+        </div>
+      </div>`;
+
+    if (rich) el.querySelector(".text").innerHTML = toHtml(b.text);
+    else el.querySelector(".raw").value = b.text;
     sheet.appendChild(el);
 
-    const text = el.querySelector(".text");
-    const original = b.text;
-    text.addEventListener("input", () => {
-      // Editing is the decision. No save button, because a save button is a thing to forget.
-      if (text.innerText === original) return;
-      decide(b.id, "edit");
-    });
-    for (const btn of el.querySelectorAll("button")) {
+    const editor = el.querySelector(".text") ?? el.querySelector(".raw");
+    const changed = () => {
+      const isChanged = current(el) !== b.text;
+      el.classList.toggle("changed", isChanged);
+      // Editing is the decision. A save button is a thing to forget, and going back to the original
+      // takes the decision back with it.
+      if (isChanged) decide(b.id, "edit");
+      else if (state.get(b.id)?.action === "edit") clear(b.id, el);
+    };
+    editor.addEventListener("input", changed);
+    el.addEventListener("stet:changed", changed);
+    editor.addEventListener("focus", () => el.classList.add("focused"));
+    editor.addEventListener("blur", () => setTimeout(() => el.classList.remove("focused"), 150));
+
+    for (const btn of el.querySelectorAll(".tools [data-fmt]")) {
+      btn.addEventListener("mousedown", (e) => e.preventDefault());
+      btn.addEventListener("click", () => format(el, btn.dataset.fmt));
+    }
+    for (const btn of el.querySelectorAll(".actions [data-action]")) {
       btn.addEventListener("click", () => decide(b.id, btn.dataset.action));
     }
-    el.querySelector("textarea").addEventListener("input", () => {
-      if (state.get(b.id)?.action === "query") decide(b.id, "query");
+    el.querySelector(".revert").addEventListener("click", () => revert(b.id));
+
+    el.querySelector(".rewrite").addEventListener("click", async () => {
+      const note = el.querySelector(".retry textarea").value.trim();
+      const status = el.querySelector(".status");
+      const button = el.querySelector(".rewrite");
+      button.disabled = true;
+      el.classList.add("busy");
+      status.textContent = "rewriting";
+      const res = await post("/api/retry", { id: b.id, text: current(el), note });
+      el.classList.remove("busy");
+      button.disabled = false;
+      if (!res.ok) {
+        status.textContent = res.reason ?? "no rewrite came back";
+        return;
+      }
+      status.textContent = "rewritten. Save it, edit it, or retry again.";
+      if (el.querySelector(".raw")) el.querySelector(".raw").value = res.text;
+      else el.querySelector(".text").innerHTML = toHtml(res.text);
+      el.classList.add("changed");
+      // A rewrite is still the agent's work. The block goes back to undecided rather than being
+      // recorded as the author's, because they have not accepted it yet.
+      clear(b.id, el);
     });
   }
   counts();

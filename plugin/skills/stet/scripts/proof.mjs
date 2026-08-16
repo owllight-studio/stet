@@ -19,6 +19,8 @@
  */
 
 import { createServer } from "node:http";
+import { execFile } from "node:child_process";
+import { existsSync } from "node:fs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,6 +66,9 @@ const server = createServer(async (req, res) => {
   };
 
   if (req.url === "/" || req.url?.startsWith("/?")) return send(200, page, "text/html; charset=utf-8");
+  if (req.url === "/proof-md.js") {
+    return send(200, readFileSync(join(here, "proof-md.js"), "utf8"), "text/javascript; charset=utf-8");
+  }
   if (req.url === "/api/blocks") return send(200, { root, blocks: drafts });
 
   if (req.url === "/api/decide" && req.method === "POST") {
@@ -76,6 +81,57 @@ const server = createServer(async (req, res) => {
     } catch (err) {
       return send(400, { error: err.message });
     }
+  }
+
+  /**
+   * Rewrite one block, here, now.
+   *
+   * The author should be able to work through a page without leaving it, so a retry does the
+   * rewrite rather than queueing one. It shells out to a fresh `claude -p` with the house voice and
+   * nothing else: no conversation, no memory, no chance of it wandering into the rest of the repo.
+   *
+   * If the CLI is missing or fails, the retry falls back to a query the terminal picks up, which is
+   * the behaviour this had before and is never worse than nothing.
+   */
+  if (req.url === "/api/retry" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) body += chunk;
+    const { id, text, note } = JSON.parse(body || "{}");
+    const voicePath = join(root, "VOICE.md");
+    const voice = existsSync(voicePath) ? readFileSync(voicePath, "utf8") : "";
+
+    const prompt = [
+      "Rewrite one block of content. Return ONLY the replacement, as Markdown.",
+      "No preamble, no explanation, no code fences, no commentary of any kind.",
+      "Keep the same Markdown shape: a heading stays a heading, a list stays a list.",
+      voice ? `\nThe house voice, which is not optional:\n\n${voice}` : "",
+      `\nWhat the author wants changed:\n${note || "Make it better."}`,
+      `\nThe block:\n${text}`,
+    ].join("\n");
+
+    const rewritten = await new Promise((resolve) => {
+      execFile(
+        "claude",
+        ["-p", prompt],
+        { timeout: 120000, maxBuffer: 1 << 22, cwd: root },
+        (err, stdout) => resolve(err ? null : String(stdout).trim()),
+      );
+    });
+
+    if (!rewritten) {
+      return send(200, { ok: false, reason: "No rewrite came back. Queued for the terminal instead." });
+    }
+    // Fences sometimes survive the instruction not to use them.
+    const clean = rewritten.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/, "").trim();
+    return send(200, { ok: true, id, text: clean });
+  }
+
+  if (req.url === "/api/undecide" && req.method === "POST") {
+    let body = "";
+    for await (const chunk of req) body += chunk;
+    const { id } = JSON.parse(body || "{}");
+    decisions.delete(id);
+    return send(200, { ok: true, count: decisions.size });
   }
 
   if (req.url === "/api/done" && req.method === "POST") {
@@ -92,7 +148,7 @@ const port = Number(process.env.STET_PROOF_PORT ?? 4741);
 server.listen(port, () => {
   console.log(`Proof sheet: http://localhost:${port}`);
   console.log(`${drafts.length} draft blocks across ${new Set(drafts.map((d) => d.file)).size} files.`);
-  console.log("Waiting. Keep, correct or query each block, then press Done.\n");
+  console.log("Waiting. Save, correct or retry each block, then press Done.\n");
 });
 
 await new Promise((resolve) => server.on("close", resolve));

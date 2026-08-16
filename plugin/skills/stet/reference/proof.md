@@ -23,8 +23,14 @@ becomes theirs and closes to you permanently. Only that line. The paragraph arou
 of the file, stay exactly as owned as they were. Recording it any wider would have the tool claim
 they wrote things they never touched.
 
-**A query is not a rejection.** A block sent back with a comment stays `draft` and the comment
-becomes your instruction. You rewrite and it goes back on the sheet.
+**A retry is not a rejection.** The sheet rewrites the block itself: it shells out to a fresh
+`claude -p` with the house voice, the block and the author's note, and swaps the result in place so
+they can keep working without leaving the page. The block goes back to undecided, because a rewrite
+is still the agent's work until somebody accepts it.
+
+**Every decision can be taken back.** Clicking an action again clears it, and Revert restores the
+block exactly as it arrived and drops the decision with it. A choice you cannot undo is a choice
+nobody makes freely, and a review surface people are wary of is one nobody finishes.
 
 ## Do this
 
@@ -47,12 +53,12 @@ at what the author will choose. It blocks until they are done and then prints th
 
 ### 3. Apply what came back
 
-The script writes the edits and the states itself. Your job afterwards is the queries: each one is
-an instruction about a specific block, in the author's words, and the block is still `draft` so you
-may act on it.
+The script writes the edits and the sentence claims itself. Most retries were handled on the page
+and need nothing from you. Any that were left queued are instructions about a specific block, in the
+author's words, and the block is still `draft` so you may act on it.
 
-Rewrite, then offer the sheet again. Do not rewrite the blocks that were kept, and do not touch the
-blocks the author edited, which are now `authored` and closed to you.
+Do not touch the blocks that were saved, and do not touch the sentences the author typed. Those are
+theirs now, and the rest of the file around them is still yours.
 
 ### 4. Report
 
