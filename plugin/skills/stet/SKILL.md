@@ -70,7 +70,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
-| `restructure` | Refine | Reorder and regroup within a page | reference/restructure.md |
+| `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
 | `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | reference/doctor.md |
 
