@@ -86,7 +86,8 @@ voice, but everybody can correct a wrong description of it.
 
 ## Status
 
-Early. The Establish group is built. Everything else is designed and not yet written. Being built and proved against a real site before it is recommended to anyone.
+Early. The Establish group is built. Everything else is designed and not written yet.
+Being proved against a real site before it is recommended to anyone.
 
 ## Licence
 
