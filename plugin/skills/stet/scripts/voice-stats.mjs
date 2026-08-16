@@ -28,6 +28,9 @@ function prose(text, ext) {
   t = t.replace(/`[^`]*`/g, "");                          // inline code
   t = t.replace(/^\|.*\|$/gm, "");                        // tables
   t = t.replace(/<[^>]+>/g, " ");                         // html
+  // A quoted example of a habit is not the habit. Found by measuring Stet's own writing, where the
+  // file that lists the tics was counted as committing them.
+  t = t.replace(/"[^"]{0,80}"/g, '""');
   if (ext === ".json") t = t.replace(/"[a-zA-Z_]+"\s*:/g, " ");
   return t;
 }

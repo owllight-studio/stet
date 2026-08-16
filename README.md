@@ -3,14 +3,19 @@
 **Content that knows who owns it.** A Claude Code plugin that stops agents rewriting your words and
 keeps the rest true.
 
-*stet* — the proofreader's mark meaning **let it stand**. Ignore the correction; the original is
+*stet*, the proofreader's mark meaning **let it stand**. Ignore the correction; the original is
 right.
 
 ---
 
 ## The problem
 
-You point Claude at a content codebase. Two things go wrong, and they pull in opposite directions.
+You point Claude at a content codebase. Three things go wrong.
+
+**It writes too much.** Every paragraph is a sentence and a half doing the work of a sentence. Every
+list has a preamble. Nothing is ever just said. You end up spending more time unwinding the slop
+than you would have spent writing it, which is the opposite of the deal, and the time it takes comes
+out of the work only you can do.
 
 **It rewrites what it should not touch.** The paragraph you agonised over comes back "improved". You
 did not ask. You asked for a redesign, or a fix three files away, and your words were collateral.
@@ -19,8 +24,11 @@ did not ask. You asked for a redesign, or a fix three files away, and your words
 in the file says that number came from anywhere, so nothing knows it went stale, and the page keeps
 stating it with a straight face.
 
-Both are the same missing thing: **content carries no record of who owns it or what may be done to
-it.** Every CMS ever built hands you a text box and hopes.
+The last two are one missing thing: **content carries no record of who owns it or what may be done
+to it.** Every CMS ever built hands you a text box and hopes.
+
+The first is a missing standard. A voice defined once, derived from writing you already did, applied
+every time, and checked. Not a note in a prompt that survives eleven turns.
 
 ## What Stet does
 
@@ -83,6 +91,17 @@ Establish a project, then work in it.
 The order for a project that already has content is `ingest`, `init`, `voice`, `ia`. Read it before
 you describe it, and derive the voice rather than asking for it: nobody can describe their own
 voice, but everybody can correct a wrong description of it.
+
+## Stet governs Stet
+
+This repository is its own first user. `stet.config.json` declares its content, `VOICE.md` was
+derived from its writing rather than written for it, and both checks run clean over all of it: zero
+em dashes, zero exclamations, zero of the usual tells, median sentence 13 words.
+
+Two bugs came out of pointing it at itself on the first day. The tell checker flagged the file that
+lists the tells, because naming a construction is not committing it; quoted text is skipped now. And
+the default of claiming everything as `owner: human` does not fit a repository an agent wrote under
+direction, which is a gap in the ownership model rather than a bug in the code.
 
 ## Status
 

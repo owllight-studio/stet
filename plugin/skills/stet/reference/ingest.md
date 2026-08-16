@@ -67,20 +67,20 @@ edits content is an ingest nobody will run twice.
 
 The report is the deliverable. Structure it as:
 
-**What this is** — one paragraph, what the project appears to be for and who it is written for.
+**What this is**, one paragraph, what the project appears to be for and who it is written for.
 
-**How it sounds** — three or four observations with an example line for each. Quote real sentences.
+**How it sounds**, three or four observations with an example line for each. Quote real sentences.
 
-**The inventory** — files, words, formats, and the shape of it: how many pages, how deep, how
+**The inventory**, files, words, formats, and the shape of it: how many pages, how deep, how
 uneven.
 
-**Claims that will go stale** — every figure with no recorded source, grouped by how load-bearing it
+**Claims that will go stale**, every figure with no recorded source, grouped by how load-bearing it
 is. This is usually the most useful part of the whole report and the one that sells the tool.
 
-**What is already wrong** — contradictions, dead ends, duplicated content, pages that no other page
+**What is already wrong**, contradictions, dead ends, duplicated content, pages that no other page
 links to.
 
-**What I would do next** — usually `voice`, then `ia`. Say why.
+**What I would do next**, usually `voice`, then `ia`. Say why.
 
 ## Do not
 

@@ -186,9 +186,9 @@ counter-example for each, and let them correct it.
 Three artifacts, on the model of Impeccable's `PRODUCT.md` and `DESIGN.md` split, kept separate
 because they change on different clocks:
 
-- `CONTENT.md` — what the project is, who reads it, what it must never be
-- `VOICE.md` — how it sounds, as rules with examples and counter-examples
-- `IA.md` — what exists, how it relates, and the rules for where the next page goes
+- `CONTENT.md`, what the project is, who reads it, what it must never be
+- `VOICE.md`, how it sounds, as rules with examples and counter-examples
+- `IA.md`, what exists, how it relates, and the rules for where the next page goes
 
 ## Open
 

@@ -5,7 +5,7 @@ description: Use when writing, editing, auditing or refreshing content in a proj
 
 # Stet
 
-*stet* — the proofreader's mark meaning **let it stand**.
+*stet*, the proofreader's mark meaning **let it stand**.
 
 Content in this project carries an owner and a policy. Some of it is the author's and you may not
 touch it. Some of it is yours to maintain, and leaving it stale is as much a failure as rewriting
@@ -13,10 +13,22 @@ what was not yours.
 
 This skill is how you tell the difference.
 
-## The two failures
+## The three failures
 
-They pull in opposite directions, which is why one instruction cannot fix both, and why you will
-fail at whichever one you are not currently thinking about.
+You will commit all three, and the first one you will commit today.
+
+**Writing too much.** This is the default failure and the one that costs the author most, because
+unwinding it takes longer than writing would have. A sentence and a half doing the work of a
+sentence. A preamble before a list. A qualifier nobody asked for. The fix is not to write long and
+trim: trimming leaves the qualifiers in. Write the short version first and ship that.
+
+The tells, in order of how often they show up: the em dash, the "not X, it is Y" construction, the
+aphorism that summarises a paragraph nobody needed summarised, restating the question before
+answering it, and explaining to readers what they obviously are.
+
+**Never use an em dash.** Not in content, not in a commit message, not in your reply. A colon, a
+full stop or a bracket is better in every case, and its absence is the single cheapest way for
+writing not to read as generated.
 
 **Rewriting what is not yours.** The author laboured over a paragraph. You were asked for something
 else entirely and improved it on the way past. Nobody asked. This is the one that destroys trust,
@@ -86,6 +98,9 @@ without changing.
 
 **Proposing is not editing.** You may always show the author a rewrite of their own words. Show it
 in your reply. Do not put it in the file.
+
+**The short version first.** Not a long draft trimmed afterwards. Trimming leaves the qualifiers
+in, which is why every trimmed draft still reads long.
 
 **Report what you did not do.** Every command that skips content because of ownership must list what
 it skipped. Silence reads as "there was nothing to do", which is a different and false statement.

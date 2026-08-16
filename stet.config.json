@@ -1,0 +1,11 @@
+{
+  "content": [
+    "README.md",
+    "VOICE.md",
+    "docs",
+    "plugin/skills/stet"
+  ],
+  "format": "auto",
+  "voice": "VOICE.md",
+  "note": "Stet's own content, governed by Stet. The skill and reference files are content: they are read by an agent and their wording decides what it does, which makes them the highest-stakes prose in the project."
+}
