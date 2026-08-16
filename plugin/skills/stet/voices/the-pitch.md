@@ -43,8 +43,28 @@ of a bad afternoon.
 Every claim spends trust. Proof is how you pay it back, and it has to be within a sentence or two:
 a number, a demonstration, a name, a mechanism. Never a testimonial standing in for one.
 
-**Yes:** "It refuses the edit. Not a guideline in a prompt, a hook that says no."
+**Yes:** "An agent that tries to rewrite your paragraph gets an error instead."
 **No:** "Our best-in-class protection gives you peace of mind."
+
+Why: the first is a thing that either happens or does not, and the reader can imagine it happening.
+The second is a feeling, and a feeling cannot be checked.
+
+### Proof a stranger can evaluate
+
+This is where concrete writing usually fails on a landing page, and it fails in a way that looks
+like success. Insider detail feels specific to the person who wrote it and means nothing to the
+person reading it. A reader who cannot tell whether your proof is impressive has not been given
+proof.
+
+**Yes:** "An agent that tries to rewrite your paragraph gets an error instead."
+**No:** "A PreToolUse hook denies the edit rather than a rule in the system prompt."
+
+Why: the second is more precise and less useful. Every noun in it is one the reader has to already
+own. Vague and comprehensible beats exact and opaque, which is the one place a marketing page
+should be less rigorous than a reference page, and the reason this is its own rule.
+
+The test: could somebody who has never heard of you repeat your proof to a colleague and have it
+still sound good? If not, it is a fact about your implementation rather than a reason to care.
 
 ### Handle the obvious objection before they leave
 
