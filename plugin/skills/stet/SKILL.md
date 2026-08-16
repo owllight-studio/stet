@@ -64,6 +64,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `write` | Compose | Author in the voice, to the IA | [reference/write.md](reference/write.md) |
 | `expand` | Compose | A stub into a finished piece | [reference/expand.md](reference/expand.md) |
 | `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
+| `proof` | Authorship | Read what an agent wrote, block by block, and decide | [reference/proof.md](reference/proof.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
 | `critique` | Evaluate | A scored review of one piece | [reference/critique.md](reference/critique.md) |
@@ -72,7 +73,7 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
 | `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
-| `doctor` | Maintain | Drift between config, content and this plugin | reference/doctor.md |
+| `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |
 
 Commands without a reference file yet are not built. Say so rather than improvising one.
 
