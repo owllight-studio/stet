@@ -12,5 +12,11 @@
   "prose": [
     "site/index.html",
     "README.md"
-  ]
+  ],
+  "sources": {
+    "library.presets": {
+      "run": "node scripts/count-presets.mjs",
+      "as": "number"
+    }
+  }
 }

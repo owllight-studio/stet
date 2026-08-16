@@ -67,11 +67,11 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `policy` | Authorship | What may be done to them, and what they depend on | reference/policy.md |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | reference/audit.md |
 | `critique` | Evaluate | A scored review of one piece | reference/critique.md |
-| `verify` | Evaluate | Every claim checked against its real source | reference/verify.md |
+| `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `tighten` | Refine | Cut | reference/tighten.md |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | reference/clarify.md |
 | `restructure` | Refine | Reorder and regroup within a page | reference/restructure.md |
-| `refresh` | Maintain | Update what policy allows, leave the rest | reference/refresh.md |
+| `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | reference/doctor.md |
 
 Commands without a reference file yet are not built. Say so rather than improvising one.

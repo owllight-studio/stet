@@ -2,11 +2,13 @@
 stet:
   state: draft
   author: agent
+  policy: refresh
+  sources: [library.presets]
 ---
 
 # Voices
 
-A library of registers, not moods.
+A library of 17 registers, not moods.
 
 The job these serve is one sentence: **writing that does not read as written by a machine.** That is
 not a taste preference. Readers told a headline was AI-generated rated it less accurate and were
