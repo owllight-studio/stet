@@ -65,9 +65,28 @@ Hugo, a docs folder, or a pile of Markdown.
 
 Your project tells Stet where content lives and how to fetch a fact. Stet does the rest.
 
+## Commands
+
+Establish a project, then work in it.
+
+    ingest    read what is there, claim it for you, report what it found
+    init      what this is, who reads it, what it must never be
+    voice     derive the house voice from what you have already written
+    ia        what exists, how it relates, where the next page goes
+
+    write · outline · expand          compose
+    claim · release · policy          authorship
+    audit · critique · verify         evaluate
+    tighten · clarify · restructure   refine
+    refresh · doctor                  maintain
+
+The order for a project that already has content is `ingest`, `init`, `voice`, `ia`. Read it before
+you describe it, and derive the voice rather than asking for it: nobody can describe their own
+voice, but everybody can correct a wrong description of it.
+
 ## Status
 
-Early. Being built and proved against a real site before it is recommended to anyone.
+Early. The Establish group is built. Everything else is designed and not yet written. Being built and proved against a real site before it is recommended to anyone.
 
 ## Licence
 

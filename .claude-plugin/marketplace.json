@@ -1,0 +1,24 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "stet",
+  "metadata": {
+    "description": "Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words and keeps the rest true."
+  },
+  "owner": {
+    "name": "Owllight Studio"
+  },
+  "plugins": [
+    {
+      "name": "stet",
+      "description": "Content that knows who owns it. Establishes ownership and policy on every piece of content, derives and enforces a house voice, maps information architecture, and keeps claims true to their sources.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Owllight Studio"
+      },
+      "source": "./plugin",
+      "category": "content",
+      "repository": "https://github.com/owllight-studio/stet",
+      "tags": ["content", "cms", "writing", "editing", "ownership", "skills", "commands"]
+    }
+  ]
+}

@@ -128,6 +128,70 @@ dreambreath.gg, a Preservation Evoker resource whose entire claim is that every 
 query. It already has the document schema, a metric registry, a validator and a block registry built
 by hand. Those become the first project to adopt Stet, and the test of whether the boundary holds.
 
+## Commands
+
+Six groups. Each command is a different mode of working, not a synonym for the one beside it.
+
+| Group | Command | What it does |
+|---|---|---|
+| **Establish** | `init` | What the project is, who reads it, what it must do. Writes `CONTENT.md`. |
+| | `voice` | Derive the house voice from writing that exists, or define it. Writes `VOICE.md`. |
+| | `ia` | What exists, how it relates, what each page is for. Writes `IA.md`. |
+| | `ingest` | Read everything there, claim it for the author, report what is there. |
+| **Compose** | `outline` | Plan a piece before writing it. |
+| | `write` | Author in the voice, to the IA, respecting ownership. |
+| | `expand` | A stub into a finished piece. |
+| **Authorship** | `claim` / `release` | Whose words these are. |
+| | `policy` | What may be done to them, and what they depend on. |
+| **Evaluate** | `audit` | The sweep: stale claims, typed figures, unowned content, orphans, voice breaks. |
+| | `critique` | A scored review of one piece against a rubric. |
+| | `verify` | Every claim checked against its real source. |
+| **Refine** | `tighten` | Cut. |
+| | `clarify` | Make it comprehensible to someone who is not the author. |
+| | `restructure` | Reorder and regroup within a page. |
+| **Maintain** | `refresh` | Update what policy allows, leave the rest. |
+| | `doctor` | Drift between config, content and the plugin. |
+
+The group holding `claim` was called Custody while the design was being worked out. Authorship is
+warmer, it is native to the publishing vocabulary the rest of the product borrows from, and "claim
+your words" is the emotional centre of the pitch. The writing group became Compose so the two do
+not collide.
+
+Three commands were not in the original sketch and earned their place:
+
+- **`verify`** is separate from `audit` because a sweep and a deep check of one claim against its
+  real source are different jobs. One says "this looks stale", the other says "I asked, and it is
+  wrong."
+- **`tighten`** because on the reference project it is, by a distance, the most repeated correction
+  ever given. Four times, escalating, ending in capitals. If there is one refine command it is this.
+- **`critique`** as the Impeccable analogue: a rubric and specific findings rather than a general
+  improve-this pass.
+
+## The zero to one path
+
+Impeccable's real value is not its polish commands, it is that it walks a project from nothing to a
+described design system. Stet does the same for content, and the order matters:
+
+**`ingest` → `init` → `voice` → `ia`**
+
+`ingest` first, always, and before `init`. You cannot usefully describe what a project is until you
+have read what it already says, and the author is far better at correcting a description than
+producing one.
+
+`voice` derives rather than asks. Nobody can describe their own voice; ask and you get "clear,
+friendly, authoritative", which excludes nothing and instructs nothing. Read the corpus, measure
+what can be measured, present rules with the author's own sentences as examples and a
+counter-example for each, and let them correct it.
+
+Three artifacts, on the model of Impeccable's `PRODUCT.md` and `DESIGN.md` split, kept separate
+because they change on different clocks:
+
+- `CONTENT.md` — what the project is, who reads it, what it must never be
+- `VOICE.md` — how it sounds, as rules with examples and counter-examples
+- `IA.md` — what exists, how it relates, and the rules for where the next page goes
+
 ## Open
 
-The command set for the first release, and how much of the audit and voice work lands in it.
+Whether Stet holds a point of view on what good content is, or stays neutral and enforces whatever
+voice a project declares. Impeccable has taste and asserts it. Neutral makes better plumbing; a
+position makes the better product, and it is not a decision to take early.

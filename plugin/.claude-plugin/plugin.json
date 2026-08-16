@@ -1,0 +1,10 @@
+{
+  "name": "stet",
+  "description": "Content that knows who owns it. Establishes ownership and policy on every piece of content, derives and enforces a house voice, maps information architecture, and keeps claims true to their sources.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Owllight Studio"
+  },
+  "repository": "https://github.com/owllight-studio/stet",
+  "skills": "./skills/"
+}
