@@ -1,0 +1,209 @@
+/* Stet.
+ *
+ * The world is a galley proof: paper, a copy editor's marks, and the non-photo blue pencil that
+ * printers could not see. That blue is the accent, red is deletion, and neither is decoration:
+ * they are the two colours the craft actually uses.
+ *
+ * Deliberately not the warm-cream-and-terracotta look every generated landing page arrives in.
+ * Paper is cool white here, the way a proof is, and the accent is a colour nobody picks.
+ */
+
+:root {
+  --paper: #fbfbf9;
+  --paper-edge: #f1f1ec;
+  --ink: #16161a;
+  --ink-soft: #55555f;
+  --ink-faint: #8b8b95;
+  --rule: #e2e2db;
+
+  /* Non-photo blue. The pencil a copy editor marks with, chosen because the camera could not see
+     it. Nothing else on the web uses it, which is the point. */
+  --pencil: #2c6d9e;
+  --pencil-wash: #eaf2f8;
+  --strike: #c0392b;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --measure: 34rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14141a;
+    --paper-edge: #1b1b22;
+    --ink: #eeeef0;
+    --ink-soft: #a9a9b4;
+    --ink-faint: #74747f;
+    --rule: #2b2b34;
+    --pencil: #7db8e0;
+    --pencil-wash: #1b2733;
+    --strike: #e07a6e;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14141a;
+  --paper-edge: #1b1b22;
+  --ink: #eeeef0;
+  --ink-soft: #a9a9b4;
+  --ink-faint: #74747f;
+  --rule: #2b2b34;
+  --pencil: #7db8e0;
+  --pencil-wash: #1b2733;
+  --strike: #e07a6e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 60rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
+.measure { max-width: var(--measure); }
+
+/* --- masthead ------------------------------------------------------------ */
+
+.top {
+  display: flex; align-items: baseline; gap: 1.25rem; flex-wrap: wrap;
+  padding: 1.75rem 0 0;
+}
+.mark {
+  font-family: var(--mono); font-size: 1rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink);
+}
+.mark b { font-weight: 400; border-bottom: 2px solid var(--pencil); padding-bottom: 2px; }
+.top nav { margin-left: auto; display: flex; gap: 1.5rem; }
+.top nav a {
+  font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid transparent;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.top nav a:hover { color: var(--ink); border-bottom-color: var(--pencil); }
+
+/* --- the proof ------------------------------------------------------------ */
+
+.hero { padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 4.5rem); }
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 3.9rem);
+  line-height: 1.06; letter-spacing: -0.021em; font-weight: 400;
+  margin: 0 0 1.5rem; text-wrap: balance;
+}
+.lede { font-size: clamp(1.05rem, 2.2vw, 1.28rem); color: var(--ink-soft); margin: 0 0 2.75rem; }
+
+/* The demonstration. A page of proof with one sentence struck out and restored by a margin mark. */
+.proof {
+  position: relative;
+  background: var(--paper-edge);
+  border: 1px solid var(--rule);
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.5rem)
+           clamp(4.5rem, 11vw, 7.5rem);
+  font-size: 1.02rem; line-height: 1.85;
+}
+.proof p { margin: 0 0 .9rem; color: var(--ink-soft); }
+.proof p:last-child { margin-bottom: 0; }
+
+.proof .kept { color: var(--ink); position: relative; }
+/* The strike is drawn rather than a line-through, so it can be animated and so it sits where a
+   pencil would put it rather than where the font metrics would. */
+.proof .kept::after {
+  content: ""; position: absolute; left: -.1em; right: -.1em; top: 52%;
+  height: 2px; background: var(--strike); transform-origin: left; transform: scaleX(0);
+  animation: strike 9s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes strike {
+  0%, 8%    { transform: scaleX(0); }
+  22%, 58%  { transform: scaleX(1); }
+  72%, 100% { transform: scaleX(0); }
+}
+
+.margin-mark {
+  position: absolute; left: clamp(1rem, 3vw, 2rem); top: 50%; transform: translateY(-50%);
+  font-family: var(--mono); font-size: .82rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--pencil); opacity: 0;
+  animation: mark 9s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.margin-mark::after {
+  content: ""; display: block; height: 1px; background: var(--pencil); margin-top: .35rem;
+}
+@keyframes mark {
+  0%, 26%   { opacity: 0; transform: translateY(-50%) translateX(-.4rem); }
+  38%, 62%  { opacity: 1; transform: translateY(-50%) translateX(0); }
+  78%, 100% { opacity: 0; transform: translateY(-50%) translateX(-.4rem); }
+}
+
+.proof-note {
+  margin: .9rem 0 0; font-family: var(--mono); font-size: .76rem; letter-spacing: .06em;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proof .kept::after, .margin-mark { animation: none; }
+  .proof .kept::after { transform: scaleX(1); }
+  .margin-mark { opacity: 1; transform: translateY(-50%); }
+}
+
+/* --- sections ------------------------------------------------------------ */
+
+section { padding: clamp(3rem, 7vw, 5.5rem) 0; border-top: 1px solid var(--rule); }
+
+h2 {
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 400; letter-spacing: -0.014em;
+  margin: 0 0 1.75rem; text-wrap: balance;
+}
+h3 { font-size: 1.12rem; font-weight: 400; margin: 0 0 .4rem; }
+p { margin: 0 0 1.15rem; }
+p:last-child { margin-bottom: 0; }
+
+.eyebrow {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--pencil); margin: 0 0 .9rem;
+}
+
+.failures { display: grid; gap: 2.25rem; }
+@media (min-width: 52rem) { .failures { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; } }
+.failure { border-top: 2px solid var(--strike); padding-top: 1rem; }
+.failure:nth-child(2) { border-top-color: var(--pencil); }
+.failure:nth-child(3) { border-top-color: var(--ink-faint); }
+.failure p { font-size: .96rem; color: var(--ink-soft); margin: 0; }
+
+/* The three states, as a proof sheet rather than a table of features. */
+.states { border-top: 1px solid var(--rule); }
+.state {
+  display: grid; gap: .25rem 1.5rem; padding: 1.35rem 0; border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 44rem) { .state { grid-template-columns: 9rem 1fr; } }
+.state dt {
+  font-family: var(--mono); font-size: .82rem; letter-spacing: .08em; color: var(--pencil);
+}
+.state dd { margin: 0; color: var(--ink-soft); font-size: .98rem; }
+.state dd b { color: var(--ink); font-weight: 400; }
+
+pre {
+  background: var(--paper-edge); border: 1px solid var(--rule);
+  padding: 1.1rem 1.25rem; overflow-x: auto; margin: 0 0 1.15rem;
+  font-family: var(--mono); font-size: .84rem; line-height: 1.7; color: var(--ink-soft);
+}
+pre b { color: var(--ink); font-weight: 400; }
+code { font-family: var(--mono); font-size: .88em; color: var(--pencil); }
+
+.cmds { display: grid; gap: 1.75rem; }
+@media (min-width: 44rem) { .cmds { grid-template-columns: repeat(2, 1fr); gap: 1.75rem 3rem; } }
+.cmd h3 { font-family: var(--mono); font-size: .9rem; letter-spacing: .04em; color: var(--ink); }
+.cmd p { font-size: .93rem; color: var(--ink-soft); margin: 0; }
+
+.foot {
+  border-top: 1px solid var(--rule); padding: 2.5rem 0 4rem;
+  font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; color: var(--ink-faint);
+  display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: baseline;
+}
+.foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.foot a:hover { color: var(--ink); border-bottom-color: var(--pencil); }
+.foot .right { margin-left: auto; }
