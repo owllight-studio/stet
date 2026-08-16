@@ -164,6 +164,18 @@ button:disabled { opacity: .4; cursor: default; }
   padding: .7rem 0; border-bottom: 1px solid var(--rule); color: var(--soft); font-size: .98rem;
 }
 .tally b { font-family: var(--mono); font-size: .9rem; color: var(--pencil); margin-right: .5rem; }
+.finished .files { font-size: .9rem; }
+.finished code { font-family: var(--mono); font-size: .82rem; color: var(--pencil); }
+.notes { margin: 1.5rem 0; }
+.notes blockquote {
+  margin: .5rem 0 0; padding: .6rem .85rem; background: var(--edge);
+  border-left: 2px solid var(--strike);
+}
+.notes b {
+  display: block; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em;
+  color: var(--soft); margin-bottom: .25rem;
+}
+.notes span { font-size: .95rem; }
 </style>
 </head>
 <body>
@@ -440,14 +452,22 @@ async function finish(publish) {
         ${line(summary.kept, publish ? "approved and closed" : "saved and closed")}
         ${line(summary.edited, "corrected by you, and those sentences are yours")}
         ${line(summary.rewritten, "rewritten and written back")}
-        ${line(summary.queries, "sent back to the terminal, still draft")}
+        ${line(summary.queries, "sent back, still draft")}
         ${publish ? "" : line(left, "left alone, still draft")}
       </ul>
+      ${summary.files?.length ? `<p class="files">Written to ${summary.files.map((f) => `<code>${f}</code>`).join(", ")}</p>` : ""}
+      ${
+        summary.notes?.length
+          ? `<div class="notes"><p>Sent back, for the agent to act on:</p>${summary.notes
+              .map((n) => `<blockquote><b>${n.id}</b>${n.note ? `<span>${n.note}</span>` : "<span>no note given</span>"}</blockquote>`)
+              .join("")}</div>`
+          : ""
+      }
       <p>${
         publish
           ? "Everything you did not send back is approved and closed to the agent."
           : "Only what you decided was applied. Everything else is still a draft and will be on the next sheet."
-      } The same summary is in your terminal. You can close this tab.</p>
+      } You can close this tab.</p>
     </div>`;
 }
 

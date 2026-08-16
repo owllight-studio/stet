@@ -190,7 +190,11 @@ const server = createServer(async (req, res) => {
       else if (d.action === "rewrite") tally.rewritten++;
       else if (d.action === "query") tally.queries++;
     }
-    send(200, { ok: true, published: publishing, ...tally });
+    const touched = [...new Set([...decisions.keys()].map((id) => id.split("#")[0]))];
+    const notes = [...decisions.entries()]
+      .filter(([, d]) => d.action === "query")
+      .map(([id, d]) => ({ id, note: d.note ?? "" }));
+    send(200, { ok: true, published: publishing, files: touched, notes, ...tally });
     setTimeout(() => server.close(), 150);
     return;
   }
