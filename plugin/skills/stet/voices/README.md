@@ -2,7 +2,6 @@
 stet:
   state: draft
   author: agent
-  policy: refresh
   sources: [library.presets]
 ---
 

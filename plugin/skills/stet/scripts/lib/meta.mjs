@@ -28,8 +28,18 @@ import { join, extname } from "node:path";
 export const STATES = ["draft", "approved", "authored"];
 export const POLICIES = ["frozen", "refresh", "open"];
 
-/** May an agent rewrite the words? Only in draft. Everything else is closed. */
-export const mayEdit = (meta) => meta?.state === "draft";
+/**
+ * May an agent rewrite the words?
+ *
+ * In draft, because nobody has accepted them. Or under policy `open`, which is the only way a
+ * closed file reopens without changing its state, and exists for the page somebody approved once
+ * and wants kept current wholesale.
+ *
+ * `open` used to be declared in the policy vocabulary and behave exactly like `refresh`, which made
+ * one of the three policies dead and the vocabulary a lie. Either it means this or it should not be
+ * offered.
+ */
+export const mayEdit = (meta) => meta?.state === "draft" || meta?.policy === "open";
 
 /**
  * Sentences a person wrote inside otherwise open content. Ownership is per sentence: correcting one
