@@ -13,21 +13,54 @@ This is the file that gets loaded before every `write`, `tighten` and `clarify`.
 artifact that determines whether generated content is usable or has to be rewritten by hand, which
 in practice means it is the most valuable file in the project.
 
+## Four sources, and they compose
+
+A voice is built from evidence. There are four kinds and an author may bring any combination: start
+from a preset, bend it with a persona, feed it their own writing, and let it read the project. All
+four feed one derivation, and the output is always the same file.
+
+| Source | What it is | How to get it |
+|---|---|---|
+| **preset** | a register from Stet's library | `node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/voices.mjs` |
+| **persona** | a description, turned into rules | the author's words, in the request |
+| **samples** | their writing from elsewhere | files, URLs, Drive documents, pasted text |
+| **project** | the corpus already here | `ingest` found it |
+
+Ask which they have. Do not assume the project is the only source just because it is the one you can
+read without asking.
+
+### On presets
+
+Offer the library rather than describing it. Show the list, grouped, and let them pick. A preset is
+a starting point and never a finished voice: it goes into `VOICE.md` composed with everything else,
+and nothing reads the preset file again afterwards.
+
+### On personas
+
+"Anthony Bourdain and James Earl Jones narrate my writing." "A child who only knows what a crayon
+is." "A PhD mathematician." These are real and usable requests, and the way to honour them is not
+imitation.
+
+**Extract the qualities into rules.** What makes that voice recognisable? The concrete noun over the
+abstract one. The aside that undercuts the reverence. The short sentence after the long one. Write
+those as rules with examples, the same as any other source.
+
+Pastiche is a party trick that falls apart by the third paragraph. Rules are usable, transferable,
+and the author's own. When a persona names a real person, you are extracting technique, not
+impersonating them, and the difference shows in whether the result still works on the fourth page.
+
+### On samples
+
+The strongest evidence there is, because it already happened. Read whatever they can point at: files
+in the repo, a URL, a Google Doc, text pasted into the conversation. Read enough for range: their
+best piece and their most ordinary one say different things and the voice is both.
+
+### On the project
+
+What `ingest` already read. If the author is adopting Stet on an existing site, this is where you
+start, and where the current corpus can correct a preset that does not quite fit.
+
 ## Derive it, do not ask for it
-
-**Nobody can describe their own voice.** Ask an author how they write and you get aspiration:
-"clear, friendly, authoritative". Every author says this. It is worthless as an instruction because
-it excludes nothing.
-
-So read the corpus and tell them what they actually do. They will correct you, and correction is
-accurate where description is not.
-
-## Do this
-
-### 1. Read widely, then read the best of it closely
-
-`ingest` gave you an inventory. Read across all of it for range, then pick the three or four pieces
-the author is proudest of, or the ones that read strongest, and read those line by line.
 
 ### 2. Measure what can be measured
 

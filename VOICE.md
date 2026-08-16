@@ -1,6 +1,6 @@
 ---
 stet:
-  state: draft
+  state: approved
   author: agent
   policy: refresh
 ---
