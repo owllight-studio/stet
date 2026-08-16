@@ -289,6 +289,32 @@ const server = createServer(async (req, res) => {
   send(404, { error: "not found" });
 });
 
+/**
+ * Fill any variant that has no text before anybody can look at the page.
+ *
+ * A sheet whose readings are blank is worse than no sheet: it looks broken and it wastes the trip.
+ * This used to depend on somebody remembering to roll each one after starting the server, which is
+ * exactly the kind of step that gets forgotten between a config change and a restart.
+ *
+ * Serialized on purpose. Three concurrent CLI calls is not worth the seconds it saves.
+ */
+const blank = variants.filter((v) => !current.get(v.id)?.trim());
+if (blank.length) {
+  console.log(`Writing ${blank.length} ${blank.length === 1 ? "reading" : "readings"} before opening the sheet.`);
+  for (const v of blank) {
+    const started = Date.now();
+    const text = await write(v, null);
+    const took = Math.round((Date.now() - started) / 1000);
+    if (text) {
+      current.set(v.id, text);
+      console.log(`  ${v.label}: ${took}s`);
+    } else {
+      console.log(`  ${v.label}: nothing came back. It will be empty on the sheet; send it back from there.`);
+    }
+  }
+  console.log("");
+}
+
 const port = Number(process.env.STET_VOICE_PORT ?? 4742);
 server.listen(port, () => {
   console.log(`Voice proof sheet: http://localhost:${port}`);

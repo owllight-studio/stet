@@ -107,6 +107,7 @@ header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
 
 /* Counted in the browser, so a reading that did not commit is visible as a number rather than as a
    feeling. The point of the whole library is that a voice has figures attached. */
+.stats[hidden] { display: none; }
 .stats { display: flex; flex-wrap: wrap; gap: .1rem 1.5rem; margin: 0 0 .9rem; padding: .35rem 0;
   border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
 .stats span { font-family: var(--mono); font-size: .8rem; color: var(--pencil); font-variant-numeric: tabular-nums; }
@@ -439,6 +440,7 @@ function showStats(id, text) {
   const el = document.getElementById("m-" + id);
   if (!el) return;
   const m = measure(text);
+  el.hidden = !m;
   if (!m) return (el.innerHTML = "");
   el.innerHTML = [
     ["typical sentence", m.median + " words"],
