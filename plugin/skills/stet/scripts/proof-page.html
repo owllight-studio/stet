@@ -204,7 +204,7 @@ button:disabled { opacity: .4; cursor: default; }
 </div>
 
 <script type="module">
-import { toHtml, toMd, safe } from "/proof-md.js";
+import { toHtml, toMd, safe, unwrapped } from "/proof-md.js";
 
 const sheet = document.getElementById("sheet");
 const state = new Map();
@@ -233,12 +233,22 @@ function counts() {
   if (publish) publish.textContent = left ? `Publish all ${blocks.length}` : "Publish";
 }
 
-/** Whatever the block currently says, in the format it came in. */
+/**
+ * Whatever the block currently says, in the format it came in.
+ *
+ * A Markdown block that was displayed unwrapped comes back as one long line. If nothing was
+ * actually changed, the original is returned instead, so an untouched paragraph keeps the hand
+ * wrapping it had and the file does not gain a diff nobody asked for.
+ */
 function current(el) {
   const raw = el.querySelector(".raw");
   if (raw) return raw.value;
   const text = el.querySelector(".text");
-  return el.dataset.format === "html" ? text.innerHTML.trim() : toMd(text);
+  if (el.dataset.format === "html") return text.innerHTML.trim();
+
+  const now = toMd(text);
+  const was = el.dataset.original ?? "";
+  return unwrapped(now) === unwrapped(was) ? was : now;
 }
 
 function paint(el, action) {
@@ -338,6 +348,7 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
     el.dataset.id = b.id;
     el.dataset.line = b.line;
     el.dataset.format = b.format ?? "md";
+    el.dataset.original = b.text;
     el.innerHTML = `
       <span class="stamp">L${b.line}</span>
       <div class="tools">
