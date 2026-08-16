@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stet, content that knows who owns it</title>
-<meta name="description" content="A Claude Code plugin that stops agents rewriting your words and keeps the rest true. Three states, one hook, no rendering code.">
+<title>Stet, words that know whose they are</title>
+<meta name="description" content="A Claude Code plugin. It keeps agents off your sentences and keeps everything else honest. Three states, one hook, no rendering code.">
 <meta property="og:title" content="Stet">
-<meta property="og:description" content="Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words and keeps the rest true.">
+<meta property="og:description" content="Words that know whose they are. A Claude Code plugin that keeps agents off your sentences and keeps everything else honest.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='25' x='2' font-size='22' font-family='monospace' fill='%232c6d9e'>s</text></svg>">
 <link rel="stylesheet" href="stet.css">
@@ -26,9 +26,9 @@
   </header>
 
   <div class="hero">
-    <h1 class="measure">Content that knows who owns it.</h1>
+    <h1 class="measure">Words that know whose they are.</h1>
     <p class="lede measure">
-      A Claude Code plugin that stops agents rewriting your words, and keeps the rest true.
+      A Claude Code plugin. It keeps agents off your sentences and keeps everything else honest.
     </p>
 
     <div class="proof">
@@ -54,29 +54,32 @@
 <div class="wrap">
   <section id="problem">
     <p class="eyebrow">The problem</p>
-    <h2 class="measure">Point an agent at your writing and three things go wrong.</h2>
+    <h2 class="measure">Point an agent at your writing. Three things go wrong.</h2>
 
     <div class="failures">
       <div class="failure">
         <h3>It writes too much</h3>
         <p>
-          A sentence and a half doing the work of a sentence. A preamble before every list. You
-          spend longer unwinding it than writing would have taken, and that time comes out of the
-          work only you can do.
+          Every sentence turns up with half another sentence stapled to it, and no list arrives
+          without a small paragraph standing in front of it to announce that a list is coming. So
+          you cut. Unwinding it takes longer than writing the thing yourself would have taken, and
+          the hours come out of the one job nobody can do in your place.
         </p>
       </div>
       <div class="failure">
         <h3>It rewrites what is not its own</h3>
         <p>
-          The paragraph you laboured over comes back improved. You did not ask. You asked for a
-          redesign, or a fix three files away, and your words were collateral.
+          It goes into paragraphs that were never its business. You worked that one over and it
+          comes back improved. Nobody asked. You asked for a redesign, or a fix in some file three
+          doors down, and your words were standing too close to the door.
         </p>
       </div>
       <div class="failure">
         <h3>It leaves what it should refresh</h3>
         <p>
-          A sentence quotes a number that moved three weeks ago. Nothing in the file says where the
-          number came from, so nothing noticed, and the page states it with a straight face.
+          A sentence quotes a number that moved three weeks ago. Nothing in the file says where
+          that number came from, so nothing noticed. The page says it anyway, with a straight
+          face.
         </p>
       </div>
     </div>
@@ -84,11 +87,10 @@
 
   <section id="states">
     <p class="eyebrow">The model</p>
-    <h2 class="measure">Every piece of content carries a state. Approval is what confers ownership.</h2>
+    <h2 class="measure">Every piece of writing carries a state. Approval is what makes it yours.</h2>
     <p class="measure">
-      An agent's draft belongs to the agent until a person reads it and accepts it. Nothing else
-      transfers ownership: not time, not the writing being good, not the agent having written every
-      word of it.
+      A draft belongs to the agent until somebody reads it and takes it. Nothing else hands it
+      over. Not time. Not the writing being good. Not the agent having written every word.
     </p>
 
     <dl class="states">
@@ -107,16 +109,17 @@
     </dl>
 
     <p class="measure" style="margin-top:1.75rem">
-      Ownership is per sentence, not per file. Correct one line on the proof sheet and that line
-      becomes yours: the paragraph around it stays the agent's to improve. Sentences are stored by
-      their own words rather than by position, so yours survive everything around them moving, and
-      lapse the moment the words themselves change. You own what you wrote.
+      Ownership runs per sentence, not per file. Fix one line on the proof sheet and that line is
+      yours. The paragraph around it stays open. Sentences are held by their own words rather than
+      by where they sit, so yours survive everything around them moving, and they lapse the moment
+      the words change. You own what you wrote. Nothing more, and nothing less.
     </p>
 
     <p class="measure">
-      Policy sits alongside it and says what may still be done to closed content. <code>authored</code>
-      plus <code>refresh</code> is the combination the whole thing exists to make sayable: these are
-      my words, and I want the numbers in them kept true. Change the figure. Leave the sentence.
+      Policy sits alongside it and says what may still be done to closed writing.
+      <code>authored</code> plus <code>refresh</code> is the pair the whole thing exists to make
+      sayable. These are my words and I want the numbers in them kept true. Change the figure. Leave
+      the sentence.
     </p>
 
     <pre>---
@@ -131,11 +134,11 @@ Ramp casts are 47% of what you press before a spike.</pre>
 
   <section id="enforcement">
     <p class="eyebrow">Enforcement</p>
-    <h2 class="measure">A hook that refuses, not a rule that asks.</h2>
+    <h2 class="measure">A hook that refuses. Not a rule that asks.</h2>
     <p class="measure">
       Every other part of this is an instruction, and instructions are advice. Advice loses. A
-      PreToolUse hook reads the state before any edit and denies the ones that are not the agent's
-      to make.
+      PreToolUse hook reads the state before any edit lands and refuses the ones that were never the
+      agent's to make.
     </p>
     <pre>VOICE.md is authored. You may not edit it.
 
@@ -144,33 +147,34 @@ A person wrote this. Do not edit it and do not regenerate it.
 You may propose a rewrite in your reply. Show it to the author.
 Do not put it in the file.</pre>
     <p class="measure">
-      Three boundaries keep it out of the way. A project with no config is not using Stet and the
-      hook has no opinion. Only declared content paths count, so code passes through. A file that
-      does not exist yet is new, which is a draft, which is allowed.
+      Three boundaries keep it out of your way. No config means the project is not using Stet, so
+      the hook has no opinion. Only declared paths count, so code goes straight through. A file that
+      does not exist yet is new, which is a draft, which is fine.
     </p>
   </section>
 
   <section id="voice">
     <p class="eyebrow">Voice</p>
-    <h2 class="measure">The other half: writing that does not read as written by a machine.</h2>
+    <h2 class="measure">The other half. Writing that does not read as though a machine wrote it.</h2>
     <p class="measure">
       Ownership stops your words being changed. It does nothing about the words an agent adds, and
-      that is the half people actually notice. Readers told a headline was AI-generated rated it
-      less accurate and were less willing to share it, whether or not the headline was true and
-      whether or not a machine wrote it. The penalty attaches to how prose reads, so writing that
-      merely sounds generated pays it with no label attached.
+      that is the half readers actually notice. Tell somebody a headline was written by AI and they
+      rate it less accurate and are less willing to pass it on. That holds whether the headline was
+      true and whether a machine wrote it at all. The penalty lands on how the writing reads. So
+      prose that merely sounds generated pays it, with no label on it and nobody to appeal to.
     </p>
     <p class="measure">
-      So Stet ships a library of registers, and none of them is a description of how a kind of
-      writing feels. Each was counted off the real texts, and each carries the specific ways an
-      imitation of it gives itself away. Orwell fails modern plain-language guidance inside his own
-      manifesto, at a mean sentence of 25.9 words. Chandler's famous simile appears once every 545
-      words, which is roughly forty times rarer than pastiche runs it. Those are the parts you
-      cannot get by describing the style to yourself.
+      So Stet ships a library of registers, and not one of them describes how a kind of writing
+      feels. Somebody went and counted the actual books. Orwell breaks modern plain-English guidance
+      inside his own manifesto, at a mean sentence of 25.9 words. Chandler's famous simile turns up
+      once every 545 words, which is roughly forty times rarer than the people copying him run it.
+      Tolkien writes shorter sentences than Fitzgerald. You do not get any of that by sitting there
+      describing the style to yourself.
     </p>
     <p class="measure">
-      Four ways to have one: pick a preset, describe your own in a sentence, point at writing you
-      already did, or let it read the project and derive the house voice from what is there.
+      Four ways to have one. Pick a preset. Describe your own in a sentence. Point it at writing
+      you already did. Or let it read the project and work out the house voice from what is
+      there.
     </p>
     <p class="measure">
       <a class="more" href="voices.html">Explore the library</a>
@@ -179,28 +183,28 @@ Do not put it in the file.</pre>
 
   <section id="commands">
     <p class="eyebrow">Commands</p>
-    <h2 class="measure">Establish a project, then work in it.</h2>
+    <h2 class="measure">Set the project up. Then work in it.</h2>
     <p class="measure">
-      For a project that already has writing, the order is <code>ingest</code>, <code>init</code>,
-      <code>voice</code>, <code>ia</code>. Read it before you describe it.
+      For a project that already has writing in it, the order is <code>ingest</code>,
+      <code>init</code>, <code>voice</code>, <code>ia</code>. Read it before you describe it.
     </p>
 
     <div class="cmds">
       <div class="cmd">
         <h3>ingest</h3>
-        <p>Reads everything there, claims all of it for you, and reports what it found: the inventory, how it sounds, and every claim that will go stale.</p>
+        <p>Reads everything already there, claims all of it for you, and tells you what it found. What exists, how it sounds, and every claim in it that will go stale.</p>
       </div>
       <div class="cmd">
         <h3>init</h3>
-        <p>What this is, who reads it, and what it must never be. The last one is the answer nobody volunteers and the one worth most.</p>
+        <p>What this is, who reads it, and what it must never be. Nobody volunteers that last one. It is the answer worth most.</p>
       </div>
       <div class="cmd">
         <h3>voice</h3>
-        <p>Derives the house voice from writing you already did, because nobody can describe their own. Rules with your sentences as examples, and a counter-example for each.</p>
+        <p>Works the house voice out of writing you already did, because nobody can describe their own. Rules with your own sentences as the examples, and a counter-example for each one.</p>
       </div>
       <div class="cmd">
         <h3>ia</h3>
-        <p>What exists, what job each page does, and the rules for where the next one goes. Without those rules every new page is a fresh argument.</p>
+        <p>What exists, what job each page does, and where the next one goes. Without that last part every new page is a fresh argument.</p>
       </div>
       <div class="cmd">
         <h3>claim &middot; release &middot; approve</h3>
@@ -208,7 +212,7 @@ Do not put it in the file.</pre>
       </div>
       <div class="cmd">
         <h3>audit &middot; verify &middot; refresh</h3>
-        <p>Stale claims, figures typed by hand, orphaned pages, voice breaks. Then check each claim against its real source and bring current only what policy allows.</p>
+        <p>Stale claims, figures somebody typed by hand, orphaned pages, voice breaks. Then it checks each claim against its actual source and brings current only what policy allows.</p>
       </div>
     </div>
   </section>
@@ -219,10 +223,10 @@ Do not put it in the file.</pre>
     <pre>/plugin marketplace add owllight-studio/stet
 /plugin install stet@stet</pre>
     <p class="measure">
-      The Establish group, the authorship model and the hook are built. Everything else is designed
-      and not written yet. Stet's own content is marked <code>draft</code> rather than
-      <code>approved</code>, because its author has directed it and not yet read it line by line,
-      and marking it approved would be the exact failure the model exists to prevent.
+      The Establish group, the authorship model and the hook are built. The rest is designed and
+      not written. Stet's own writing sits at <code>draft</code> rather than <code>approved</code>,
+      because its author has directed it and has not yet read it line by line. Marking it approved
+      would be the exact failure the whole thing exists to stop.
     </p>
   </section>
 

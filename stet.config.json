@@ -8,5 +8,9 @@
   ],
   "format": "auto",
   "voice": "VOICE.md",
-  "note": "Stet's own content, governed by Stet. The skill and reference files are content: they are read by an agent and their wording decides what it does, which makes them the highest-stakes prose in the project. The site is here too, because a tool that governs everybody else's marketing copy and not its own is not being used."
+  "note": "Stet's own content, governed by Stet. `content` is everything the hook protects, and most of it is reference: measurement tables and rule lists an agent reads to decide what to do. `prose` is the subset written to be read by a person choosing whether to use this, and it is the only thing a voice should ever be applied to. Rewriting a column of sentence-length figures in somebody's house voice destroys the thing that made it useful.",
+  "prose": [
+    "site/index.html",
+    "README.md"
+  ]
 }

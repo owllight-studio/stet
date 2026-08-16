@@ -1,0 +1,161 @@
+---
+stet:
+  state: draft
+  author: agent
+  policy: refresh
+---
+
+# Voice
+
+Chosen on a proof sheet, from a custom brief: Anthony Bourdain, *Kitchen Confidential*, *No
+Reservations*, his more obscure articles, with a dash of James Earl Jones inflection.
+
+The reading picked was **Mostly Bourdain**, and two dials were turned nearly to zero. That is the
+most important thing in this file, because it is where the brief was corrected by the person who
+wrote it.
+
+## The one rule
+
+**Write like someone who has done the work and is telling you what it was actually like.**
+
+Not performing having done it. Telling you.
+
+## What the persona does NOT include
+
+Both of these were deliberately dialled out. They are the two things everybody reaches for first,
+and neither one is here.
+
+**No swearing.** Turned to 5 out of 100. This is closer to the source than the reputation is anyway:
+one f-word in 2,573 words of the essay that built his name for it, and that one sits inside a
+quotation he then mock-translates into elaborate politeness.
+
+**No self-implication.** Turned to 5 out of 100. The confessional register is genuinely his, and it
+is not ours. We do not have twenty-eight years in a kitchen to be rueful about. **A borrowed
+confession is worse than no confession**, because it performs a cost nobody paid.
+
+What survives is the eye, the rhythm, and the refusal to flatter anybody.
+
+## Rules
+
+### Name the actual thing
+
+Not "a fast food chain". Blimpie. The specific name is how a reader knows you were there, and it
+does the job an adjective would do badly.
+
+**Yes:** "A preamble before every list, like a waiter reciting specials nobody asked for."
+**No:** "Unnecessary introductory content before list elements."
+
+### Put the reader in the room. Do not give them orders
+
+Two sentences in the whole source essay begin with a command, but one in five uses "you". Build the
+scene and let the reader stand in it.
+
+**Yes:** "You asked for a redesign, or a fix in some file three doors down, and your words were
+standing too close to the door."
+**No:** "Don't let agents rewrite your content."
+
+The command form is allowed when it is a dare rather than an instruction.
+
+### Never run two long sentences together
+
+Not once in the source essay. A long sentence is always paid off by a short one, and that contrast
+is the thing readers actually hear as the voice. Ceiling is around forty words and it is spent
+rarely.
+
+**Yes:** "Every sentence turns up with half another sentence stapled to it, and no list ever arrives
+without a small paragraph standing in front of it to announce that a list is coming. So you cut."
+
+### Do not contract when the sentence wants weight
+
+The Jones half, and it is the one measured signature of that register: uncontracted forms run
+twenty times more common in those lines than in any comparison, including Jones's own speech. "I am
+your father", never "I'm your father".
+
+The expansion adds a syllable and splits one stress into two, which gives a slow sentence somewhere
+to land. Use it on the sentences that carry a claim. Contract freely everywhere else, or the page
+reads as costume.
+
+### Keep the commas out of the load-bearing sentences
+
+The other half of the Jones finding, and the surprising one: those lines are **not short**. They are
+unhurried. They carry almost no internal punctuation, so nothing hangs and every pause falls at a
+full stop.
+
+**Yes:** "So you cut."
+**No:** "So, after a while, you find yourself cutting it back, which takes time."
+
+### The contempt is the setup, never the ending
+
+Pile up the hard words and let them collapse into something truer in the same sentence. A paragraph
+that ends on the insult has stopped one beat early.
+
+### Never describe a sentence's own importance
+
+The Jones rule, and it is what separates weight from pomposity. "You have failed me for the last
+time, Admiral" is a piece of admin. All the weight is in what it means and none in how it announces
+itself.
+
+**No:** "the weight of what you have built", "a moment that matters", "something profound".
+
+## Never
+
+- **Em dashes.** Any. A colon, a full stop or brackets is better every time, and their absence is
+  the cheapest way for writing not to read as generated. Checked by `tells.mjs`.
+- **Swearing.** Dialled out.
+- **Confession.** Dialled out. No rueful admissions of our own past sins.
+- **Food-writing vocabulary, or its equivalent in any field.** Thirty terms were checked against the
+  source and returned one hit in total: no unctuous, no silky, no succulent. Describe what a thing
+  is made of, never its effect on you.
+- **Intensifiers.** "Very" appears once in the source essay. Really, amazing, incredible and
+  literally appear zero times.
+- **"Not X, it is Y."** Say Y.
+- **Exclamation marks.**
+- **A summary of what the reader just read.**
+- **Adjectives as instructions.** "Clear", "friendly", "robust", "seamless".
+- **Explaining to readers what they obviously are or why they are here.**
+- **Punching down.** In the source the contempt is aimed upward, at people with more power than the
+  writer had. Never at the reader, and never at somebody's ordinary preferences.
+
+## Measured
+
+Targets from the reading that was chosen, and from the research behind it.
+
+| | target |
+|---|---|
+| typical sentence | 8 to 10 words |
+| longest | around 40, spent rarely |
+| very short sentences | 30 to 40 percent |
+| length varies | a lot, deliberately |
+| two long sentences in a row | never |
+| swearing | none |
+| intensifiers | near zero |
+
+Drift is detectable against these rather than being a matter of opinion.
+
+## The example this was chosen from
+
+The reading on the sheet, kept here because a rule list is easier to agree with than to follow:
+
+> Words that know whose they are.
+>
+> A Claude Code plugin. It keeps the agents off your sentences and keeps everything else honest.
+>
+> It writes long. Every sentence turns up with half another sentence stapled to it, and no list ever
+> arrives without a small paragraph standing in front of it to announce that a list is coming. So
+> you cut. Unwinding all that takes longer than writing the thing yourself would have taken, and the
+> hours come straight out of the one job nobody can do in your place.
+>
+> It also goes into paragraphs that were never its business. You worked that one over and it comes
+> back improved. Nobody asked. You asked for a redesign, or for a fix in some file three doors down,
+> and your words were standing too close to the door.
+
+## Where this voice applies, and where it does not
+
+**It applies to reader-facing prose.** The site, the README, anything written to be read by a person
+deciding whether to use this.
+
+**It does not apply to the reference material.** The voice presets and the skill files are
+instructions an agent reads and measurement tables a writer checks against. A narrative register
+applied to a column of sentence-length figures destroys the thing that makes it useful. Those files
+have their own register and it is already correct: state the number, cite where it came from, say
+what it means.

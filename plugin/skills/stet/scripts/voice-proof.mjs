@@ -25,7 +25,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
-import { findContent, words } from "./lib/find.mjs";
+import { findContent, words, config } from "./lib/find.mjs";
 
 const root = process.cwd();
 const here = dirname(fileURLToPath(import.meta.url));
@@ -60,7 +60,14 @@ const page = readFileSync(join(here, "voice-proof-page.html"), "utf8");
  * the number 28.
  */
 function scopes() {
-  const all = findContent(root).files;
+  /* Only reader-facing prose. A voice applied to a rule list or a table of figures destroys what
+     made the file useful, and offering it as a choice invites exactly that. Projects that have not
+     drawn the line fall back to everything governed, and the label says which happened. */
+  const declared = config(root)?.prose;
+  const governed = findContent(root).files;
+  const all = declared?.length
+    ? governed.filter((f) => declared.some((g) => f === g || f.startsWith(g.replace(/\*.*$/, ""))))
+    : governed;
   const page = sample.file ? all.find((f) => sample.file.startsWith(f) || f === sample.file) : null;
   const count = (files) => files.reduce((n, f) => n + (words(root, f) ?? 0), 0);
 
@@ -72,8 +79,8 @@ function scopes() {
   }
   out.push({
     key: "site",
-    label: "Everything",
-    detail: `${all.length} files, ${count(all).toLocaleString()} words`,
+    label: declared?.length ? "All the writing people read" : "Everything",
+    detail: `${all.length} ${all.length === 1 ? "file" : "files"}, ${count(all).toLocaleString()} words`,
     files: all,
   });
   return out;
