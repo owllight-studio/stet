@@ -53,10 +53,10 @@ header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
   position: sticky; top: 0; z-index: 5; background: var(--paper);
   padding: 1rem 0 .9rem; border-bottom: 1px solid var(--rule);
 }
-.dials.stuck { padding-bottom: .5rem; box-shadow: 0 6px 12px -10px rgba(0,0,0,.4); }
-.dials.stuck .ends, .dials.stuck .rollall { display: none; }
-.dials.stuck:hover .ends { display: flex; }
-.dials.stuck:hover .rollall { display: inline-block; }
+.dials.shut .axes, .dials.shut .rollall { display: none; }
+.dials h2 { cursor: pointer; user-select: none; }
+.dials h2::after { content: " \2013 hide"; color: var(--faint); }
+.dials.shut h2::after { content: " \2013 show"; }
 .dials h2 {
   font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
   color: var(--pencil); font-weight: 400; margin: 0 0 .7rem;
@@ -111,10 +111,12 @@ header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
 }
 .origin .stats { margin-bottom: .7rem; }
 .body { white-space: pre-wrap; }
-.body[contenteditable="true"] { outline: none; border-radius: 2px; transition: box-shadow 160ms ease; }
-.body[contenteditable="true"]:hover { box-shadow: 0 0 0 .5rem var(--edge); background: var(--edge); }
-.body[contenteditable="true"]:focus { box-shadow: 0 0 0 .5rem var(--wash); background: var(--wash); }
-.variant.is-mine .body { border-left: 2px solid var(--mine); padding-left: .9rem; margin-left: -1.1rem; }
+.body[contenteditable="true"] {
+  outline: none; border-left: 2px solid transparent; padding-left: .9rem; margin-left: -1.1rem;
+}
+.body[contenteditable="true"]:hover { border-left-color: var(--rule); }
+.body[contenteditable="true"]:focus { border-left-color: var(--pencil); background: var(--wash); }
+.variant.is-mine .body { border-left-color: var(--mine); }
 .undo { display: none; }
 .variant.is-mine .undo { display: inline-block; color: var(--mine); border-color: var(--mine); }
 .mine-note {
@@ -161,6 +163,7 @@ button:disabled { opacity: .4; cursor: default; }
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   animation: laydown 1.1s linear infinite;
+  will-change: background-position;
 }
 @keyframes laydown { from { background-position-x: 0; } to { background-position-x: 10px; } }
 .working span { font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
@@ -453,12 +456,7 @@ $("done").addEventListener("click", async () => {
     </div>`;
 });
 
-/* Compact the dial bar once it is actually stuck, so it does not take a third of the screen while
-   the author is reading a variant. Hovering it brings the whole thing back. */
-const sentinel = document.createElement("div");
-$("dials").before(sentinel);
-new IntersectionObserver(([e]) => $("dials").classList.toggle("stuck", !e.isIntersecting), { threshold: 1 })
-  .observe(sentinel);
+$("dials").querySelector("h2").addEventListener("click", () => $("dials").classList.toggle("shut"));
 
 fetch("/api/sheet")
   .then((r) => r.json())

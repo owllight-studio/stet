@@ -53,6 +53,15 @@ impersonating them, and the difference shows in whether the result still works o
 and never neither. Writing a persona straight from the request is the single most reliable way to
 produce something the author rejects, and the reason is in the next section.
 
+**And the voice that comes out belongs to the author.** Not to Stet, not to the preset library, not
+to the next project. A persona is somebody's own answer to how their writing should sound, so
+tidying it up into a shipped preset is taking their answer and handing it to everybody. The research
+behind it goes the same way: it was commissioned for their brief.
+
+The rule is short. **Research it for them, write it into their `VOICE.md`, and leave it there.** A
+library that absorbs what its users invent is doing exactly what the hook exists to stop an agent
+doing to a paragraph, only at the scale of a whole voice.
+
 ### On samples
 
 The strongest evidence there is, because it already happened. Read whatever they can point at: files

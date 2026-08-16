@@ -31,7 +31,7 @@ Teacher, The Manual, Field Notes, The Catalogue.
 Launch, The Case, The Founder Letter.
 
 **Genre**, fiction registers, for anyone whose product has a world in it. Noir, The Locked Room,
-The Bridge, Hard SF, The Kitchen. Planned: Epic Fantasy, and the drama register.
+The Bridge, Hard SF. Planned: Epic Fantasy, and the drama register.
 
 **Fun**, invoked on purpose, for delight or for a joke that has to hold a whole page. Patch Notes,
 Nature Documentary, The Sportscaster. Planned: The Chronicle, The Bureaucrat.
@@ -41,6 +41,20 @@ two sentences is a party trick, and a party trick is not worth shipping.
 
 Planned means not written. It is listed here so the shape of the library is visible, not so it can
 be picked.
+
+## What never becomes a preset
+
+**A voice somebody defined for their own project is theirs.** If an author describes a persona and
+Stet researches it, measures it and writes it into their `VOICE.md`, that voice belongs to them. It
+does not get cleaned up and added to this library, and the research behind it does not either.
+
+This is not a courtesy. It is the same rule the rest of the product enforces: the author's words are
+the author's, and a voice built to their brief is their words at the level that matters most. A
+preset library that quietly absorbs what its users invent is doing precisely what the hook exists to
+stop an agent doing to a paragraph.
+
+Presets here come from published registers with named practitioners and public texts. The line is
+whether it was somebody's own answer to the question of how their writing should sound.
 
 ## The shape of a preset
 
