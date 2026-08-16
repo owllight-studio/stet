@@ -101,29 +101,53 @@ const server = createServer(async (req, res) => {
     const voice = existsSync(voicePath) ? readFileSync(voicePath, "utf8") : "";
 
     const prompt = [
-      "Rewrite one block of content. Return ONLY the replacement, as Markdown.",
-      "No preamble, no explanation, no code fences, no commentary of any kind.",
-      "Keep the same Markdown shape: a heading stays a heading, a list stays a list.",
-      voice ? `\nThe house voice, which is not optional:\n\n${voice}` : "",
-      `\nWhat the author wants changed:\n${note || "Make it better."}`,
-      `\nThe block:\n${text}`,
+      "You are rewriting one block of content because the author rejected the current version.",
+      "",
+      "Return ONLY the replacement text, as Markdown. No preamble, no explanation, no code fences,",
+      "no commentary, no quotation marks around it. Your entire output is written into their file.",
+      "",
+      "Keep the same Markdown shape: a heading stays a heading, a list stays a list, a paragraph",
+      "stays a paragraph.",
+      "",
+      "The author asked for a change, so returning the same text, or a version that differs only in",
+      "punctuation, is a failed answer. If you think the original was already right, you are wrong:",
+      "they read it and rejected it. Make the change they asked for.",
+      voice ? `\nTHE HOUSE VOICE. Not optional, and it outranks your instincts:\n\n${voice}` : "",
+      `\nWHAT THE AUTHOR WANTS CHANGED:\n${note || "Make it better. Shorter, plainer, and with nothing in it that does not earn its place."}`,
+      `\nTHE BLOCK TO REWRITE:\n${text}`,
     ].join("\n");
 
+    const started = Date.now();
     const rewritten = await new Promise((resolve) => {
       execFile(
         "claude",
         ["-p", prompt],
-        { timeout: 120000, maxBuffer: 1 << 22, cwd: root },
-        (err, stdout) => resolve(err ? null : String(stdout).trim()),
+        { timeout: 180000, maxBuffer: 1 << 22, cwd: root },
+        (err, stdout, stderr) => {
+          if (err) console.log(`  retry failed: ${err.message.split("\n")[0]}${stderr ? ` / ${String(stderr).slice(0, 160)}` : ""}`);
+          resolve(err ? null : String(stdout).trim());
+        },
       );
     });
+    const took = Math.round((Date.now() - started) / 1000);
 
     if (!rewritten) {
-      return send(200, { ok: false, reason: "No rewrite came back. Queued for the terminal instead." });
+      console.log(`  retry ${id}: nothing came back after ${took}s`);
+      return send(200, { ok: false, took, reason: "No rewrite came back. Try again, or say it in the terminal." });
     }
+
     // Fences sometimes survive the instruction not to use them.
     const clean = rewritten.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/, "").trim();
-    return send(200, { ok: true, id, text: clean });
+
+    // An identical answer is a failure worth naming. Silently swapping the same text back in looks
+    // exactly like the feature being broken, which is how this was first reported.
+    if (clean === text.trim()) {
+      console.log(`  retry ${id}: came back unchanged after ${took}s`);
+      return send(200, { ok: false, took, unchanged: true, reason: `Came back unchanged after ${took}s. Say more about what is wrong with it.` });
+    }
+
+    console.log(`  retry ${id}: rewritten in ${took}s`);
+    return send(200, { ok: true, id, text: clean, took });
   }
 
   if (req.url === "/api/undecide" && req.method === "POST") {

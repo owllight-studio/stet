@@ -41,12 +41,38 @@ header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; max-width: 
 .block.is-kept { background: linear-gradient(90deg, var(--wash), transparent 55%); }
 .block.is-edited { background: linear-gradient(90deg, rgba(30,122,82,.10), transparent 55%); }
 .block.is-queried { background: linear-gradient(90deg, rgba(192,57,43,.08), transparent 55%); }
-.block.busy { opacity: .55; }
+.block.busy .text, .block.busy .raw, .block.busy .actions { opacity: .45; }
 
+/* The working state draws the mark itself. On paper, stet is written by laying a row of dots under
+   the text you want kept, so a row of dots being laid down left to right is the tool doing the one
+   thing it is named after. A spinner would have said nothing about what it was doing. */
+.working { display: none; align-items: center; gap: .75rem; margin: .55rem 0 .1rem; }
+.block.busy .working { display: flex; }
+.dots {
+  flex: 1; height: 7px;
+  background-image: radial-gradient(circle at 3px 3.5px, var(--pencil) 1.6px, transparent 1.8px);
+  background-size: 10px 7px; background-repeat: repeat-x;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  animation: laydown 1.1s linear infinite;
+}
+@keyframes laydown {
+  from { background-position-x: 0; }
+  to { background-position-x: 10px; }
+}
+.elapsed {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; color: var(--pencil);
+  min-width: 3.5rem; text-align: right;
+}
+.block.busy .stamp { color: var(--pencil); }
+@media (prefers-reduced-motion: reduce) { .dots { animation: none; } }
+
+/* The margin is 3.75rem of padding and the stamp lives in it. Clipped rather than allowed to run
+   into the text, because a long mark once printed straight through the first word of a paragraph. */
 .stamp {
-  position: absolute; left: 0; top: 1.3rem; width: 3.25rem;
+  position: absolute; left: 0; top: 1.3rem; width: 3.25rem; overflow: hidden;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--faint);
+  color: var(--faint); white-space: nowrap;
 }
 .block.is-kept .stamp { color: var(--pencil); }
 .block.is-edited .stamp { color: var(--mine); }
@@ -298,6 +324,10 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
         <span class="hint">${rich ? "edit it to make it yours" : ""}</span>
         <button class="revert">Revert</button>
       </div>
+      <div class="working">
+        <span class="dots"></span>
+        <span class="elapsed"></span>
+      </div>
       <div class="retry">
         <textarea placeholder="What is wrong with it, and what you want instead."></textarea>
         <div class="retry-row">
@@ -339,15 +369,29 @@ fetch("/api/blocks").then((r) => r.json()).then((data) => {
       const button = el.querySelector(".rewrite");
       button.disabled = true;
       el.classList.add("busy");
-      status.textContent = "rewriting";
+      el.querySelector(".stamp").textContent = "stet";
+      status.textContent = "";
+
+      // A rewrite takes ten to thirty seconds. An elapsed count is the difference between waiting
+      // and wondering whether anything is happening at all.
+      const from = Date.now();
+      const elapsed = el.querySelector(".elapsed");
+      const tick = setInterval(() => {
+        elapsed.textContent = `${Math.round((Date.now() - from) / 1000)}s`;
+      }, 250);
+
       const res = await post("/api/retry", { id: b.id, text: current(el), note });
+
+      clearInterval(tick);
+      elapsed.textContent = "";
       el.classList.remove("busy");
       button.disabled = false;
       if (!res.ok) {
+        el.querySelector(".stamp").textContent = "retry";
         status.textContent = res.reason ?? "no rewrite came back";
         return;
       }
-      status.textContent = "rewritten. Save it, edit it, or retry again.";
+      status.textContent = `rewritten in ${res.took}s. Save it, edit it, or retry again.`;
       if (el.querySelector(".raw")) el.querySelector(".raw").value = res.text;
       else el.querySelector(".text").innerHTML = toHtml(res.text);
       el.classList.add("changed");
