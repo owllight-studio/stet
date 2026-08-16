@@ -49,6 +49,10 @@ Pastiche is a party trick that falls apart by the third paragraph. Rules are usa
 and the author's own. When a persona names a real person, you are extracting technique, not
 impersonating them, and the difference shows in whether the result still works on the fourth page.
 
+**A persona always gets the two extra steps below: research it, then show it.** Never both at once
+and never neither. Writing a persona straight from the request is the single most reliable way to
+produce something the author rejects, and the reason is in the next section.
+
 ### On samples
 
 The strongest evidence there is, because it already happened. Read whatever they can point at: files
@@ -61,6 +65,36 @@ What `ingest` already read. If the author is adopting Stet on an existing site, 
 start, and where the current corpus can correct a preset that does not quite fit.
 
 ## Derive it, do not ask for it
+
+### 1. Research the persona before writing a word of it
+
+**Mandatory whenever the persona names a real person, a real publication, or a named register.** Not
+optional, not skippable because the voice seems obvious, and least skippable when it seems obvious.
+
+Send subagents at the actual texts. Have them count: sentence length and variance, what the register
+refuses, which of its famous features are actually rare in it. Then write the rules from the counts.
+
+The evidence for making this a step rather than a suggestion is Stet's own library. Six presets were
+first written from instinct by someone who knew the registers well, then measured. **All six had
+their central mechanic wrong, and wrong in direction rather than magnitude.**
+
+- Nature documentary was written as long-then-short rhythm. Measured autocorrelation is +0.16, so
+  the lengths *cluster*. The opposite.
+- Noir was built around the simile, which is the register's rarest move: one per 545 words in
+  Chandler, one per 1,969 in Hammett. Pastiche runs it forty times too often.
+- The Teacher was written short. Measured medians are 19 to 25 with wide variance, and uniform
+  length is a documented marker of condescension rather than of kindness.
+- Plainspoken cited Orwell, who fails modern plain-language guidance inside his own manifesto at a
+  mean sentence of 25.9 words.
+- Christie is believed to be adverb-free. She uses nearly twice as many as Doyle. Her prose is plain
+  because the sentences are short.
+
+Every one of those is a rule an author would have accepted, followed, and been misled by. **An
+impression of a voice is reliably an inversion of it**, because what makes a register memorable is
+usually its rarest move rather than its habitual one.
+
+Say what you could not verify. A brief that admits three gaps is worth more than one that fills them
+from memory, and the gaps become the next round of work.
 
 ### 2. Measure what can be measured
 
@@ -94,6 +128,53 @@ agree with "be concise" and impossible to argue with two versions of the same se
 
 Ask them what is wrong with it. Expect two or three corrections and one thing they did not know they
 did.
+
+### 5. Put it on a proof sheet, and let them tune it
+
+**Required for any persona.** A one-line persona has several honest readings, and the author knows
+which one they meant the moment they see it and not one second before. Asking them to describe it
+further only produces another sentence with the same problem.
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/voice-proof.mjs
+```
+
+It reads `.stet/voice-proof.json`, which you write first:
+
+```json
+{
+  "persona": "Anthony Bourdain, with a dash of James Earl Jones",
+  "findings": ["what the research counted, one line each"],
+  "sample": { "file": "index.html", "text": "a real passage from their project" },
+  "axes": [
+    { "key": "profanity", "label": "Profanity", "low": "none", "high": "unfiltered", "value": 30 }
+  ],
+  "variants": [
+    { "id": "a", "label": "The kitchen", "brief": "why this is a defensible reading", "text": "" }
+  ]
+}
+```
+
+Four things it has to get right, and they are the difference between this and a generic variant
+picker.
+
+**One passage, several readings.** Every variant is the *same real paragraph from their own
+project*. The question is which one sounds like their site, and that question is unanswerable if
+each version is also about something different.
+
+**The dials come from the research.** Every persona yields its own axes, and the script renders
+whatever you hand it rather than shipping a fixed set. A dial the author cannot justify is a dial
+they will not move, which is why the findings sit on the page beside them.
+
+**Three to five variants.** They must be genuinely different readings and each `brief` must say why
+that reading is defensible. Two is a false choice, and past five nobody reads the last one.
+
+**Their edits are theirs.** The sheet is editable in place. A passage they corrected by hand is
+their sentence and gets recorded as such, exactly as on the content proof sheet.
+
+It writes `.stet/voice-choice.json` when they pick, including every version they rejected and what
+they said about it. **Read the rejections.** What an author turned down says as much about the voice
+as what they kept, and it is the material for the rules in the next step.
 
 ## VOICE.md
 
@@ -148,3 +229,6 @@ them, and only write down the ones it does.
 
 `VOICE.md` exists, every rule has an example from real writing and a counter-example, the author
 corrected at least one thing, and the measured section has numbers in it.
+
+For a persona, add two: the rules came out of counted texts rather than an impression, and the
+author picked from a sheet rather than approving a description.

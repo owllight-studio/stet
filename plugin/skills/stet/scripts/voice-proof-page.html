@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voice proof sheet</title>
+<style>
+/* The same world as the content sheet and the site: paper, the copy editor's non-photo blue, red
+   for deletion, green for the author's own hand. */
+:root {
+  --paper: #fbfbf9; --edge: #f1f1ec; --ink: #16161a; --soft: #55555f; --faint: #8b8b95;
+  --rule: #e2e2db; --pencil: #2c6d9e; --wash: #eaf2f8; --strike: #c0392b; --mine: #1e7a52;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14141a; --edge: #1b1b22; --ink: #eeeef0; --soft: #a9a9b4; --faint: #74747f;
+    --rule: #2b2b34; --pencil: #7db8e0; --wash: #1b2733; --strike: #e07a6e; --mine: #5fbf90;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--serif); font-size: 17px; line-height: 1.6;
+}
+.wrap { max-width: 58rem; margin: 0 auto; padding: 0 1.5rem 10rem; }
+
+header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
+.mark { font-family: var(--mono); font-size: .95rem; letter-spacing: .22em; text-transform: uppercase; }
+.mark b { font-weight: 400; border-bottom: 2px solid var(--pencil); padding-bottom: 2px; }
+.asked { font-size: 1.28rem; line-height: 1.4; margin: 1.1rem 0 0; max-width: 42rem; }
+.asked span {
+  display: block; font-family: var(--mono); font-size: .68rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--faint); margin-bottom: .45rem;
+}
+.lede { color: var(--soft); font-size: .95rem; margin: 1.1rem 0 0; max-width: 44rem; }
+
+/* What the research found. On the page because a dial the author cannot justify is a dial they will
+   not move, and because the whole promise is that this was counted rather than guessed. */
+.findings { margin: 1.5rem 0 0; padding: 1rem 1.2rem; background: var(--edge); border-left: 3px solid var(--pencil); }
+.findings h2 {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--faint); font-weight: 400; margin: 0 0 .55rem;
+}
+.findings ul { margin: 0; padding: 0; list-style: none; }
+.findings li { font-size: .9rem; color: var(--soft); padding: .2rem 0 .2rem .9rem; position: relative; }
+.findings li::before { content: ""; position: absolute; left: 0; top: .78em; width: .4rem; height: 1px; background: var(--pencil); }
+
+/* --- the dials ----------------------------------------------------------- */
+
+.dials { position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 1rem 0 .9rem; border-bottom: 1px solid var(--rule); }
+.dials h2 {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--pencil); font-weight: 400; margin: 0 0 .7rem;
+}
+.axes { display: grid; gap: .7rem 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.axis label {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: .2rem;
+}
+.axis label b { color: var(--ink); font-weight: 400; }
+.axis input[type=range] { width: 100%; accent-color: var(--pencil); margin: 0; }
+.ends { display: flex; justify-content: space-between; font-size: .74rem; color: var(--faint); margin-top: .1rem; }
+.dials .rollall { margin-top: .85rem; }
+
+/* --- the passage --------------------------------------------------------- */
+
+.origin { margin: 2.25rem 0 0; }
+.tag {
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--pencil); margin: 0 0 .5rem;
+}
+.origin .body { color: var(--soft); font-size: .96rem; border-left: 2px solid var(--rule); padding-left: 1rem; }
+
+/* --- the readings -------------------------------------------------------- */
+
+.variant { margin: 2.5rem 0 0; padding-top: 1.1rem; border-top: 2px solid var(--rule); }
+.variant.is-chosen { border-top-color: var(--pencil); }
+.variant.busy .body, .variant.busy .actions { opacity: .45; }
+.vhead { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.vhead h3 { font-family: var(--mono); font-size: .84rem; letter-spacing: .08em; text-transform: uppercase; margin: 0; font-weight: 400; }
+.vhead .picked {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--pencil); display: none;
+}
+.variant.is-chosen .picked { display: inline; }
+.brief { font-size: .88rem; color: var(--faint); margin: .3rem 0 .9rem; max-width: 42rem; }
+.body { white-space: pre-wrap; }
+.body[contenteditable="true"] { outline: none; }
+.body[contenteditable="true"]:focus { background: var(--wash); box-shadow: 0 0 0 .5rem var(--wash); border-radius: 2px; }
+
+.actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; align-items: center; }
+button {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  padding: .42rem .8rem; border: 1px solid var(--rule); background: transparent; color: var(--soft);
+  cursor: pointer; border-radius: 2px; transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+button:hover { color: var(--ink); border-color: var(--pencil); }
+button.primary { color: var(--pencil); border-color: var(--pencil); }
+button.primary:hover { background: var(--wash); }
+button:disabled { opacity: .4; cursor: default; }
+.note {
+  flex: 1; min-width: 12rem; font-family: var(--serif); font-size: .88rem;
+  padding: .4rem .6rem; border: 1px solid var(--rule); background: transparent; color: var(--ink);
+  border-radius: 2px;
+}
+.note:focus { outline: none; border-color: var(--pencil); }
+.said { font-size: .82rem; color: var(--strike); margin: .5rem 0 0; display: none; }
+
+/* The working state draws the mark itself: a row of dots laid under the text, left to right, which
+   is how stet is written on paper. */
+.working { display: none; align-items: center; gap: .75rem; margin: .6rem 0 .2rem; }
+.variant.busy .working { display: flex; }
+.dots {
+  flex: 1; height: 7px;
+  background-image: radial-gradient(circle at 3px 3.5px, var(--pencil) 1.6px, transparent 1.8px);
+  background-size: 10px 7px; background-repeat: repeat-x;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  animation: laydown 1.1s linear infinite;
+}
+@keyframes laydown { from { background-position-x: 0; } to { background-position-x: 10px; } }
+.working span { font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .dots { animation: none; } }
+
+/* --- the bar ------------------------------------------------------------- */
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+  border-top: 1px solid var(--rule); padding: .85rem 1.5rem;
+}
+.barin { max-width: 58rem; margin: 0 auto; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+.count { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; color: var(--faint); }
+.count b { color: var(--ink); font-weight: 400; }
+.blend { flex: 1; min-width: 14rem; }
+.finished { text-align: center; padding: 5rem 1.5rem; }
+.finished p { color: var(--soft); max-width: 34rem; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <header>
+    <div class="mark"><b>stet</b> &nbsp;voice</div>
+    <p class="asked"><span>You asked for</span> <em id="persona"></em></p>
+    <p class="lede">
+      The same passage from your own writing, read several ways. Nobody can describe the voice they
+      want, so this is the version of the question you can actually answer. Move the dials, send back
+      whatever is close, and pick the one that sounds like you.
+    </p>
+    <div class="findings" id="findings" hidden>
+      <h2>What the research found</h2>
+      <ul id="findlist"></ul>
+    </div>
+  </header>
+
+  <div class="dials" id="dials" hidden>
+    <h2>Dials</h2>
+    <div class="axes" id="axes"></div>
+    <button class="rollall" id="rollall">Re-roll all at these settings</button>
+  </div>
+
+  <div class="origin">
+    <p class="tag" id="origintag">The passage as it stands</p>
+    <div class="body" id="origin"></div>
+  </div>
+
+  <div id="variants"></div>
+</div>
+
+<div class="bar" id="bar">
+  <div class="barin">
+    <span class="count" id="count">Nothing picked yet</span>
+    <input class="note blend" id="blend" placeholder="Anything to carry over from the ones you did not pick">
+    <button class="primary" id="done" disabled>Use this voice</button>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let sheet = null;
+let chosen = null;
+
+const post = (url, body) =>
+  fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
+    .then((r) => r.json());
+
+function dialValues() {
+  const out = {};
+  for (const el of document.querySelectorAll("input[type=range][data-key]")) out[el.dataset.key] = Number(el.value);
+  return out;
+}
+
+function renderAxes() {
+  if (!sheet.axes.length) return;
+  $("dials").hidden = false;
+  $("axes").innerHTML = sheet.axes
+    .map(
+      (a) => `
+      <div class="axis">
+        <label for="ax-${a.key}"><span>${a.label}</span> <b id="v-${a.key}">${sheet.dials[a.key]}</b></label>
+        <input type="range" id="ax-${a.key}" data-key="${a.key}" min="0" max="100" step="5" value="${sheet.dials[a.key]}">
+        <div class="ends"><span>${a.low}</span><span>${a.high}</span></div>
+      </div>`
+    )
+    .join("");
+  for (const el of document.querySelectorAll("input[type=range][data-key]")) {
+    el.addEventListener("input", () => {
+      $("v-" + el.dataset.key).textContent = el.value;
+    });
+    el.addEventListener("change", () => post("/api/dials", { dials: dialValues() }));
+  }
+}
+
+function renderVariants() {
+  $("variants").innerHTML = sheet.variants
+    .map(
+      (v) => `
+      <article class="variant" id="var-${v.id}" data-id="${v.id}">
+        <div class="vhead"><h3>${v.label}</h3><span class="picked">Picked</span></div>
+        <p class="brief">${v.brief ?? ""}</p>
+        <div class="working"><div class="dots"></div><span id="w-${v.id}">Laying the stet mark</span></div>
+        <div class="body" id="t-${v.id}" contenteditable="true" spellcheck="false"></div>
+        <p class="said" id="s-${v.id}"></p>
+        <div class="actions">
+          <button class="primary" data-act="pick">This one</button>
+          <input class="note" data-act="note" placeholder="What is wrong with it">
+          <button data-act="roll">Send it back</button>
+        </div>
+      </article>`
+    )
+    .join("");
+
+  for (const v of sheet.variants) $("t-" + v.id).textContent = v.text ?? "";
+
+  $("variants").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-act]");
+    if (!btn) return;
+    const card = btn.closest(".variant");
+    const id = card.dataset.id;
+
+    if (btn.dataset.act === "pick") return pick(id);
+
+    const note = card.querySelector('[data-act="note"]').value.trim();
+    card.classList.add("busy");
+    $("s-" + id).style.display = "none";
+    const started = Date.now();
+    const tick = setInterval(() => {
+      $("w-" + id).textContent = `Laying the stet mark  ${Math.round((Date.now() - started) / 1000)}s`;
+    }, 1000);
+
+    const r = await post("/api/roll", { id, note });
+    clearInterval(tick);
+    $("w-" + id).textContent = "Laying the stet mark";
+    card.classList.remove("busy");
+
+    if (r.ok) {
+      $("t-" + id).textContent = r.text;
+    } else {
+      const said = $("s-" + id);
+      said.textContent = r.reason ?? "Nothing came back.";
+      said.style.display = "block";
+    }
+  });
+
+  /* An edit is the author's own hand, so it is kept exactly and never regenerated under them. */
+  $("variants").addEventListener("focusout", (e) => {
+    const body = e.target.closest(".body[contenteditable]");
+    if (!body) return;
+    const id = body.closest(".variant").dataset.id;
+    post("/api/edit", { id, text: body.textContent });
+  });
+}
+
+function pick(id) {
+  chosen = id;
+  for (const el of document.querySelectorAll(".variant")) el.classList.toggle("is-chosen", el.dataset.id === id);
+  const v = sheet.variants.find((x) => x.id === id);
+  $("count").innerHTML = `Picked <b>${v.label}</b>`;
+  $("done").disabled = false;
+  post("/api/choose", { id });
+  $("var-" + id).scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+$("rollall").addEventListener("click", async () => {
+  await post("/api/dials", { dials: dialValues() });
+  for (const v of sheet.variants) {
+    document.querySelector(`#var-${v.id} button[data-act="roll"]`).click();
+  }
+});
+
+$("done").addEventListener("click", async () => {
+  if (!chosen) return;
+  $("done").disabled = true;
+  await post("/api/done", { id: chosen, note: document.querySelector(`#var-${chosen} [data-act="note"]`).value.trim(), blend: $("blend").value.trim() });
+  const v = sheet.variants.find((x) => x.id === chosen);
+  $("bar").remove();
+  $("wrap").innerHTML = `
+    <div class="finished">
+      <div class="mark"><b>stet</b></div>
+      <p style="margin-top:1.5rem">
+        <b>${v.label}</b> it is. Everything you saw went back, including the ones you turned down,
+        because what you rejected says as much about the voice as what you kept.
+      </p>
+      <p style="margin-top:1rem">Go back to the terminal. Close this tab whenever.</p>
+    </div>`;
+});
+
+fetch("/api/sheet")
+  .then((r) => r.json())
+  .then((data) => {
+    sheet = data;
+    $("persona").textContent = sheet.persona;
+    if (sheet.findings?.length) {
+      $("findings").hidden = false;
+      $("findlist").innerHTML = sheet.findings.map((f) => `<li>${f}</li>`).join("");
+    }
+    if (sheet.sample?.file) $("origintag").textContent = `The passage as it stands · ${sheet.sample.file}`;
+    $("origin").textContent = sheet.sample?.text ?? "";
+    renderAxes();
+    renderVariants();
+  });
+</script>
+</body>
+</html>
