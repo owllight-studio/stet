@@ -71,9 +71,14 @@ export function replace(root, file, index, text) {
   const before = blocks.slice(0, index).map((b) => b.text);
   const after = blocks.slice(index + 1).map((b) => b.text);
 
-  // Rebuilt from the block list, so spacing between blocks is uniform. That is a real change to
-  // files with irregular blank lines, and it is why this is only used on files being proofed.
-  const rebuilt = [...before, text, ...after].join("\n\n");
+  // The gap between the frontmatter and the first block is preserved rather than rebuilt. It was
+  // being swallowed, which is a change to a file this function promises not to change other than
+  // in the one block it was given.
+  const lead = body.match(/^\s*\n/)?.[0] ?? "";
   const trailing = body.endsWith("\n") ? "\n" : "";
-  writeFileSync(full, head + rebuilt + trailing);
+
+  // Between blocks the spacing is uniform. That is a real change to files with irregular blank
+  // lines, and it is why this runs only on files being proofed.
+  const rebuilt = [...before, text, ...after].join("\n\n");
+  writeFileSync(full, head + lead + rebuilt + trailing);
 }

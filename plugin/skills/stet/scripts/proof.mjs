@@ -31,8 +31,13 @@ const root = process.cwd();
 const here = dirname(fileURLToPath(import.meta.url));
 const LIMIT = Number(process.env.STET_PROOF_LIMIT ?? 24);
 
+// Named files, or everything in draft. Reviewing is work, and a sheet of a hundred blocks is a set
+// of decisions nobody made carefully.
+const only = process.argv.slice(2);
+const candidates = only.length ? only : findContent(root).files;
+
 const drafts = [];
-for (const file of findContent(root).files) {
+for (const file of candidates) {
   const meta = read(root, file);
   if (meta?.state !== "draft") continue;
   for (const block of split(root, file).blocks) {
