@@ -22,6 +22,19 @@ import { join, relative, resolve, isAbsolute } from "node:path";
 
 const allow = () => process.exit(0);
 
+const deny = (lines) => {
+  process.stdout.write(
+    JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        permissionDecision: "deny",
+        permissionDecisionReason: lines.join("\n"),
+      },
+    }),
+  );
+  process.exit(0);
+};
+
 let payload = "";
 try {
   payload = readFileSync(0, "utf8");
@@ -40,7 +53,8 @@ const tool = input?.tool_name ?? "";
 if (!/^(Edit|Write|MultiEdit|NotebookEdit)$/.test(tool)) allow();
 
 const root = input?.cwd || process.cwd();
-const raw = input?.tool_input?.file_path ?? input?.tool_input?.notebook_path;
+const input_ = input?.tool_input;
+const raw = input_?.file_path ?? input_?.notebook_path;
 if (!raw) allow();
 
 const abs = isAbsolute(raw) ? raw : resolve(root, raw);
@@ -66,13 +80,41 @@ if (!matchesAny(file, globs)) allow();
 // 3. New content is a draft.
 if (!existsSync(abs)) allow();
 
-const { read, mayEdit } = await import("./lib/meta.mjs");
+const { read, mayEdit, ownedSpans } = await import("./lib/meta.mjs");
 const meta = read(root, file);
+
+// Sentences a person wrote inside otherwise open content. Checked before the file's own state,
+// because a draft file can still contain the author's lines and those are the ones that matter.
+const owned = ownedSpans(meta);
+if (owned.length) {
+  const { touches, intact } = await import("./lib/spans.mjs");
+  const input = input_ ?? {};
+  const hits =
+    typeof input.old_string === "string"
+      ? touches(input.old_string, owned)
+      : typeof input.content === "string"
+        ? intact(input.content, owned)
+        : [];
+
+  if (hits.length) {
+    deny([
+      `${file} contains ${hits.length === 1 ? "a sentence" : `${hits.length} sentences`} the author wrote.`,
+      "",
+      ...hits.map((h) => `  "${h}"`),
+      "",
+      "Those words are theirs, character for character. Everything else in this file is still",
+      "open to you: edit around them.",
+      "",
+      "If the sentence itself is wrong, say so in your reply and let the author change it.",
+    ]);
+  }
+}
 
 if (meta && mayEdit(meta)) allow();
 
 const state = meta?.state ?? null;
-const reason = !state
+deny(
+  !state
   ? [
       `${file} is content and it is unclaimed.`,
       "",
@@ -94,15 +136,5 @@ const reason = !state
       "",
       "You may propose a rewrite in your reply. Show it to the author. Do not put it in the file.",
       "If this is blocking the request, say so and ask. Do not release it yourself.",
-    ];
-
-process.stdout.write(
-  JSON.stringify({
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "deny",
-      permissionDecisionReason: reason.join("\n"),
-    },
-  }),
+    ],
 );
-process.exit(0);

@@ -31,6 +31,12 @@ export const POLICIES = ["frozen", "refresh", "open"];
 /** May an agent rewrite the words? Only in draft. Everything else is closed. */
 export const mayEdit = (meta) => meta?.state === "draft";
 
+/**
+ * Sentences a person wrote inside otherwise open content. Ownership is per sentence: correcting one
+ * line does not hand an agent's paragraph to the author, and does not hand the author's line back.
+ */
+export const ownedSpans = (meta) => (Array.isArray(meta?.owned) ? meta.owned : []);
+
 /** May an agent bring a named fact current, despite the words being closed? */
 export const mayRefresh = (meta) =>
   meta?.state === "draft" || meta?.policy === "refresh" || meta?.policy === "open";
@@ -69,9 +75,11 @@ function render(meta) {
   for (const key of ["state", "author", "approved", "policy"]) {
     if (meta[key] !== undefined && meta[key] !== null) lines.push(`  ${key}: ${meta[key]}`);
   }
-  if (meta.sources?.length) {
-    lines.push("  sources:");
-    for (const s of meta.sources) lines.push(`    - ${s}`);
+  for (const key of ["sources", "owned"]) {
+    if (!meta[key]?.length) continue;
+    lines.push(`  ${key}:`);
+    // Quoted, because a sentence contains colons, dashes and quotes that would otherwise be YAML.
+    for (const v of meta[key]) lines.push(`    - ${JSON.stringify(String(v))}`);
   }
   return lines.join("\n");
 }

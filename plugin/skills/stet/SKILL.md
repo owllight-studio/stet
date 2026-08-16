@@ -92,6 +92,11 @@ Commands without a reference file yet are not built. Say so rather than improvis
 finds as `authored`. That is the safe default and the honest one: those words were written by a
 person who did not ask you. Content becomes yours by being handed over, never by being found.
 
+**Ownership is per sentence.** A file's state is the coarse default. `owned` lists sentences a
+person wrote, by their exact words, and those are closed to you inside a file that is otherwise
+yours to edit. Work around them. Correcting one line of somebody's paragraph does not hand you the
+rest, and correcting one line of yours does not hand them the rest either.
+
 **Approval confers ownership.** Your own draft is yours until a person reads it and accepts it, and
 then it is theirs and you may not change it. Not time, not the writing being good, not you having
 written every word of it: only approval. And only the author performs it. You record it.

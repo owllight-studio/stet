@@ -28,6 +28,15 @@ was written by a person, and a project that wants to say honestly who wrote what
 difference. It also changes what a regeneration means: an approved page can be rebuilt if the author
 asks for that, and an authored one cannot be rebuilt at all, only replaced by its author.
 
+## Ownership is per sentence
+
+State is the coarse default for a file. `owned` is the fine grain: sentences a person wrote, stored
+as their exact words rather than a position, so they survive everything around them moving and lapse
+on their own if the words themselves change.
+
+A `draft` file with owned sentences in it is the normal case after a proof sheet. Most of it is
+yours. Those lines are not. Edit around them.
+
 ## Policy is separate
 
 State says who owns the words. `policy` says what may still be done to closed content.

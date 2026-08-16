@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof sheet</title>
+<style>
+/* The same world as the site: paper, the copy editor's non-photo blue, red for deletion. A proof
+   sheet should look like a proof sheet, and the marks should mean what they mean on paper. */
+:root {
+  --paper: #fbfbf9; --edge: #f1f1ec; --ink: #16161a; --soft: #55555f; --faint: #8b8b95;
+  --rule: #e2e2db; --pencil: #2c6d9e; --wash: #eaf2f8; --strike: #c0392b; --keep: #1e7a52;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14141a; --edge: #1b1b22; --ink: #eeeef0; --soft: #a9a9b4; --faint: #74747f;
+    --rule: #2b2b34; --pencil: #7db8e0; --wash: #1b2733; --strike: #e07a6e; --keep: #5fbf90;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--serif); font-size: 17px; line-height: 1.6;
+}
+.wrap { max-width: 52rem; margin: 0 auto; padding: 0 1.5rem 8rem; }
+
+header { padding: 2rem 0 1.25rem; border-bottom: 1px solid var(--rule); }
+.mark { font-family: var(--mono); font-size: .95rem; letter-spacing: .22em; text-transform: uppercase; }
+.mark b { font-weight: 400; border-bottom: 2px solid var(--pencil); padding-bottom: 2px; }
+header p { color: var(--soft); font-size: .95rem; margin: .6rem 0 0; }
+
+.file {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--pencil); margin: 2.5rem 0 .75rem; padding-bottom: .4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.block { position: relative; padding: 1.1rem 0 1.1rem 3.5rem; border-bottom: 1px solid var(--rule); }
+.block.is-kept { background: linear-gradient(90deg, var(--wash), transparent 60%); }
+.block.is-edited { background: linear-gradient(90deg, rgba(30,122,82,.10), transparent 60%); }
+.block.is-queried { background: linear-gradient(90deg, rgba(192,57,43,.08), transparent 60%); }
+
+.stamp {
+  position: absolute; left: 0; top: 1.25rem; width: 3rem;
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--faint);
+}
+.block.is-kept .stamp { color: var(--pencil); }
+.block.is-edited .stamp { color: var(--keep); }
+.block.is-queried .stamp { color: var(--strike); }
+
+.text {
+  white-space: pre-wrap; outline: none; border-radius: 2px;
+  padding: .15rem .3rem; margin: -.15rem -.3rem;
+}
+.text:focus { background: var(--edge); box-shadow: 0 0 0 1px var(--pencil); }
+.text.k-heading { font-size: 1.15rem; }
+.text.k-list { font-family: var(--mono); font-size: .88rem; line-height: 1.75; }
+
+.actions { display: flex; gap: .5rem; margin-top: .7rem; align-items: center; flex-wrap: wrap; }
+button {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+  background: transparent; color: var(--soft); border: 1px solid var(--rule);
+  padding: .38rem .7rem; cursor: pointer; border-radius: 2px;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+button:hover { color: var(--ink); border-color: var(--pencil); }
+button.on { color: var(--paper); background: var(--pencil); border-color: var(--pencil); }
+.hint { font-family: var(--mono); font-size: .68rem; color: var(--faint); letter-spacing: .04em; }
+
+.query { display: none; width: 100%; margin-top: .6rem; }
+.block.is-queried .query { display: block; }
+.query textarea {
+  width: 100%; min-height: 4.5rem; resize: vertical; padding: .6rem .7rem;
+  font-family: var(--serif); font-size: .95rem; line-height: 1.55;
+  background: var(--edge); color: var(--ink); border: 1px solid var(--strike); border-radius: 2px;
+}
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+  border-top: 1px solid var(--rule); padding: .85rem 1.5rem;
+}
+.bar-in {
+  max-width: 52rem; margin: 0 auto; display: flex; gap: 1.25rem; align-items: center;
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; color: var(--soft);
+}
+.bar b { font-weight: 400; color: var(--ink); }
+.bar .done {
+  margin-left: auto; background: var(--pencil); color: var(--paper); border-color: var(--pencil);
+  padding: .5rem 1.1rem;
+}
+.bar .done:hover { filter: brightness(1.1); }
+.finished { padding: 4rem 0; }
+.finished h2 { font-weight: 400; font-size: 1.5rem; margin: 0 0 .75rem; }
+.finished p { color: var(--soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="mark"><b>stet</b> &nbsp;proof sheet</span>
+    <p>
+      Keep it, correct it, or query it. Correcting a block makes it yours: it becomes authored and
+      closes to the agent permanently. Anything you leave alone stays a draft, because silence is
+      not approval.
+    </p>
+  </header>
+  <div id="sheet"></div>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <span><b id="n-keep">0</b> kept</span>
+    <span><b id="n-edit">0</b> corrected</span>
+    <span><b id="n-query">0</b> queried</span>
+    <span><b id="n-left">0</b> left</span>
+    <button class="done" id="done">Done</button>
+  </div>
+</div>
+
+<script>
+const sheet = document.getElementById("sheet");
+const state = new Map();
+let blocks = [];
+
+const post = (url, body) =>
+  fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+
+function counts() {
+  let k = 0, e = 0, q = 0;
+  for (const s of state.values()) {
+    if (s.action === "keep") k++;
+    if (s.action === "edit") e++;
+    if (s.action === "query") q++;
+  }
+  document.getElementById("n-keep").textContent = k;
+  document.getElementById("n-edit").textContent = e;
+  document.getElementById("n-query").textContent = q;
+  document.getElementById("n-left").textContent = blocks.length - state.size;
+}
+
+function decide(id, action, extra = {}) {
+  const el = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  const text = el.querySelector(".text").innerText;
+  const note = el.querySelector("textarea")?.value ?? "";
+  const payload = { id, action, text, note, ...extra };
+  state.set(id, payload);
+  el.classList.toggle("is-kept", action === "keep");
+  el.classList.toggle("is-edited", action === "edit");
+  el.classList.toggle("is-queried", action === "query");
+  el.querySelector(".stamp").textContent = action === "keep" ? "stet" : action === "edit" ? "mine" : "query";
+  for (const b of el.querySelectorAll("button")) b.classList.toggle("on", b.dataset.action === action);
+  post("/api/decide", payload);
+  counts();
+}
+
+fetch("/api/blocks").then((r) => r.json()).then((data) => {
+  blocks = data.blocks;
+  let currentFile = null;
+  for (const b of blocks) {
+    if (b.file !== currentFile) {
+      currentFile = b.file;
+      const h = document.createElement("div");
+      h.className = "file";
+      h.textContent = b.file;
+      sheet.appendChild(h);
+    }
+    const el = document.createElement("div");
+    el.className = "block";
+    el.dataset.id = b.id;
+    el.innerHTML = `
+      <span class="stamp">L${b.line}</span>
+      <div class="text k-${b.kind}" contenteditable="plaintext-only" spellcheck="true"></div>
+      <div class="actions">
+        <button data-action="keep">Stet</button>
+        <button data-action="query">Query</button>
+        <span class="hint">edit the text to make it yours</span>
+      </div>
+      <div class="query"><textarea placeholder="What should change, and why."></textarea></div>`;
+    el.querySelector(".text").textContent = b.text;
+    sheet.appendChild(el);
+
+    const text = el.querySelector(".text");
+    const original = b.text;
+    text.addEventListener("input", () => {
+      // Editing is the decision. No save button, because a save button is a thing to forget.
+      if (text.innerText === original) return;
+      decide(b.id, "edit");
+    });
+    for (const btn of el.querySelectorAll("button")) {
+      btn.addEventListener("click", () => decide(b.id, btn.dataset.action));
+    }
+    el.querySelector("textarea").addEventListener("input", () => {
+      if (state.get(b.id)?.action === "query") decide(b.id, "query");
+    });
+  }
+  counts();
+});
+
+document.getElementById("done").addEventListener("click", async () => {
+  await post("/api/done", {});
+  document.body.innerHTML =
+    '<div class="wrap finished"><h2>Done.</h2><p>Decisions are back in the terminal. You can close this tab.</p></div>';
+});
+</script>
+</body>
+</html>

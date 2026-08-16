@@ -79,6 +79,35 @@ ownership: not time, not the content being good, not the agent having written ev
 rebuild means. An approved page can be regenerated on request. An authored one cannot be regenerated
 at all, only replaced by its author.
 
+### Ownership is per sentence, not per file
+
+Added 2026-08-16, from the author: *if I only correct a sentence I only own that sentence, you still
+own what is around it.*
+
+He is right, and the first proof sheet had the flaw: correcting one line flipped the whole file to
+`authored`, which would have had the tool report that a person wrote paragraphs they never touched.
+That is the same dishonesty as an agent claiming someone else's words, and easier to miss because it
+flatters the author.
+
+So a file's `state` is the coarse default and `owned` is the fine grain: a list of sentences a
+person wrote, stored as their own exact words.
+
+**Content-addressed, never positional.** Three things follow, and all three are the reason:
+
+- A sentence stays owned when everything around it moves. Offsets would not survive one insert.
+- Ownership is checkable against any version of the file, with no index to keep in step.
+- If the words change, the claim lapses on its own. You own what you wrote; rewrite it and it is no
+  longer what you wrote.
+
+The unit is the sentence because it is the smallest thing that can be found again unambiguously. A
+word cannot: a claim on "the" means nothing, and a word repeated four times in a paragraph cannot be
+told from its copies. A correction to a single word therefore claims the sentence containing it,
+which is also how anyone would describe what they just did.
+
+The hook enforces it on both shapes of edit. An `Edit` whose `old_string` overlaps an owned sentence
+is refused; a `Write` whose new content no longer contains one is refused. Everything else in the
+file stays open.
+
 `policy` is orthogonal and applies to closed content. `authored` plus `refresh` is the combination
 the whole system exists to make expressible: these are my words, keep the numbers in them true.
 
