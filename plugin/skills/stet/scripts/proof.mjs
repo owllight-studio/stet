@@ -39,15 +39,17 @@ const only = process.argv.slice(2);
 const candidates = only.length ? only : findContent(root).files;
 
 const drafts = [];
+let waiting = 0;
 for (const file of candidates) {
   const meta = read(root, file);
   if (meta?.state !== "draft") continue;
   for (const block of split(root, file).blocks) {
     if (block.kind === "code") continue;
+    // Past the limit, keep counting rather than stopping. A cap that does not say what it dropped
+    // reads as "this is the whole file", which is the one thing it must never imply.
+    if (drafts.length >= LIMIT) { waiting++; continue; }
     drafts.push({ file, ...block, id: `${file}#${block.index}` });
-    if (drafts.length >= LIMIT) break;
   }
-  if (drafts.length >= LIMIT) break;
 }
 
 if (!drafts.length) {
@@ -206,6 +208,10 @@ const port = Number(process.env.STET_PROOF_PORT ?? 4741);
 server.listen(port, () => {
   console.log(`Proof sheet: http://localhost:${port}`);
   console.log(`${drafts.length} draft blocks across ${new Set(drafts.map((d) => d.file)).size} files.`);
+  if (waiting) {
+    console.log(`${waiting} more are in draft and not on this sheet. Reviewing is work and a sheet of a hundred blocks is a set of decisions nobody made carefully.`);
+    console.log(`Run it again afterwards for the rest, or raise STET_PROOF_LIMIT (currently ${LIMIT}).`);
+  }
   console.log("Waiting. Save, correct or retry each block, then press Done.\n");
 });
 
