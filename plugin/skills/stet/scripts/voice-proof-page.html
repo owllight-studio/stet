@@ -353,25 +353,32 @@ function renderVariants() {
     card.classList.remove("busy");
 
     if (r.ok) {
-      const was = before;
-      const d = diff(was, r.text);
-      $("t-" + id).innerHTML = d.html;
+      const d = diff(before, r.text);
+      $("t-" + id).textContent = r.text;
       showStats(id, r.text);
-
-      /* Show it marked up first, because "nothing happened" is what a silent success looks like.
-         The clean version is one click away and the button says how much moved. */
       generated.set(id, r.text);
       card.classList.remove("is-mine");
+
+      /* The stamp is the confirmation, because a silent success is indistinguishable from nothing
+         happening. The marks are opt-in: at a 90 percent change rate they are noise, and the number
+         tells the reader that before they click. */
       const stamp = $("k-" + id);
+      const heavy = d.ratio > 0.6;
       stamp.style.display = "flex";
-      stamp.innerHTML = `<span>Rewritten in ${r.took}s &middot; ${d.changed} ${d.changed === 1 ? "word" : "words"} changed</span>`;
-      const clean = document.createElement("button");
-      clean.textContent = "Hide the marks";
-      clean.addEventListener("click", () => {
-        $("t-" + id).textContent = r.text;
-        stamp.style.display = "none";
-      });
-      stamp.append(clean);
+      stamp.innerHTML = `<span>Rewritten in ${r.took}s &middot; ${d.changed} ${d.changed === 1 ? "word" : "words"} changed${heavy ? ", nearly all of it" : ""}</span>`;
+
+      if (!heavy) {
+        const marks = document.createElement("button");
+        let on = false;
+        marks.textContent = "Show the marks";
+        marks.addEventListener("click", () => {
+          on = !on;
+          if (on) $("t-" + id).innerHTML = d.html;
+          else $("t-" + id).textContent = r.text;
+          marks.textContent = on ? "Hide the marks" : "Show the marks";
+        });
+        stamp.append(marks);
+      }
     } else {
       const said = $("s-" + id);
       said.textContent = r.reason ?? "Nothing came back.";
@@ -396,8 +403,12 @@ function renderVariants() {
   });
 }
 
-/* Word-level diff, so a rewrite is visible rather than merely true. Longest common subsequence over
-   whitespace tokens: plenty for a paragraph, and no dependency. */
+/* Word-level diff. Longest common subsequence over whitespace tokens: plenty for a paragraph, and
+   no dependency.
+
+   Whitespace is never marked. It is emitted as itself whichever side it came from, because a run of
+   deletions that swallows the spaces between them prints the words welded together and the marks
+   become unreadable exactly when there are most of them. */
 function diff(before, after) {
   const a = before.split(/(\s+)/), b = after.split(/(\s+)/);
   const n = a.length, m = b.length;
@@ -407,15 +418,25 @@ function diff(before, after) {
       grid[i][j] = a[i] === b[j] ? grid[i + 1][j + 1] + 1 : Math.max(grid[i + 1][j], grid[i][j + 1]);
 
   const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const space = (t) => !t.trim();
   let out = "", i = 0, j = 0, changed = 0;
+
   while (i < n && j < m) {
-    if (a[i] === b[j]) { out += esc(a[i]); i++; j++; }
-    else if (grid[i + 1][j] >= grid[i][j + 1]) { if (a[i].trim()) { out += `<del>${esc(a[i])}</del>`; changed++; } i++; }
-    else { if (b[j].trim()) { out += `<ins>${esc(b[j])}</ins>`; changed++; } j++; }
+    if (a[i] === b[j]) { out += esc(a[i]); i++; j++; continue; }
+    if (space(a[i])) { out += esc(a[i]); i++; continue; }
+    if (space(b[j])) { out += esc(b[j]); j++; continue; }
+    if (grid[i + 1][j] >= grid[i][j + 1]) { out += `<del>${esc(a[i])}</del>`; changed++; i++; }
+    else {
+      if (out.endsWith("</del>")) out += " ";
+      out += `<ins>${esc(b[j])}</ins>`;
+      changed++; j++;
+    }
   }
-  while (i < n) { if (a[i].trim()) { out += `<del>${esc(a[i])}</del>`; changed++; } i++; }
-  while (j < m) { if (b[j].trim()) { out += `<ins>${esc(b[j])}</ins>`; changed++; } j++; }
-  return { html: out, changed };
+  while (i < n) { out += space(a[i]) ? esc(a[i]) : `<del>${esc(a[i])}</del>`; if (!space(a[i])) changed++; i++; }
+  while (j < m) { out += space(b[j]) ? esc(b[j]) : `<ins>${esc(b[j])}</ins>`; if (!space(b[j])) changed++; j++; }
+
+  const words = after.split(/\s+/).filter(Boolean).length;
+  return { html: out, changed, ratio: words ? changed / words : 0 };
 }
 
 /* Rough, and deliberately so: the author is comparing three numbers with each other, not citing
