@@ -7,7 +7,7 @@ measured:
   sentenceMedian: 9
   sentenceP95: 26
   secondPerson: 0.02
-  hedgesPerSentence: 0.03
+  softenersPerSentence: 0.03
 sources: Vin Scully, Richie Benaud, Martin Tyler, Peter Drury, Howard Cosell, Jim McKay, Murray Walker, Al Michaels, Barry Davies
 stet:
   state: draft

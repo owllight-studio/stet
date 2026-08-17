@@ -15,7 +15,7 @@ measured:
   secondPerson: 0.0
   questions: 0
   exclamations: 1
-  hedgesPerSentence: 0.01
+  softenersPerSentence: 0.01
 sources: American Antiquities auction catalogue 1898; Rock, Textile Fabrics, South Kensington Museum 1870; Catalogue of the Gallery of Art, New York Historical Society 1915; Cleveland Museum of Art open access records; V&A physicalDescription; Sears Roebuck Consumers Guide 1897; Burpee's Farm Annual 1885; Whole Earth Catalog 1968
 stet:
   state: draft

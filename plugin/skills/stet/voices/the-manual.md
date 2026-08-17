@@ -20,7 +20,7 @@ measured:
   emDashesPer10kWords: 3.5
   questions: 0.003
   exclamations: 0
-  hedgesPerSentence: 0.03
+  softenersPerSentence: 0.03
 sources: Linux man-pages (18 pages); GNU coreutils manual 9.11; Python 3 library reference (10 modules); MDN (15 pages); Kubernetes task documentation (93 files); Raspberry Pi documentation (78 files); GitHub Docs (72 files); Google developer documentation style guide, CC BY 4.0 (15 pages)
 stet:
   state: draft
@@ -87,9 +87,10 @@ Modals run at 130 per 10,000 words, which is one every 77 words: "can" and "cann
 **Yes:** "Some filesystems may not implement the flag." (`open(2)`)
 **No:** "This generally does not work on all filesystems."
 
-A warning about this project's own tooling: `measure` reads this register as almost unhedged, at
-0.03 per sentence, because none of "may", "can", "must", "should" or "will" is in the `HEDGES` list
-in `lib/prose.mjs`. The most systematically qualified prose in this library scores as the least.
+Measuring this register is what found the defect that split this project's word lists in four. The
+old single list contained no modals at all, so the most systematically qualified prose in the library
+scored as the least hedged. `measure` now reports `modalsPerSentence` separately, and for this
+register that is the figure to read.
 
 ### Put the edge case in brackets
 
@@ -160,7 +161,8 @@ zero, because it breaks every long sentence in two.
 documentation contains none about 70 percent of the time.
 
 **Hedge substitution.** If a passage contains more instances of "generally" than of "may", it is not
-a manual whatever it looks like. This failure is invisible to `measure` as currently written.
+a manual whatever it looks like. Compare `modalsPerSentence` against `softenersPerSentence`: this
+register runs the first far higher than the second, and imitation reverses that.
 
 **Cross-reference suppression.** Prose that never sends the reader anywhere reads as a self-contained
 essay, which is exactly what a reference page is not.

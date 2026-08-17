@@ -8,7 +8,7 @@ measured:
   sentenceSdOverMean: 0.55
   sentenceMax: 45
   shortSentences: 0.3
-  hedgesPerSentence: 0.1
+  softenersPerSentence: 0.1
 sources: Orwell, Hemingway, GOV.UK content guidance, digital.gov, Butterick, Paul Graham, and Pullum's criticism of Strunk and White
 stet:
   state: draft

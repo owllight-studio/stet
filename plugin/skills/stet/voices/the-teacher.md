@@ -9,7 +9,7 @@ measured:
   sentenceVariance: high
   secondPerson: 0.14
   firstPersonPlural: 0.38
-  hedgesPerSentence: 0.2
+  softenersPerSentence: 0.2
 sources: Feynman, Sagan, Bartosz Ciechanowski, Michael Nielsen, Grant Sanderson, Bret Victor, Paul Halmos, Julia Galef
 stet:
   state: draft

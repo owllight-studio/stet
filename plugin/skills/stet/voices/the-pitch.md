@@ -20,7 +20,7 @@ measured:
   questions: 0.067
   pastTenseMarkers: 0.009
   semicolons: 0
-  hedgesPerSentence: 0.04
+  softenersPerSentence: 0.04
 sources: 16 software home pages fetched 17 August 2026 (stripe, basecamp, hey, fly.io, buttondown, plausible, posthog, linear, intercom, ghost, honeycomb, tailwind, obsidian, supabase, mailchimp, wistia), 759 sentences and 528 copy blocks; compared against Hopkins, Scientific Advertising 1923, 1,853 sentences
 stet:
   state: draft

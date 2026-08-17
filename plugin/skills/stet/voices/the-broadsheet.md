@@ -8,7 +8,7 @@ measured:
   adjectivesBeforeNoun: 2
   sentenceMedian: 18
   secondPerson: 0.0
-  hedgesPerSentence: 0.02
+  softenersPerSentence: 0.02
 sources: Reuters Handbook of Journalism, AP Statement of News Values, BBC News Styleguide, The Economist Style Guide
 stet:
   state: draft
