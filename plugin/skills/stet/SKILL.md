@@ -112,7 +112,7 @@ to judge honestly.
 | `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
 | `stet-citation-checker` | `cite` | Whether a source exists is arithmetic; whether it supports the sentence is not |
-| `stet-continuity` | long works | No single reading holds four hundred pages, and the contradiction is never in one place |
+| `stet-continuity` | long works, and across them | No single reading holds four hundred pages, and the contradiction is never in one place |
 | `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |
 | `stet-critic` | `critique` | Fresh eyes on a finished piece, outside the attention gravity of having written it |
 

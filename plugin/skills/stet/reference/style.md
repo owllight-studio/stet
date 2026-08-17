@@ -49,6 +49,34 @@ places, and a timeline. `stet-continuity` builds the last three, and the reason 
 separate is that the errors happen between people who share scenes rather than between people whose
 names begin with the same letter.
 
+## Finding what nobody has decided yet
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs discover
+```
+
+`check` enforces decisions somebody made. `discover` finds where the corpus is already saying one
+thing two ways, which is the state a style sheet exists to end and the thing nobody notices from
+inside a single file.
+
+The primitive is the right one: not "this word is wrong", which needs an authority, but **"both of
+these appear here, pick one"**, which needs only the corpus.
+
+It is worth knowing what the large word lists actually are. Google maintains 598 term entries,
+Microsoft 876, Red Hat 924, and reading them shows they are inventories of how many wrong names
+existed in production. One Red Hat product had four. GitLab's list bans three wrong forms of "sign
+in" and five of "later".
+
+And the drift types are measured. Across 2,400 documents over 1,000 words, **80 percent had
+inconsistent capitalisation and 60 percent inconsistent hyphenation**, with "long-term" against
+"long term" the single commonest at 10 percent of documents. Those are the two things `discover`
+looks for.
+
+**Two exclusions do the work**, and both were learned by running it. A match at the start of a
+sentence is never recorded, because a capital there is grammar rather than spelling. And a case-only
+difference is only reported on a word that is not ordinary English, because there it is a name being
+spelled two ways rather than a word being quoted.
+
 ## Changing a decision
 
 `decide` refuses to overwrite one silently. **Changing a decision is a decision**, so it has to be

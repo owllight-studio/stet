@@ -122,9 +122,167 @@ if (cmd === "decide") {
   process.exit(0);
 }
 
-/* --- check ----------------------------------------------------------------- */
-
 const text = load();
+
+/* --- discover -------------------------------------------------------------- */
+
+/*
+ * Find the variation nobody has decided yet.
+ *
+ * `check` enforces decisions somebody made. This finds where the corpus is already saying one thing
+ * two ways, which is the state a style sheet exists to end and the thing nobody notices from inside
+ * a single file.
+ *
+ * The primitive is borrowed from Vale's `consistency` check and it is the right one: not "this word
+ * is wrong", which needs an authority, but **"both of these appear here, pick one"**, which needs
+ * only the corpus. The organisations that took this seriously ended up with word lists of 598
+ * entries (Google), 876 (Microsoft) and 924 (Red Hat), and reading them shows what they are: an
+ * inventory of how many wrong names existed in production. One Red Hat product had four.
+ */
+const NORMAL = (w) => w.toLowerCase().replace(/[-\s.']/g, "");
+
+/**
+ * Ordinary English, where a difference in case is grammar rather than terminology.
+ *
+ * The two kinds of variation are not equally interesting, and the split is what makes the report
+ * readable. A hyphenation or spacing difference is always worth knowing about: "e-mail" against
+ * "email" is a decision somebody has to make, and it is the single most common drift type measured
+ * anywhere. A case difference is only worth knowing about on a word that is usually capitalised,
+ * which is to say a name.
+ *
+ * Without this, a run reports "none" against "None" and "just" against "Just", which is a word
+ * being quoted as a word rather than a product being spelled two ways.
+ */
+const COMMON = new Set(
+  ("about after all also and any are because been before both but can could did does down each even " +
+   "every first from had has have here how into its just like made make many more most much must " +
+   "never none not now once only other over said same should since some such than that the their " +
+   "them then there these they this those through time under until very was way well were what when " +
+   "where which while who why will with without would your ever else always able back best come far " +
+   "find give good great keep know last least less long look mean might need next often place put " +
+   "right same say see seem several small still take tell thing think two use used want well work " +
+   "measured stated rules never done doing being").split(" "),
+);
+
+/**
+ * The same word wearing different clothes, and nothing else.
+ *
+ * Two exclusions do all the work, and both were learned by running it. A first pass reported "The
+ * one" against "the one" across 37 files, which is not a terminology variant, it is a sentence
+ * starting.
+ *
+ * So a match at the start of a sentence is never recorded. A capital there says nothing about how
+ * anybody spells the word, and thresholding on frequency does not help because a common phrase
+ * clears any threshold.
+ *
+ * And a multi-word candidate has to carry a capital or a hyphen. Product names and compounds are
+ * worth checking; "and the" is not.
+ *
+ * Headings go too. Title Case in a heading is a formatting convention, so scanning them reports
+ * every section title against its own ordinary use in a sentence, which is what a first run did:
+ * "Rules" nineteen times against "rules" four times, across twenty-one files, all of it noise.
+ */
+function variants(text) {
+  const seen = new Map();
+  const body = text
+    .split("\n")
+    .filter((l) => !/^\s*#{1,6}\s/.test(l) && !/^\s*[|>]/.test(l))
+    .join("\n");
+  const flat = body.replace(/\s+/g, " ");
+
+  const record = (surface, index) => {
+    // Sentence-initial, or the very start. A capital here is grammar rather than spelling.
+    const before = flat.slice(Math.max(0, index - 2), index);
+    if (!before.trim() || /[.!?:]\s$/.test(before)) return;
+
+    const key = NORMAL(surface);
+    if (key.length < 4) return;
+    if (!seen.has(key)) seen.set(key, new Map());
+    const forms = seen.get(key);
+    forms.set(surface, (forms.get(surface) ?? 0) + 1);
+  };
+
+  /*
+   * Single words first, and separately from pairs.
+   *
+   * One regex doing both was the bug: an optional trailing-word group is greedy, so "e-mail arrived"
+   * matched as a single token and never lined up against "email came". A corpus written to contain
+   * four obvious drifts reported none of them.
+   */
+  for (const m of flat.matchAll(/\b[A-Za-z][A-Za-z'.-]{2,}\b/g)) record(m[0], m.index);
+
+  /* Then capitalised pairs, which is where product names live. An uncapitalised pair is "and the". */
+  for (const m of flat.matchAll(/\b[A-Z][A-Za-z'.-]+[ -][A-Z][A-Za-z'.-]+\b/g)) record(m[0], m.index);
+
+  return seen;
+}
+
+if (cmd === "discover") {
+  const files = argv.slice(1).filter((a) => !a.startsWith("--")).length
+    ? argv.slice(1).filter((a) => !a.startsWith("--"))
+    : findContent(root).files;
+
+  const all = new Map();
+  const where = new Map();
+  for (const file of files) {
+    const body = prose(readFileSync(join(root, file), "utf8"), markupOf(file));
+    for (const [key, forms] of variants(body)) {
+      if (!all.has(key)) all.set(key, new Map());
+      const into = all.get(key);
+      for (const [surface, n] of forms) {
+        into.set(surface, (into.get(surface) ?? 0) + n);
+        const k = `${key}::${surface}`;
+        if (!where.has(k)) where.set(k, new Set());
+        where.get(k).add(file);
+      }
+    }
+  }
+
+  const decided = new Set(decisions(text).flatMap((d) => [NORMAL(d.term), NORMAL(d.as)]));
+
+  const split = [...all.entries()]
+    .filter(([key, forms]) => forms.size > 1 && !decided.has(key))
+    /* Hyphenation and spacing always count. A case-only difference counts only on a word that is not
+       ordinary English, because there it is a name being spelled two ways. */
+    .filter(([key, forms]) => {
+      const surfaces = [...forms.keys()];
+      const caseOnly = surfaces.every((x) => x.toLowerCase() === surfaces[0].toLowerCase());
+      if (caseOnly && COMMON.has(key)) return false;
+      // "agent's" against "agents" is grammar. Strip the possessive and see if anything is left.
+      const bare = new Set(surfaces.map((x) => x.toLowerCase().replace(/'s$/, "").replace(/s$/, "")));
+      return bare.size > 1 || !surfaces.every((x) => /s$/i.test(x));
+    })
+    .map(([key, forms]) => {
+      const sorted = [...forms.entries()].sort((a, b) => b[1] - a[1]);
+      const total = sorted.reduce((n, [, c]) => n + c, 0);
+      /* How split it is. A term used 40 times one way and once the other is a typo; 20 and 18 is a
+         decision nobody made. */
+      const evenness = sorted[1][1] / sorted[0][1];
+      return { key, forms: sorted, total, evenness };
+    })
+    .sort((a, b) => b.evenness * b.total - a.evenness * a.total);
+
+  if (!split.length) {
+    console.log("Nothing is being said two ways that has not already been decided.");
+    process.exit(0);
+  }
+
+  console.log(`${split.length} ${split.length === 1 ? "term appears" : "terms appear"} in more than one form.\n`);
+  for (const v of split.slice(0, 25)) {
+    console.log(`  ${v.forms.map(([f, n]) => `${f} (${n})`).join("   ")}`);
+    const files = new Set(v.forms.flatMap(([f]) => [...(where.get(`${v.key}::${f}`) ?? [])]));
+    console.log(`    across ${files.size} ${files.size === 1 ? "file" : "files"}: ${[...files].slice(0, 3).join(", ")}${files.size > 3 ? ", and more" : ""}`);
+    console.log(`    decide it:  style.mjs decide "${v.forms[1][0]}" "${v.forms[0][0]}" --why "..."`);
+    console.log("");
+  }
+  if (split.length > 25) console.log(`and ${split.length - 25} more.\n`);
+
+  console.log("Neither form is wrong. That is the point: this is variation nobody decided, and the");
+  console.log("value of deciding is that nobody has to decide it again.");
+  process.exit(1);
+}
+
+/* --- check ----------------------------------------------------------------- */
 
 if (cmd === "check") {
   if (!text) {

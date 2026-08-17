@@ -15,6 +15,24 @@ sitting prevents. An author holds a chapter in their head and cannot hold four h
 documentation set has thirty pages written by six people over two years. The contradiction is always
 visible and never in one place.
 
+**And the job does not exist.** Checked against the two main professional associations, the dominant
+marketplace and the dominant style manual: "continuity editor" appears in none of them. The
+Editorial Freelancers Association rate chart has 216 rows and no continuity line. The CIEP directory
+lists 681 members under exactly two roles. Chicago folds it into copyediting in one sentence:
+copyeditors "check spelling, punctuation, grammar, consistency, and continuity."
+
+So the work is real, it is nobody's title, and it lives inside an artifact.
+
+**Which is why the failure is across books rather than inside one.** A copyeditor catches
+contradictions within a manuscript. What they cannot catch is a contradiction with the previous
+book, because they were not hired for it. A practitioner describes exactly this: a character's
+surname changing slightly in book two, and the same surname used for two different characters in
+different books. Continuity knowledge lives in the editor, and the editor changes between books.
+
+**The style sheet is the only thing that survives that change.** A real published-novel style sheet
+lists the previous book's style sheet as a source. So build against `STYLE.md`, add to it, and treat
+anything already in it as decided.
+
 ## What professional practice actually does here
 
 Copyeditors working on fiction keep **four separate sheets**, not one, and the split is the method:
