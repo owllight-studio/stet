@@ -88,6 +88,17 @@ finding two answers to the same question.
 `check` reports where the content differs from the record. That is a question rather than a verdict.
 A decision can be wrong, and **a quotation keeps its own spelling whatever the sheet says**.
 
+## What `check` matches
+
+Whole words, against the file itself. Fenced code, indented code, inline code and link targets are
+blanked before matching, so a decision about prose does not fire on an identifier that happens to
+share the word, and the line number still points at the line in the file.
+
+Case is matched exactly whenever case is what was decided. `guide-sourced` becoming `Guide-sourced`
+carries no capital in the term, and matching that case-blind reports every already-correct
+`Guide-sourced` as a disagreement, which is the checker arguing with its own decision. Otherwise a
+term written in lower case matches either way, because that is usually drift rather than intent.
+
 ## Never
 
 - Never put a voice rule in here. "Warm but authoritative" is not a decision, it is an adjective, and

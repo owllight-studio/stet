@@ -300,14 +300,42 @@ if (cmd === "check") {
 
   const found = [];
   for (const file of files) {
-    const body = prose(readFileSync(join(root, file), "utf8"), markupOf(file));
-    const lines = body.split("\n");
+    /*
+     * Checked against the real file, line for line.
+     *
+     * Stripping the not-prose first and then counting lines reports a number that points at a
+     * different line in the file somebody has to open, which is worse than not reporting one. So
+     * the lines stay where they are and the parts that are not prose are blanked in place: fenced
+     * code keeps its line count, inline code and link targets become spaces.
+     */
+    const raw = readFileSync(join(root, file), "utf8");
+    let fenced = false;
+    const lines = raw.split("\n").map((line) => {
+      if (/^\s*```/.test(line)) { fenced = !fenced; return ""; }
+      if (fenced) return "";
+      if (/^\s{4,}\S/.test(line)) return "";
+      return line
+        .replace(/`[^`]*`/g, (m) => " ".repeat(m.length))
+        .replace(/\]\([^)]*\)/g, (m) => " ".repeat(m.length))
+        .replace(/<[^>]+>/g, (m) => " ".repeat(m.length));
+    });
     for (const d of decided) {
-      // Whole word, case sensitive only when the decision itself carries a capital.
-      const flags = /[A-Z]/.test(d.term) ? "g" : "gi";
-      const re = new RegExp(`(?<![\\w-])${d.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`, flags);
+      /*
+       * Whole word, and case sensitive whenever case is what was decided.
+       *
+       * "guide-sourced becomes Guide-sourced" carries no capital in the term, and matching it
+       * case-blind reports every already-correct Guide-sourced as a disagreement, which is the
+       * checker arguing with its own decision. So the test is not whether the term has a capital.
+       * It is whether the term and the replacement differ only in case.
+       */
+      const caseOnly = d.term.toLowerCase() === (d.as ?? "").toLowerCase();
+      const flags = caseOnly || /[A-Z]/.test(d.term) ? "g" : "gi";
+      const src = `(?<![\\w-])${d.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`;
       lines.forEach((line, i) => {
-        if (re.test(line)) found.push({ file, line: i + 1, ...d, saw: line.trim().slice(0, 78) });
+        // A fresh regex per line. A /g/ regex reused across .test() calls carries lastIndex
+        // forward and starts the next line partway in, so it quietly misses real matches.
+        if (new RegExp(src, flags).test(line))
+          found.push({ file, line: i + 1, ...d, saw: line.trim().slice(0, 78) });
       });
     }
   }
