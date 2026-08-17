@@ -18,7 +18,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { findContent } from "./lib/find.mjs";
-import { relations, statistics, checkFraction, checkRange, checkStat, alphaIn, exemptions } from "./lib/sums.mjs";
+import { relations, statistics, checkFraction, checkRange, checkStat, alphaIn, hidden } from "./lib/sums.mjs";
 
 const root = process.cwd();
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -26,10 +26,10 @@ const files = only.length ? only : findContent(root).files;
 
 const found = [];
 const unread = [];
+const wholeFiles = [];
 let checked = 0;
-let quotedSpans = 0;
-let markedLines = 0;
-let exemptFiles = 0;
+let hiddenByQuoting = 0;
+let hiddenByMarking = 0;
 for (const file of files) {
   let text;
   try {
@@ -50,12 +50,16 @@ for (const file of files) {
   const alpha = alphaIn(text);
 
   /* Quoting a claim and marking a line are both legitimate, and both are ways a real finding can
-     disappear. Counted here rather than left to bury themselves in a clean run, on the same
-     principle as the file this could not read: silence reads as "there was nothing here". */
-  const ex = exemptions(text, markup);
-  quotedSpans += ex.quoted;
-  markedLines += ex.marked;
-  if (ex.wholeFile) exemptFiles++;
+     disappear. What is counted is arithmetic hidden, not text removed: a span or a line count
+     fires on nearly every file in a real corpus and teaches a reader to stop reading it. A file
+     exempted whole is different in kind, since none of its arithmetic was even attempted, so it is
+     named rather than counted. */
+  const h = hidden(text, markup);
+  if (h.wholeFile) wholeFiles.push(file);
+  else {
+    hiddenByQuoting += h.quoted;
+    hiddenByMarking += h.marked;
+  }
 
   for (const r of relations(text, markup)) {
     checked++;
@@ -77,15 +81,17 @@ const sayUnread = () => {
 };
 
 /* Disclosure, not a finding. An exemption is legitimate, so this never touches the exit code, but
-   the command that reports a p-value inconsistent by one part in ten thousand does not get to stay
-   quiet about having skipped three quoted sentences and a whole file on the way there. */
+   quoting a claim or marking a line are also how a real inconsistency disappears, so a hidden
+   count of zero stays silent and a count above zero says so. A file exempted whole is named rather
+   than counted, every time, since somebody made that decision and none of that file's arithmetic
+   was even attempted. */
 const sayNotChecked = () => {
+  for (const file of wholeFiles) console.log(`NOT CHECKED  ${file}, exempted whole`);
+
   const parts = [];
-  if (quotedSpans) parts.push(`${quotedSpans} quoted ${quotedSpans === 1 ? "span" : "spans"}`);
-  if (markedLines) parts.push(`${markedLines} marked ${markedLines === 1 ? "line" : "lines"}`);
-  if (exemptFiles) parts.push(`${exemptFiles} ${exemptFiles === 1 ? "file" : "files"} exempted whole`);
-  if (!parts.length) return;
-  console.log(`NOT CHECKED  ${parts.join(", ")}`);
+  if (hiddenByQuoting) parts.push(`${hiddenByQuoting} ${hiddenByQuoting === 1 ? "relation" : "relations"} inside quotation marks`);
+  if (hiddenByMarking) parts.push(hiddenByMarking === 1 ? "1 on a marked line" : `${hiddenByMarking} on marked lines`);
+  if (parts.length) console.log(`NOT CHECKED  ${parts.join(", ")}`);
 };
 
 if (!checked) {

@@ -83,61 +83,26 @@ const GAP = 80;
  */
 const blank = (m) => " ".repeat(m.length);
 
-/*
- * The one place that actually does the blanking. `readable` and `exemptions` both call this and
- * keep it private, rather than each doing its own pass: two passes over the same rules is how the
- * whole-file check and the per-line check drifted apart once already.
- *
- * Exempting a claim is not free. It is also how a real finding disappears, quoted into an example
- * or waved past with a marker, so what was taken out is counted here and reported by the command,
- * on the same principle as the file it could not read: silence reads as "there was nothing here".
- */
-function strip(text, markup) {
+/* Colon-suffixed marker, that line only. Bare marker, tested separately below, the whole file. */
+const blankMarked = (text) => text
+  .split("\n")
+  .map((line) => (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line) ? "" : line))
+  .join("\n");
+
+const blankQuoted = (text) => text.replace(/"[^"\n]{0,200}"/g, blank).replace(/“[^”\n]{0,200}”/g, blank);
+
+export function readable(text, markup = "md") {
   /* Bare marker, whole file. Colon-suffixed marker, that line only. Those are the two forms
      tells.mjs already defines, and the colon is what distinguishes them: the bare pattern does not
      match a suffixed marker, so a line exempting itself does not exempt everything around it.
      Getting that backwards silently exempted three correct relations elsewhere in one document.
      It is not directional either: the check runs against the raw text before anything is split
      into lines, so a bare marker exempts the whole file regardless of where in it the marker sits. */
-  if (/<!--\s*stet-allow\s*-->/.test(text)) return { text: "", quoted: 0, marked: 0, wholeFile: true };
-
-  let marked = 0;
-  const lines = withoutCode(text, markup)
-    .split("\n")
-    .map((line) => {
-      if (!/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line)) return line;
-      marked++;
-      return "";
-    })
-    .join("\n");
-
-  let quoted = 0;
-  const blankQuoted = (m) => {
-    quoted++;
-    return blank(m);
-  };
-  const out = lines.replace(/"[^"\n]{0,200}"/g, blankQuoted).replace(/“[^”\n]{0,200}”/g, blankQuoted);
-  return { text: out, quoted, marked, wholeFile: false };
+  if (/<!--\s*stet-allow\s*-->/.test(text)) return "";
+  return blankQuoted(blankMarked(withoutCode(text, markup)));
 }
 
-export function readable(text, markup = "md") {
-  return strip(text, markup).text;
-}
-
-/** What `readable` took out, for the command to disclose rather than bury. */
-export function exemptions(text, markup = "md") {
-  const { quoted, marked, wholeFile } = strip(text, markup);
-  return { quoted, marked, wholeFile };
-}
-
-export function relations(text, markup = "md") {
-  /*
-   * Code and quotation are blanked first, by `readable`, so a figure inside a fenced block or a
-   * quoted example cannot be married to a figure in the prose around it. Without this the extractor
-   * reads straight through code and pairs numbers that have nothing to do with each other: on this
-   * repository it produced four findings and every one of them was wrong.
-   */
-  const clean = readable(text, markup);
+function extractRelations(clean) {
   const out = [];
   for (const s of sentences(clean)) {
     const fracs = [...s.text.matchAll(FRACTION)];
@@ -176,6 +141,16 @@ export function relations(text, markup = "md") {
     }
   }
   return out;
+}
+
+export function relations(text, markup = "md") {
+  /*
+   * Code and quotation are blanked first, by `readable`, so a figure inside a fenced block or a
+   * quoted example cannot be married to a figure in the prose around it. Without this the extractor
+   * reads straight through code and pairs numbers that have nothing to do with each other: on this
+   * repository it produced four findings and every one of them was wrong.
+   */
+  return extractRelations(readable(text, markup));
 }
 
 const consistent = () => ({ state: "consistent", tier: "none", detail: "" });
@@ -261,12 +236,7 @@ const TESTS = [
   { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/g },
 ];
 
-export function statistics(text, markup = "md") {
-  /* Code and quotation are blanked here for the same reason `readable` blanks them for the general
-     family, and leaving it out was an oversight rather than a decision: run against this
-     repository, the unblanked version read ten statistics out of fenced test fixtures and treated
-     every one as a live claim. */
-  const clean = readable(text, markup);
+function extractStatistics(clean) {
   const out = [];
   for (const s of sentences(clean)) {
     for (const { test, re } of TESTS) {
@@ -295,6 +265,43 @@ export function statistics(text, markup = "md") {
     }
   }
   return out;
+}
+
+export function statistics(text, markup = "md") {
+  /* Code and quotation are blanked here for the same reason `readable` blanks them for the general
+     family, and leaving it out was an oversight rather than a decision: run against this
+     repository, the unblanked version read ten statistics out of fenced test fixtures and treated
+     every one as a live claim. */
+  return extractStatistics(readable(text, markup));
+}
+
+/**
+ * How much arithmetic quoting and marking hid, not how much text they took out.
+ *
+ * A span or a line count fires on almost every file in a real corpus, since prose quotes things
+ * constantly and hardly any of it is a number. A count that is always in the hundreds is exactly
+ * the failure this project already has a name for: a check that fires dozens of times teaches a
+ * reader to stop reading it. What is worth disclosing is not how much was hidden but whether any of
+ * it was arithmetic, which is almost always zero and interesting precisely when it is not.
+ *
+ * Counted by re-running both families at each stage of the same pipeline `readable` uses and taking
+ * the difference: what a marked line removed, then what quoting removed on top of that. Order
+ * matters, since a relation on a marked line is not double-counted as one quoting also hid.
+ */
+export function hidden(text, markup = "md") {
+  if (/<!--\s*stet-allow\s*-->/.test(text)) return { quoted: 0, marked: 0, wholeFile: true };
+
+  const count = (clean) => extractRelations(clean).length + extractStatistics(clean).length;
+
+  const code = withoutCode(text, markup);
+  const afterMarks = blankMarked(code);
+  const afterQuotes = blankQuoted(afterMarks);
+
+  return {
+    marked: count(code) - count(afterMarks),
+    quoted: count(afterMarks) - count(afterQuotes),
+    wholeFile: false,
+  };
 }
 
 /** The alpha the text declares, or the convention. Assuming 0.05 against a stricter paper invents errors. */

@@ -123,10 +123,15 @@ have made it worse.
 removes it from checking, and a marker on one line or one bare marker anywhere in a file does the
 same, more widely. Both are legitimate uses, and both are also how a real inconsistency disappears:
 the command cannot tell an illustrative quotation from a live claim somebody happened to put in
-quotation marks, so it trusts the quote marks either way. Every quoted span skipped, every marked
-line, and every file exempted whole is counted and printed as `NOT CHECKED` at the foot of the
-report, next to the summary, so an exemption stays visible rather than reading as a clean run. It
-never changes the exit code: an exemption is a disclosure, not a finding.
+quotation marks, so it trusts the quote marks either way. So hiding a real finding is not a decision
+that passes unnoticed: whenever a quotation or a marked line concealed a fraction, a range or a
+statistic this command would otherwise have checked, it says so, printed as `NOT CHECKED` at the
+foot of the report, next to the summary. A quoted example with no arithmetic in it, which is most of
+them, is not mentioned at all, because counting how much text was skipped rather than how much
+arithmetic was skipped fires on nearly every file in a real corpus and teaches a reader to stop
+reading it. A file exempted whole is named by its path every time, whether or not it happened to
+contain any arithmetic, because that exemption was a decision somebody made and none of that file was
+even attempted. None of this changes the exit code: an exemption is a disclosure, not a finding.
 
 A relation needs exactly one fraction and exactly one percentage in the sentence, no more than 80
 characters apart. A sentence carrying two of either is ambiguous, and nothing is paired: pairing the
