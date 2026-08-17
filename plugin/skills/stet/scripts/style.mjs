@@ -460,7 +460,16 @@ if (cmd === "check") {
   }
 
   const targets = argv.slice(1).filter((a) => !a.startsWith("--"));
-  const files = targets.length ? targets : findContent(root).files;
+  /*
+   * The sheet never checks itself.
+   *
+   * Recording a decision means naming the form it rules against, so "per cent becomes percent"
+   * necessarily contains "per cent". Once STYLE.md came under a content glob it started reporting
+   * its own entries as disagreements, which is the file arguing with itself and can never be
+   * resolved: removing the losing form would delete the decision.
+   */
+  const sheet = PATH.replace(root + "/", "");
+  const files = (targets.length ? targets : findContent(root).files).filter((f) => f !== sheet);
 
   const found = [];
   for (const file of files) {
