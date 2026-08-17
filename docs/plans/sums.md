@@ -436,12 +436,24 @@ export const precisionOf = (s) => (String(s).split(".")[1] ?? "").length;
  * different things, and pairing them is how a checker starts arguing with prose that is correct.
  */
 export function sentences(text) {
+  /*
+   * The offsets come off the text rather than off an assumption about the separator's width.
+   *
+   * The obvious version advances by the sentence's length plus one, which is right only when
+   * exactly one character separates two sentences. A blank line between them is two, and from
+   * there every later line number is short and the error accumulates. That exact bug shipped in
+   * this project's paragraph splitting once already and produced line numbers that pointed at the
+   * wrong line, which is worse than no line number at all.
+   */
   const out = [];
+  const between = /(?<=[.!?])\s+/g;
   let at = 0;
-  for (const part of text.split(/(?<=[.!?])\s+/)) {
-    out.push({ text: part, line: text.slice(0, at).split("\n").length });
-    at += part.length + 1;
+  let m;
+  while ((m = between.exec(text)) !== null) {
+    out.push({ text: text.slice(at, m.index), line: text.slice(0, at).split("\n").length });
+    at = m.index + m[0].length;
   }
+  out.push({ text: text.slice(at), line: text.slice(0, at).split("\n").length });
   return out;
 }
 
