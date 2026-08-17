@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { relations, checkFraction, checkRange, precisionOf } from "../plugin/skills/stet/scripts/lib/sums.mjs";
+import { relations, checkFraction, checkRange, precisionOf, readable } from "../plugin/skills/stet/scripts/lib/sums.mjs";
 
 test("a fraction and a percentage in the same sentence become one relation", () => {
   const [r] = relations("Content drift ran at 76.35 percent, 184,065 of 241,091 references.");
@@ -15,6 +15,16 @@ test("a figure inside a fenced code block is not prose and is not checked", () =
   const fence = "`".repeat(3);
   const text = `${fence}\nWe read 1 of 2 at 99 percent.\n${fence}\n`;
   assert.deepEqual(relations(text), []);
+});
+
+test("a construction shown inside quotation marks is named, not committed", () => {
+  const text = 'A backwards range looks like "between 0.61 and 0.34" when somebody writes one.';
+  assert.deepEqual(relations(readable(text)), []);
+});
+
+test("a line marked stet-allow is exempt, the way tells already allows", () => {
+  const text = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow -->";
+  assert.deepEqual(relations(readable(text)), []);
 });
 
 test("a sentence carrying two percentages is ambiguous, so nothing is paired", () => {

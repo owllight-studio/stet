@@ -98,12 +98,24 @@ in a fenced block or an attribute cannot be married to a figure in the prose aro
 the extractor reads straight through a code sample and pairs numbers that were never about each
 other.
 
+Quoted text is blanked too, for the same reason `tells` blanks it: naming a construction is not
+committing it. A sentence that shows a reader what a backwards range or a wrong p-value looks like
+has to write one down, and a checker that cannot tell the difference between an example and a claim
+reports the example as an error. This document was caught by its own command for exactly that,
+quoting the worked examples above, before quoting was exempted.
+
+Where an example cannot be put in quotes without weakening the sentence, an explicit
+`<!-- stet-allow -->` marks it, the same marker and the same rule `tells` already documents: per
+line, or for a whole file. This document uses it once, below, on the sentence recounting the
+8,273 of 16,695 bug, because that sentence is prose rather than a quotation and rewording it to
+dodge the checker would have made it worse.
+
 A relation needs exactly one fraction and exactly one percentage in the sentence, no more than 80
 characters apart. A sentence carrying two of either is ambiguous, and nothing is paired: pairing the
 first fraction to the first percentage is how an early version of this reported that 8,273 of 16,695
-was 12.9 percent, having taken the two figures from different clauses of one sentence. That is the
-same rule the sources half of this project already follows: a claim we cannot locate is a claim we
-must not touch.
+was 12.9 percent, having taken the two figures from different clauses of one sentence. <!-- stet-allow -->
+That is the same rule the sources half of this project already follows: a claim we cannot locate is
+a claim we must not touch.
 
 Every one of these rules exists because the first draft, run against this project's own writing,
 produced four findings, and every one of them was wrong. What a checker like this refuses to pair is

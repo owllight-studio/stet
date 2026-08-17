@@ -69,14 +69,38 @@ const RANGE = /between\s+(\d[\d,]*(?:\.\d+)?)\s+and\s+(\d[\d,]*(?:\.\d+)?)/g;
  */
 const GAP = 80;
 
+/**
+ * What is left when you take out everything that is not somebody's own claim.
+ *
+ * Code, because a figure in a fixture is not an assertion. Quoted text, because naming a
+ * construction is not committing it: this project's tells checker was fooled by exactly that three
+ * times before it started skipping quotations, and the reference document for this command was
+ * caught by this command for quoting the very examples it exists to explain. And anything a line
+ * marks with stet-allow, which is the escape hatch tells.mjs already defines and documents.
+ *
+ * Everything is replaced with spaces of the same length rather than removed, so line numbers stay
+ * true. A finding that points at the wrong line is worse than no line number at all.
+ */
+const blank = (m) => " ".repeat(m.length);
+
+export function readable(text, markup = "md") {
+  if (/<!--\s*stet-allow\s*-->/.test(text)) return "";
+  return withoutCode(text, markup)
+    .split("\n")
+    .map((line) => (/<!--\s*stet-allow\s*-->/.test(line) ? "" : line))
+    .join("\n")
+    .replace(/"[^"\n]{0,200}"/g, blank)
+    .replace(/“[^”\n]{0,200}”/g, blank);
+}
+
 export function relations(text, markup = "md") {
   /*
-   * Code is blanked first, by the same function `standing` uses, so a figure inside a fenced block
-   * cannot be married to a figure in the prose around it. Without this the extractor reads straight
-   * through code and pairs numbers that have nothing to do with each other: on this repository it
-   * produced four findings and every one of them was wrong.
+   * Code and quotation are blanked first, by `readable`, so a figure inside a fenced block or a
+   * quoted example cannot be married to a figure in the prose around it. Without this the extractor
+   * reads straight through code and pairs numbers that have nothing to do with each other: on this
+   * repository it produced four findings and every one of them was wrong.
    */
-  const clean = withoutCode(text, markup);
+  const clean = readable(text, markup);
   const out = [];
   for (const s of sentences(clean)) {
     const fracs = [...s.text.matchAll(FRACTION)];
@@ -201,10 +225,11 @@ const TESTS = [
 ];
 
 export function statistics(text, markup = "md") {
-  /* Code is blanked here for the same reason it is blanked in the general family, and leaving it
-     out was an oversight rather than a decision: run against this repository, the unblanked version
-     read ten statistics out of fenced test fixtures and treated every one as a live claim. */
-  const clean = withoutCode(text, markup);
+  /* Code and quotation are blanked here for the same reason `readable` blanks them for the general
+     family, and leaving it out was an oversight rather than a decision: run against this
+     repository, the unblanked version read ten statistics out of fenced test fixtures and treated
+     every one as a live claim. */
+  const clean = readable(text, markup);
   const out = [];
   for (const s of sentences(clean)) {
     for (const { test, re } of TESTS) {
