@@ -163,6 +163,12 @@ test("a statistic with no p reported is not a relation to check", () => {
   assert.deepEqual(statistics("The statistic was t(28) = 2.048 in that condition."), []);
 });
 
+test("a statistic inside a fenced code block is a fixture, not a claim", () => {
+  const fence = "`".repeat(3);
+  const text = `${fence}js\nassert.equal(check({ test: "t", df1: 28, value: 2.048 }), 0.05); // p = .99\n${fence}\n`;
+  assert.deepEqual(statistics(text), []);
+});
+
 test("a p that matches its own test statistic is consistent", () => {
   const v = checkStat({ test: "t", df1: 28, value: 2.048, comparator: "=", reported: 0.05, precision: 2 }, 0.05);
   assert.equal(v.state, "consistent");

@@ -200,9 +200,13 @@ const TESTS = [
   { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/g },
 ];
 
-export function statistics(text) {
+export function statistics(text, markup = "md") {
+  /* Code is blanked here for the same reason it is blanked in the general family, and leaving it
+     out was an oversight rather than a decision: run against this repository, the unblanked version
+     read ten statistics out of fenced test fixtures and treated every one as a live claim. */
+  const clean = withoutCode(text, markup);
   const out = [];
-  for (const s of sentences(text)) {
+  for (const s of sentences(clean)) {
     for (const { test, re } of TESTS) {
       /* matchAll clones the regex it is given and never touches the caller's lastIndex, so this
          reset changes nothing here. It stays as a guard against these regexes later being driven

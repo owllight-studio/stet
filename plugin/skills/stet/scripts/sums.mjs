@@ -50,7 +50,7 @@ for (const file of files) {
     const v = r.kind === "fraction" ? checkFraction(r) : checkRange(r);
     if (v.state !== "consistent") found.push({ file, ...r, ...v });
   }
-  for (const s of statistics(text)) {
+  for (const s of statistics(text, markup)) {
     checked++;
     const v = checkStat(s, alpha);
     if (v.state !== "consistent") found.push({ file, ...s, ...v });
