@@ -21,9 +21,24 @@ Name them with their edition, because "Chicago" means four different books.
 
 ## Decisions
 
+**stet is three words.** `Stet` the product takes a capital. `stet` the command does not, so
+`# stet check` and `stet audit` are right as written. *stet* the proofreader's mark does not either,
+and is set in italics where it is being named rather than used.
+
+This began as a single entry, `stet` becoming `Stet`, and it was wrong: it fired 29 times and every
+one of the 29 was the command or the mark. A checker cannot see which sense is meant, so the entries
+below are narrowed to the positions where the word can only be the product. They catch nothing today
+and are a guard against drift rather than a fix for it. The sense rule above is what does the work,
+and it is here because a rule that lives only in somebody's head gets broken by the third page.
+
 - `authorship` → `ownership` `owned` is the metadata key the hook actually reads and the verb carries the idea 166 times across the corpus, so ownership is the name of the property; Authorship stays the name of the command group and nothing else
 - `47%` → `47 percent` the corpus writes the word in running sentences 42 times against three uses of the symbol, and reference/refresh.md states the rule the site is breaking: a page that says 47 percent becomes 52 percent, not 52%
-- `stet` → `Stet` Stet is the product and the corpus already capitalises it everywhere it means the product; the two lowercase uses are the proofreader's mark being defined and the mark drawn in the margin, which is a different word doing a different job
+- `stet is` → `Stet is` the product takes a capital, and these are the positions where the word can only be the product
+- `stet was` → `Stet was` as above
+- `stet has` → `Stet has` as above
+- `stet does` → `Stet does` as above
+- `stet's` → `Stet's` as above, and the possessive is never the command
+
 - `a, b, and c` → `a, b and c` everything else about this corpus is British: dates run day-month-year, spellings run -ise and -our, and punctuation sits outside the closing quote 46 times against 7, so the unserialised list is the form the rest of the house style implies, and it is also the marginally commoner one here
 - `information architecture` → `IA` IA is the command name and the filename, so the short form is the term; what has to be decided is that it gets expanded once at its first appearance in each entry document, which at the moment it never is
 - `five percent` → `5 percent` every figure in this corpus that came out of a count is set in numerals, and a percentage is always a count, so the spelled-out ones are measurements wearing prose clothes
