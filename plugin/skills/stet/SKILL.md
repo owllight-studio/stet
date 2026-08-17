@@ -111,6 +111,7 @@ to judge honestly.
 | `stet-voice-researcher` | `voice`, with a persona | Six presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
 | `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
+| `stet-style-sheet` | `style` | The error hides in the string a reader skips. A machine comparing repeated strings does not skip it |
 | `stet-citation-checker` | `cite` | Whether a source exists is arithmetic; whether it supports the sentence is not |
 | `stet-continuity` | long works, and across them | No single reading holds four hundred pages, and the contradiction is never in one place |
 | `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |

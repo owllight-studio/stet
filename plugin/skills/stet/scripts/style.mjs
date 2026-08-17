@@ -111,6 +111,32 @@ if (cmd === "decide") {
     process.exit(1);
   }
 
+  /*
+   * The reversal, which the guard above cannot see.
+   *
+   * Deciding "fact-checker becomes fact checker" when "fact checker becomes fact-checker" is already
+   * recorded is a different *term*, so it walks straight past the same-term check and lands as a
+   * second entry. The sheet then contradicts itself and `check` can never be satisfied: both forms
+   * disagree with something, whichever one the content uses.
+   *
+   * Same for a chain. Deciding "a becomes b" when "b becomes c" is recorded leaves the corpus told
+   * to write a word that is itself banned.
+   */
+  const reversal = decisions(text).find((d) => d.as.toLowerCase() === term.toLowerCase());
+  if (reversal) {
+    console.log(`This reverses a decision. "${reversal.term}" already becomes "${reversal.as}"${reversal.why ? `, because ${reversal.why}` : ""}.`);
+    console.log(`Recording this would leave both forms disagreeing with the sheet, whichever one the`);
+    console.log(`content uses. Edit ${PATH.replace(root + "/", "")} by hand and say why it moved.`);
+    process.exit(1);
+  }
+
+  const chain = decisions(text).find((d) => d.term.toLowerCase() === as.toLowerCase());
+  if (chain) {
+    console.log(`"${as}" is itself decided against: it already becomes "${chain.as}"${chain.why ? `, because ${chain.why}` : ""}.`);
+    console.log(`Decide "${term}" as "${chain.as}" instead, or change that entry first.`);
+    process.exit(1);
+  }
+
   const line = `- \`${term}\` → \`${as}\`${why ? ` ${why}` : ""}\n`;
   text = text.includes("\n## Decisions\n")
     ? text.replace(/(\n## Decisions\n\n?)/, `$1${line}`)
@@ -139,7 +165,14 @@ const text = load();
  * entries (Google), 876 (Microsoft) and 924 (Red Hat), and reading them shows what they are: an
  * inventory of how many wrong names existed in production. One Red Hat product had four.
  */
-const NORMAL = (w) => w.toLowerCase().replace(/[-\s.']/g, "");
+/*
+ * An apostrophe is part of the word, not punctuation between forms.
+ *
+ * Stripping it collapsed "we're" into "were", so a run reported a contraction against an unrelated
+ * verb 42 times against 7 and ranked it near the top. Hyphens and spaces still go, because
+ * "e-mail" against "email" is the whole point.
+ */
+const NORMAL = (w) => w.toLowerCase().replace(/[-\s.]/g, "");
 
 /**
  * Ordinary English, where a difference in case is grammar rather than terminology.
@@ -188,12 +221,36 @@ function variants(text) {
     .split("\n")
     .filter((l) => !/^\s*#{1,6}\s/.test(l) && !/^\s*[|>]/.test(l))
     .join("\n");
-  const flat = body.replace(/\s+/g, " ");
+  /* Newlines survive the flatten, because a line start is as uninformative as a sentence start and
+     there is no way to see one in a single collapsed string. */
+  const flat = body.replace(/[^\S\n]+/g, " ");
 
   const record = (surface, index) => {
-    // Sentence-initial, or the very start. A capital here is grammar rather than spelling.
-    const before = flat.slice(Math.max(0, index - 2), index);
-    if (!before.trim() || /[.!?:]\s$/.test(before)) return;
+    /*
+     * Is this word in a position where a capital means nothing about how anybody spells it.
+     *
+     * There turned out to be four such positions, not one, and each was found by reading a run:
+     * the start of the text, the start of a sentence, the start of a line, and the start of a
+     * quotation. A first run on this repo returned 293 terms and almost all of the top of the list
+     * was one of the last three.
+     *
+     * The opening furniture is stripped first so the four tests do not each have to know about it.
+     * Quote marks, brackets and emphasis markers can all sit between the boundary and the word:
+     * `**"Don't worry` is a sentence start wearing three hats. Horizontal whitespace goes with
+     * them, but not the newline, which is the boundary being looked for.
+     */
+    const before = flat.slice(Math.max(0, index - 12), index)
+      .replace(/(?:[^\S\n]|["'\u201c\u2018\u2019(\[{*_`])+$/, "");
+    if (!before) return;
+    if (/[.!?:;]$/.test(before)) return;
+    if (/\n *(?:[-*+>]|\d+[.)])?$/.test(before)) return;
+    /* Inside a name. "Code" in "Claude Code" is not a variant of "code", it is the second half of a
+       proper noun, and the capitalised-pair pass below already looks at the whole thing. */
+    if (/^[A-Z]/.test(surface) && /[A-Z][A-Za-z'.-]*$/.test(before)) return;
+
+    /* A pair that spans a sentence boundary is not a compound. NORMAL drops the full stop, so
+       "it. The" and "it the" collapse to one key and get reported as a variant of each other. */
+    if (/[.!?]\s/.test(surface)) return;
 
     const key = NORMAL(surface);
     if (key.length < 4) return;
@@ -211,8 +268,17 @@ function variants(text) {
    */
   for (const m of flat.matchAll(/\b[A-Za-z][A-Za-z'.-]{2,}\b/g)) record(m[0], m.index);
 
-  /* Then capitalised pairs, which is where product names live. An uncapitalised pair is "and the". */
-  for (const m of flat.matchAll(/\b[A-Z][A-Za-z'.-]+[ -][A-Z][A-Za-z'.-]+\b/g)) record(m[0], m.index);
+  /*
+   * Then adjacent pairs, which is where "fact checker" against "fact-checker" lives.
+   *
+   * These were once restricted to capitalised pairs on the grounds that an uncapitalised pair is
+   * "and the". That reasoning was wrong, and it cost the single most cited example of the whole
+   * category. A pair is only ever *reported* if some other surface normalises to the same key, and
+   * nothing else in a corpus normalises to "andthe". So the noise the restriction was guarding
+   * against cannot reach the output, while the hyphenated compound it was excluding is the thing
+   * everybody means by a style sheet entry.
+   */
+  for (const m of flat.matchAll(/\b[A-Za-z][A-Za-z'.-]+[ -][A-Za-z][A-Za-z'.-]+\b/g)) record(m[0], m.index);
 
   return seen;
 }
