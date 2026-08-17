@@ -110,7 +110,7 @@ Establish a project, then work in it.
 
     write · outline · expand          compose
     claim · release · policy          authorship
-    audit · critique · verify         evaluate
+    audit · critique · verify · standing   evaluate
     tighten · clarify · restructure   refine
     refresh · doctor                  maintain
 
