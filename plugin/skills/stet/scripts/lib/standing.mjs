@@ -24,6 +24,39 @@ export const NONE = "none";
 /** A DOI and a URL pointing at the same paper are two references and must not share a slot. */
 export const key = (ref) => (ref.doi ? `doi:${ref.doi}` : `url:${ref.url}`);
 
+/**
+ * One entry per source, however many places cite it.
+ *
+ * A paper cited from three files is one source and one request. Checking it three times breaks the
+ * one-request-per-source rule the commands otherwise keep, and it does something worse: the second
+ * occurrence compares against the entry the first one wrote seconds earlier and reports "unchanged"
+ * about a comparison that never happened.
+ *
+ * The anchors are the union, because each citing paragraph quotes its own words and every one of
+ * them is a claim resting on this page. The site kept is the first, and `others` is how many other
+ * files cite the same source, so a finding can say where else to go and look. `others` and `files`
+ * are for the report only: `entryFor` never writes them, because a list of sites in the record is a
+ * schema change and it can wait.
+ */
+export function distinct(refs) {
+  const sources = [];
+  const byKey = new Map();
+  for (const ref of refs) {
+    const k = key(ref);
+    const already = byKey.get(k);
+    if (!already) {
+      const source = { ...ref, anchors: ref.anchors ? [...ref.anchors] : ref.anchors, files: new Set([ref.file]) };
+      byKey.set(k, source);
+      sources.push(source);
+      continue;
+    }
+    already.files.add(ref.file);
+    if (ref.anchors?.length) already.anchors = [...new Set([...(already.anchors ?? []), ...ref.anchors])];
+  }
+  for (const source of sources) source.others = source.files.size - 1;
+  return sources;
+}
+
 export function readRecord(root) {
   const path = join(root, RECORD);
   if (!existsSync(path)) return { version: 1, refs: {} };
@@ -59,6 +92,61 @@ export const titleCore = (title) =>
     .trim();
 
 /**
+ * What goes back into the record for one reference. Pure, and the date is an argument rather than
+ * the clock, so every rule below can be exercised across three runs in a millisecond.
+ *
+ * It lives here beside `compare` rather than in the command because it is the other half of the
+ * same state machine, and while it lived in the command it was the one piece with no test. Both of
+ * the rules it now states were wrong there.
+ *
+ * **`since` is the date the state began**, so it moves only when the state genuinely differs from
+ * what was recorded. A finding that fires on the record's own contents, a title that changed or
+ * text that drifted, is answered by writing the new title or digest back: it fires once, and the
+ * date the source has been dead or retracted stays put. Advancing the date on every loud or quiet
+ * run would leave the day a link died surviving exactly one run, after which the report says
+ * "yesterday" forever, and the record is committed, so it would churn the repository too.
+ *
+ * **An unreachable observation is a fact about the check, not about the source.** It keeps the
+ * recorded state and its date, and advances only `lastChecked`. Writing `unreachable` into the
+ * record would destroy the date on the run after, assert that a live page is unreachable, and stop
+ * `archive` saving a URL it would then describe as never having had a copy. With no previous
+ * observation there is nothing to keep, so the check's own outcome is recorded and the first
+ * successful look replaces it.
+ */
+export function entryFor(previous, ref, now, today) {
+  const base = {
+    ...previous,
+    anchors: ref.anchors ?? previous?.anchors ?? [],
+    file: ref.file,
+    line: ref.line,
+    firstSeen: previous?.firstSeen ?? today,
+    lastChecked: today,
+  };
+
+  if (now.state === "unreachable")
+    return { ...base, state: previous?.state ?? now.state, since: previous?.since ?? today };
+
+  const changed = !previous || previous.state !== now.state;
+  return {
+    ...base,
+    state: now.state,
+    title: now.title ?? previous?.title,
+    digest: now.digest ?? previous?.digest,
+    host: now.host ?? previous?.host,
+    since: changed ? today : (previous?.since ?? today),
+  };
+}
+
+/**
+ * A host with a leading `www.` taken off.
+ *
+ * The first time a cited site turns on a www redirect, every reference to it would answer from a
+ * "different" host and the loud tier would fire on a corpus of sources that are all fine. A check
+ * that fires wrongly gets ignored rather than fixed, which is this project's most expensive lesson.
+ */
+const bareHost = (host) => String(host ?? "").replace(/^www\./i, "");
+
+/**
  * Previous state plus current observation, in. One verdict, out.
  *
  * The order of the tests is the precedence and it is deliberate. Dead beats everything because
@@ -90,7 +178,7 @@ export function compare(previous, now) {
 
   if (!previous) return { tier: NONE, verdict: "first sight", detail: "" };
 
-  if (previous.host && now.host && previous.host !== now.host)
+  if (previous.host && now.host && bareHost(previous.host) !== bareHost(now.host))
     return {
       tier: LOUD,
       verdict: "moved host",

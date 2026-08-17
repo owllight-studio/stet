@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { compare, titleCore, key, readRecord, writeRecord } from "../plugin/skills/stet/scripts/lib/standing.mjs";
+import { compare, entryFor, distinct, titleCore, key, readRecord, writeRecord } from "../plugin/skills/stet/scripts/lib/standing.mjs";
 
 const live = (over = {}) => ({ state: "live", host: "example.com", title: "A page", digest: "aaa", anchors: [], ...over });
 const seen = (over = {}) => ({ state: "live", host: "example.com", title: "A page", digest: "aaa", anchors: [], since: "2026-03-03", ...over });
@@ -45,6 +45,17 @@ test("unreachable outranks everything, because a timeout must never be reported 
 
 test("a page that now redirects to another host is loud", () => {
   const v = compare(seen(), live({ host: "casino.example.net" }));
+  assert.equal(v.tier, "loud");
+  assert.equal(v.verdict, "moved host");
+});
+
+test("a site that turned on a www redirect has not moved host", () => {
+  assert.equal(compare(seen({ host: "example.com" }), live({ host: "www.example.com" })).tier, "none");
+  assert.equal(compare(seen({ host: "www.example.com" }), live({ host: "example.com" })).tier, "none");
+});
+
+test("a genuinely different host is still loud when one of the two carries www", () => {
+  const v = compare(seen({ host: "www.example.com" }), live({ host: "casino.example.net" }));
   assert.equal(v.tier, "loud");
   assert.equal(v.verdict, "moved host");
 });
@@ -132,10 +143,126 @@ test("a preprint whose version of record appeared is loud", () => {
   assert.equal(v.verdict, "superseded");
 });
 
+/* --- entryFor: what gets written back -------------------------------------
+ *
+ * The record is committed, so every one of these dates is a stored value somebody will read months
+ * later and cannot re-derive. Each case below was a real defect first: `since` reset on every run,
+ * and a failed check overwriting the source's state with a fact about the check.
+ */
+
+const ref = { url: "https://example.com/a", file: "content/page.md", line: 12, anchors: [] };
+const dead = { state: "dead", status: 404 };
+const nothing = { state: "unreachable", detail: "timed out" };
+
+test("a source dead for three runs still reports the day it died", () => {
+  let entry = entryFor(undefined, ref, dead, "2026-01-03");
+  assert.equal(entry.since, "2026-01-03");
+  entry = entryFor(entry, ref, dead, "2026-01-04");
+  entry = entryFor(entry, ref, dead, "2026-01-05");
+  assert.equal(entry.since, "2026-01-03");
+  assert.equal(entry.lastChecked, "2026-01-05");
+});
+
+test("the date moves on the run where the state genuinely does", () => {
+  const before = entryFor(undefined, ref, live(), "2026-01-01");
+  assert.equal(before.since, "2026-01-01");
+  const after = entryFor(before, ref, dead, "2026-02-09");
+  assert.equal(after.state, "dead");
+  assert.equal(after.since, "2026-02-09");
+});
+
+test("a check that failed says nothing about the source, only that it was checked", () => {
+  const before = entryFor(undefined, ref, live({ title: "A page" }), "2026-02-01");
+  const after = entryFor(before, ref, nothing, "2026-02-03");
+  assert.equal(after.state, "live");
+  assert.equal(after.since, "2026-02-01");
+  assert.equal(after.lastChecked, "2026-02-03");
+  assert.equal(after.title, "A page");
+  assert.equal(after.digest, "aaa");
+  assert.equal(after.host, "example.com");
+});
+
+test("the run after a failed check does not read as a source that just changed", () => {
+  const before = entryFor(undefined, ref, live(), "2026-02-01");
+  const missed = entryFor(before, ref, nothing, "2026-02-03");
+  const recovered = entryFor(missed, ref, live(), "2026-02-04");
+  assert.equal(recovered.state, "live");
+  assert.equal(recovered.since, "2026-02-01");
+  assert.equal(recovered.lastChecked, "2026-02-04");
+});
+
+test("a first sighting that could not be reached records the check and claims no state it never saw", () => {
+  const entry = entryFor(undefined, ref, nothing, "2026-02-01");
+  assert.equal(entry.state, "unreachable");
+  assert.equal(entry.firstSeen, "2026-02-01");
+  assert.equal(entry.lastChecked, "2026-02-01");
+});
+
+test("text drifting under a live page is not the state beginning again", () => {
+  const before = entryFor(undefined, ref, live(), "2026-01-01");
+  const after = entryFor(before, ref, live({ digest: "bbb" }), "2026-03-03");
+  assert.equal(after.digest, "bbb");
+  assert.equal(after.since, "2026-01-01");
+});
+
+test("what was written back is what compare reads next time, so a finding fires once", () => {
+  const before = entryFor(undefined, ref, live({ title: "Old" }), "2026-01-01");
+  const after = entryFor(before, ref, live({ title: "Domain for sale" }), "2026-03-03");
+  assert.equal(compare(before, live({ title: "Domain for sale" })).verdict, "title changed");
+  assert.equal(compare(after, live({ title: "Domain for sale" })).tier, "none");
+});
+
+test("the anchors written back are the ones the citing paragraph quotes today", () => {
+  const before = entryFor(undefined, ref, live(), "2026-01-01");
+  const quoting = { ...ref, anchors: ["a quoted sentence of some length"] };
+  const after = entryFor(before, quoting, live(), "2026-03-03");
+  assert.deepEqual(after.anchors, ["a quoted sentence of some length"]);
+  assert.equal(after.file, "content/page.md");
+  assert.equal(after.line, 12);
+});
+
 test("titleCore strips one trailing site name and nothing else", () => {
   assert.equal(titleCore("A page | Some Site"), "A page");
   assert.equal(titleCore("A page"), "A page");
   assert.equal(titleCore("  A   page  "), "A page");
+});
+
+test("a source cited from three files is one source and one check", () => {
+  const out = distinct([
+    { doi: "10.1000/a", file: "one.md", line: 3 },
+    { doi: "10.1000/a", file: "two.md", line: 9 },
+    { doi: "10.1000/a", file: "one.md", line: 40 },
+    { url: "https://example.com/a", file: "two.md", line: 1, anchors: [] },
+  ]);
+  assert.equal(out.length, 2);
+  assert.equal(out[0].file, "one.md");
+  assert.equal(out[0].line, 3);
+  assert.equal(out[0].others, 1);
+  assert.equal(out[1].others, 0);
+});
+
+test("every citing paragraph's anchors are checked, not only the first one's", () => {
+  const [only] = distinct([
+    { url: "https://example.com/a", file: "one.md", line: 1, anchors: ["a quoted sentence of some length"] },
+    {
+      url: "https://example.com/a",
+      file: "two.md",
+      line: 2,
+      anchors: ["another quoted sentence entirely", "a quoted sentence of some length"],
+    },
+  ]);
+  assert.deepEqual(only.anchors, ["a quoted sentence of some length", "another quoted sentence entirely"]);
+});
+
+test("what goes into the record from a deduplicated source is the entry, with no bookkeeping on it", () => {
+  const [only] = distinct([
+    { url: "https://example.com/a", file: "one.md", line: 1, anchors: [] },
+    { url: "https://example.com/a", file: "two.md", line: 2, anchors: [] },
+  ]);
+  const entry = entryFor(undefined, only, live(), "2026-01-01");
+  assert.equal(entry.file, "one.md");
+  assert.equal(entry.others, undefined);
+  assert.equal(entry.files, undefined);
 });
 
 test("a DOI and a URL cannot collide in the record", () => {

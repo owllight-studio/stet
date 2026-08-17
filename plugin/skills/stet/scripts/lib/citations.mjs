@@ -12,6 +12,9 @@ import { prose } from "./prose.mjs";
 const MAILTO = process.env.STET_CROSSREF_MAILTO ?? "";
 export const UA = `stet/0.1 (https://github.com/owllight-studio/stet${MAILTO ? `; mailto:${MAILTO}` : ""})`;
 
+/** Which blanker a file wants, decided once here so no command can decide it differently. */
+export const markupOf = (name) => (/\.x?html?$/i.test(name) ? "html" : "md");
+
 /**
  * Blank what is not prose, keeping every line where it was.
  *
@@ -160,6 +163,17 @@ export const classify = (status) => {
   return "unreachable";
 };
 
+/**
+ * What a non-live response looks like once it is written down.
+ *
+ * Two shapes, because the report reads them differently. `dead` is loud and names the code, so it
+ * carries `status` for `compare` to print. `unreachable` is the unknown tier, where the code itself
+ * is not the news, so it carries the sentence a reader needs instead. A real rule, pulled out of
+ * `observe` so it can be checked without a network.
+ */
+export const nonLive = (state, status) =>
+  state === "dead" ? { state, status } : { state, detail: `returned ${status}` };
+
 export const anchorsPresent = (text, anchors = []) => {
   const hay = normaliseQuoted(text).toLowerCase();
   return anchors.map((a) => ({ text: a, present: hay.includes(normaliseQuoted(a).toLowerCase()) }));
@@ -173,11 +187,7 @@ export async function observe(url, { anchors = [], timeout = 20000 } = {}) {
       signal: AbortSignal.timeout(timeout),
     });
     const state = classify(res.status);
-    if (state !== "live") {
-      return state === "dead"
-        ? { state, status: res.status }
-        : { state, detail: `returned ${res.status}` };
-    }
+    if (state !== "live") return nonLive(state, res.status);
     const html = await res.text();
     const text = prose(html, "html").replace(/\s+/g, " ").trim();
     return {

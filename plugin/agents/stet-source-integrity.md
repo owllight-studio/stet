@@ -32,12 +32,13 @@ Every finding gets exactly one.
 tripped the finding, but the words the sentence relies on are still there and still say it.
 
 **Cite the snapshot.** The original is gone and an archived copy carries the claim. This remedy
-exists only where a snapshot exists. Check the record `standing` and `archive` keep before reaching
-for it: `archive` finds snapshots that already exist and, as of 2026-08-16, cannot reliably make new
-ones, because the unauthenticated save path is confirmed gone and the documented replacement wants an
-archive.org account that `stet` does not ask for. A finding with no snapshot on it does not get this
-remedy. Read the snapshot before citing it: an archived page can be a snapshot of the same rot, taken
-after the content already changed.
+exists only where a snapshot exists. Check `.stet/standing.json`, the record `standing` and `archive`
+keep, before reaching for it: entries are keyed `url:<the url>`, and a snapshot sits on one as
+`snapshot` and `snapshotAt`. `archive` finds snapshots that already exist and, as of 2026-08-16,
+cannot reliably make new ones, because the unauthenticated save path is confirmed gone and the
+documented replacement wants an archive.org account that `stet` does not ask for. A finding with no
+snapshot on it does not get this remedy. Read the snapshot before citing it: an archived page can be
+a snapshot of the same rot, taken after the content already changed.
 
 **Replace with this**, named. A better or superseding source exists for the same claim. Give the
 actual source, not "something probably supports this".

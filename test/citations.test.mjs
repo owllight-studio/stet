@@ -1,7 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { references, normaliseQuoted } from "../plugin/skills/stet/scripts/lib/citations.mjs";
-import { titleOf, digestOf, classify, anchorsPresent } from "../plugin/skills/stet/scripts/lib/citations.mjs";
+import {
+  references,
+  normaliseQuoted,
+  titleOf,
+  digestOf,
+  classify,
+  nonLive,
+  anchorsPresent,
+} from "../plugin/skills/stet/scripts/lib/citations.mjs";
 
 test("a bare URL is found, with the line it is on", () => {
   const { urls } = references("one\ntwo https://example.com/a there\n", "md");
@@ -19,6 +26,12 @@ test("a URL inside a fenced code block is an identifier, not a citation", () => 
 test("a URL inside backticks is an identifier too", () => {
   const { urls } = references("see `https://example.com/a` for the shape\n", "md");
   assert.equal(urls.length, 0);
+});
+
+test("a DOI inside a fenced code block is a fixture, not a citation", () => {
+  const fence = "`".repeat(3);
+  const { dois } = references(`${fence}js\nconst v = compare(p, { retraction: "10.1000/notice" });\n${fence}\n`, "md");
+  assert.deepEqual(dois, []);
 });
 
 test("a markdown link target is a citation and survives blanking", () => {
@@ -119,6 +132,17 @@ test("a 404 is dead and a 503 is a server having a bad day", () => {
   assert.equal(classify(404), "dead");
   assert.equal(classify(410), "dead");
   assert.equal(classify(503), "unreachable");
+});
+
+/* The two shapes a non-live response takes. They differ because the report reads them differently:
+   `dead` is loud and prints the code, `unreachable` is the unknown tier and prints a sentence. */
+
+test("a dead response carries the status, because the finding names the code", () => {
+  assert.deepEqual(nonLive("dead", 404), { state: "dead", status: 404 });
+});
+
+test("a response nobody could learn anything from carries a detail instead", () => {
+  assert.deepEqual(nonLive("unreachable", 503), { state: "unreachable", detail: "returned 503" });
 });
 
 test("an anchor matches through curly quotes and reflowed whitespace", () => {

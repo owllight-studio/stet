@@ -52,6 +52,10 @@ nobody is looking.
 retracted, flagged or superseded, the host changed, the anchor you quoted is gone, or the title
 changed to something else. Loud exits 1.
 
+A leading `www.` is not a host that changed. The day a cited site turns on a www redirect, every
+reference to it would otherwise be reported as moved on the same run, and a check that fires wrongly
+gets ignored rather than fixed.
+
 **Quiet** is the page still standing with its text having moved underneath it anyway. That is the
 ordinary condition of a source with a snapshot, by the 76.35 percent figure above, so putting it in
 the loud tier would report three quarters of a bibliography as broken and get ignored by the second
@@ -75,6 +79,22 @@ currently reports.
 
 The first run establishes the record and reports only what is already broken, because there is no
 "last time" yet to compare against.
+
+**The date is the date the state began**, and it moves only when the state genuinely changes. A link
+that died on 2 November 2024 still reports 2 November 2024 six months later rather than yesterday,
+which is the difference between "current on 3 March, retracted now" and a report that says the
+retraction happened yesterday every day forever. It also keeps the committed record still: once
+nothing is moving, a run writes nothing but the date of the check.
+
+**A run that could not reach a source records the check and nothing else.** The state and the date
+it began are left alone, because no answer is a fact about the check rather than about the source.
+Writing it in would assert that a live page is unreachable, throw the date away on the run after
+while reporting "unchanged", and stop `archive` saving a URL it would then describe as never having
+had a copy while it stood.
+
+**A source cited from several files is one entry and one check.** The count at the top of a run is
+therefore two numbers, the references found and the distinct sources they come down to, and every
+finding names the first place the source is cited and how many other files rest on it.
 
 ## The backtick exception
 
@@ -115,7 +135,9 @@ that same page on a later retry, during the testing that built this. `archive` r
 before giving up, and giving up is reported as "could not ask", never as "no snapshot exists".
 Those are different facts. Treating a 503 as "no snapshot" would submit a duplicate save for a
 page that already has one, and treating it as "found nothing" for a page that has a snapshot would
-be worse than not checking.
+be worse than not checking. A 200 carrying something that is not a list of rows is the same kind of
+failure and is reported the same way: CDX did not answer, which is not the same fact as CDX
+answering that there is nothing there.
 
 **As of 2026-08-16, the unauthenticated `GET` save request is confirmed gone.** It returned 404
 twice, in under 300 milliseconds, against a page confirmed live and confirmed by CDX to have no
@@ -143,13 +165,18 @@ A dead finding that carries a snapshot is printed under the finding in the main 
 
 ```
 DEAD           https://example.com/a-page-that-is-gone
-               content/page.md, line 12
+               content/page.md, line 12, and 2 other files cite it
                returned 404, held since 2024-11-02
-               archived 2024-11-02: https://web.archive.org/web/20241102.../https://example.com/a-page-that-is-gone
+               archived 2024-03-18: https://web.archive.org/web/20240318.../https://example.com/a-page-that-is-gone
 ```
 
 That line is the whole reason archiving is here. A dead link with a snapshot is a citation
 somebody can fix. A dead link without one is a loss.
+
+`held since` is read off the record as this run found it, so it is the date the state before this
+one began: on the run where the page dies, the day it was last recorded as changing, and on every
+run after, the day it died. It does not move while nothing moves. A month later this same finding
+still says 2024-11-02.
 
 ## Never
 
@@ -158,7 +185,7 @@ somebody can fix. A dead link without one is a loss.
 - Never delete a citation because this reported it. Loud is a reason to look, not a reason to
   remove.
 - Never fire this at a whole bibliography in parallel. These are free public APIs and one request at
-  a time is the price of them staying free.
+  a time is the price of them staying free. One request per source, too, however many files cite it.
 - Never put a quiet finding in the loud tier to make it get attention. The split is the design: a
   quiet finding promoted to loud stops meaning anything, and the second run gets ignored along with
   it.

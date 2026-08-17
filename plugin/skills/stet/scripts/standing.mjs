@@ -20,8 +20,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { findContent } from "./lib/find.mjs";
-import { references, observe, ask, UA } from "./lib/citations.mjs";
-import { readRecord, writeRecord, compare, key, LOUD, QUIET, UNKNOWN } from "./lib/standing.mjs";
+import { references, observe, ask, markupOf, UA } from "./lib/citations.mjs";
+import { readRecord, writeRecord, compare, distinct, entryFor, key, LOUD, QUIET, UNKNOWN } from "./lib/standing.mjs";
 
 /* --- archiving -------------------------------------------------------------
  *
@@ -67,7 +67,15 @@ async function snapshotOf(url) {
         continue;
       }
       const rows = JSON.parse(await res.text());
-      const last = rows?.[1];
+      /* Three outcomes, and only three. A 200 carrying something that is not a list of rows is CDX
+         failing to answer, so it goes round again and, if it never answers, is reported as "could
+         not ask". Reading it as an empty result would be the conflation this whole function is
+         written to avoid: it would say archive.org has no snapshot when nobody was ever told. */
+      if (!Array.isArray(rows)) {
+        detail = "CDX answered with something other than a list of rows";
+        continue;
+      }
+      const last = rows[1];
       if (!last) return { status: "none" };
       const [stamp] = last;
       return {
@@ -237,8 +245,6 @@ if (argv[0] === "archive") {
 const today = new Date().toISOString().slice(0, 10);
 const files = argv.filter((a) => !a.startsWith("--"));
 
-const markupOf = (name) => (/\.x?html?$/i.test(name) ? "html" : "md");
-
 /* Every reference in scope, with where it was found. */
 const targets = files.length ? files : findContent(root).files;
 const found = [];
@@ -259,16 +265,22 @@ if (!found.length) {
   process.exit(0);
 }
 
+/* One source, one check, however many places cite it. The rule and its reasoning are in
+   lib/standing.mjs, beside the record it protects. */
+const sources = distinct(found);
+
 const record = readRecord(root);
 if (record.unreadable) console.log(".stet/standing.json could not be read, so this run starts fresh.\n");
 const first = !Object.keys(record.refs).length;
 
-console.log(`${found.length} ${found.length === 1 ? "reference" : "references"} across ${targets.length} ${targets.length === 1 ? "file" : "files"}.`);
+console.log(
+  `${found.length} ${found.length === 1 ? "reference" : "references"} across ${targets.length} ${targets.length === 1 ? "file" : "files"}, and ${sources.length} distinct ${sources.length === 1 ? "source" : "sources"} to check.`,
+);
 if (first) console.log("Nothing recorded yet, so this run establishes the record and reports only what is already broken.");
 console.log("");
 
 const results = [];
-for (const ref of found) {
+for (const ref of sources) {
   const k = key(ref);
   const previous = record.refs[k];
 
@@ -278,29 +290,17 @@ for (const ref of found) {
   const verdict = compare(previous, now);
   results.push({ ref, previous, now, ...verdict });
 
-  const changed = !previous || previous.state !== now.state || verdict.tier === LOUD || verdict.tier === QUIET;
-  record.refs[k] = {
-    ...previous,
-    state: now.state,
-    title: now.title ?? previous?.title,
-    digest: now.digest ?? previous?.digest,
-    host: now.host ?? previous?.host,
-    anchors: ref.anchors ?? previous?.anchors ?? [],
-    file: ref.file,
-    line: ref.line,
-    firstSeen: previous?.firstSeen ?? today,
-    lastChecked: today,
-    /* The date the current state began, which is what lets the report say when it moved rather than
-       only that it did. Unreachable never advances it: a timeout is not a change of state. */
-    since: now.state === "unreachable" ? (previous?.since ?? today) : changed ? today : (previous?.since ?? today),
-  };
+  record.refs[k] = entryFor(previous, ref, now, today);
 }
 
 writeRecord(root, record);
 
 /* --- the report ----------------------------------------------------------- */
 
-const at = (r) => `${r.ref.file}, line ${r.ref.line}`;
+/* The first place it is cited, and how many other files rest on the same source. Both, because one
+   finding about a source cited from four files is four sentences to go and look at. */
+const at = (r) =>
+  `${r.ref.file}, line ${r.ref.line}${r.ref.others ? `, and ${r.ref.others} other ${r.ref.others === 1 ? "file cites" : "files cite"} it` : ""}`;
 const what = (r) => r.ref.doi ?? r.ref.url;
 const held = (r) => (r.previous?.since ? `, held since ${r.previous.since}` : "");
 
