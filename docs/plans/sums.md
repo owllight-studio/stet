@@ -732,6 +732,32 @@ test("a correlation and a z are extracted", () => {
   assert.equal(statistics("z = 1.96, p = .05")[0].test, "z");
 });
 
+test("two tests reported in one sentence are both checked, each against its own p", () => {
+  /* The normal shape of a results sentence in a paper. The first draft returned one statistic here
+     and married it to the other clause's p, which is a pairing that appears nowhere in the text. */
+  const found = statistics("The correlation held, r(15) = .36, p = .05, and the difference held, t(28) = 5.0, p = .0001.");
+  assert.equal(found.length, 2);
+  const t28 = found.find((s) => s.test === "t");
+  assert.equal(t28.value, 5);
+  assert.equal(t28.reported, 0.0001);
+  const r15 = found.find((s) => s.test === "r");
+  assert.equal(r15.reported, 0.05);
+});
+
+test("a second statistic in the same sentence is not silently dropped", () => {
+  /* The one that matters: the second F here is the one whose p is wrong, so dropping it means
+     missing exactly the error this check exists to find. */
+  const found = statistics("An effect of condition, F(2, 44) = 5.67, p = .006, and of time, F(1, 22) = 3.98, p = .99.");
+  assert.equal(found.length, 2);
+  assert.equal(found[1].df2, 22);
+  assert.equal(found[1].reported, 0.99);
+});
+
+test("a statistic is skipped when the p in its sentence belongs to something else", () => {
+  const found = statistics("The statistic was t(28) = 2.048 in that condition, and the model as a whole gave p = .04.");
+  assert.deepEqual(found, []);
+});
+
 test("a statistic with no p reported is not a relation to check", () => {
   assert.deepEqual(statistics("The statistic was t(28) = 2.048 in that condition."), []);
 });
@@ -805,36 +831,53 @@ import { tP, fP, chiP, zP } from "./dist.mjs";
  * a p with no statistic is somebody quoting a result rather than reporting one. Both are skipped
  * rather than guessed at.
  */
-const P_PART = /,?\s*p\s*(=|<|>)\s*(\d*\.\d+|\d+)/;
+/*
+ * A p belongs to the statistic it follows, and nothing else.
+ *
+ * The first draft searched the sentence for one statistic and one p separately and paired whatever
+ * it found. On a results sentence reporting two tests, which is the normal case in a paper, that
+ * did two wrong things at once: it dropped the second statistic silently, and it could marry a p
+ * from one clause to a statistic from another, reporting a pairing that appears nowhere in the
+ * text. Both were reproduced against real sentence shapes before this was rewritten.
+ *
+ * So each statistic is matched, and then the text immediately after it must begin with its own p,
+ * with nothing but separators in between. A statistic with no p after it is not checkable and is
+ * skipped, which is the same rule the general family follows: what cannot be located is not
+ * touched.
+ */
+const FOLLOWING_P = /^[\s,;:)\]]*p\s*(=|<|>)\s*(\d*\.\d+|\d+)/i;
+
 const TESTS = [
-  { test: "t", re: /\bt\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "F", re: /\bF\s*\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "r", re: /\br\s*\(\s*(\d+)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "chi", re: /(?:chi2|chi-squared|χ²|χ\s*2)\s*\(\s*(\d+)\s*(?:,[^)]*)?\)\s*=\s*(-?\d*\.?\d+)/i },
-  { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/ },
+  { test: "t", re: /\bt\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "F", re: /\bF\s*\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "r", re: /\br\s*\(\s*(\d+)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "chi", re: /(?:chi2|chi-squared|χ²|χ\s*2)\s*\(\s*(\d+)\s*(?:,[^)]*)?\)\s*=\s*(-?\d*\.?\d+)/gi },
+  { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/g },
 ];
 
 export function statistics(text) {
   const out = [];
   for (const s of sentences(text)) {
-    const p = s.text.match(P_PART);
-    if (!p) continue;
     for (const { test, re } of TESTS) {
-      const m = s.text.match(re);
-      if (!m) continue;
-      const g = m.slice(1).map(Number);
-      out.push({
-        test,
-        df1: test === "z" ? null : g[0],
-        df2: test === "F" ? g[1] : null,
-        value: test === "F" ? g[2] : test === "z" ? g[0] : g[1],
-        comparator: p[1],
-        reported: Number(p[2]),
-        precision: precisionOf(p[2]),
-        line: s.line,
-        saw: s.text.trim().slice(0, 90),
-      });
-      break;
+      /* A global regex carries lastIndex between uses, and reusing one across sentences starts the
+         next search partway in and quietly misses real matches. */
+      re.lastIndex = 0;
+      for (const m of s.text.matchAll(re)) {
+        const p = s.text.slice(m.index + m[0].length).match(FOLLOWING_P);
+        if (!p) continue;
+        const g = m.slice(1).map(Number);
+        out.push({
+          test,
+          df1: test === "z" ? null : g[0],
+          df2: test === "F" ? g[1] : null,
+          value: test === "F" ? g[2] : test === "z" ? g[0] : g[1],
+          comparator: p[1],
+          reported: Number(p[2]),
+          precision: precisionOf(p[2]),
+          line: s.line,
+          saw: s.text.trim().slice(0, 90),
+        });
+      }
     }
   }
   return out;
