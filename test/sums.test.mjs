@@ -26,7 +26,12 @@ test("a sentence carrying two percentages is ambiguous, so nothing is paired", (
 });
 
 test("a percentage far from the fraction in a long sentence is not paired with it", () => {
-  const text = "Rot ran above 70 percent across the journals sampled, and separately we read 184,065 of 241,091 references.";
+  /* Far means far. The widest real gap measured in this repository is 43 characters, between a
+     percentage and the fraction it describes, so the threshold sits at 80 and this sentence puts
+     well over that between the two figures. */
+  const text =
+    "Rot ran above 70 percent across every one of the journals that were sampled for the study, " +
+    "and quite separately from that we also read 184,065 of 241,091 references.";
   assert.deepEqual(relations(text), []);
 });
 
