@@ -17,7 +17,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, dirname, basename, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { findContent, config } from "./lib/find.mjs";
+import { findContent, config, nameKind } from "./lib/find.mjs";
 import { read as readMeta, STATES, POLICIES } from "./lib/meta.mjs";
 import { declared } from "./lib/sources.mjs";
 import { lock } from "./lib/sources.mjs";
@@ -121,7 +121,24 @@ function walk(dir, out = []) {
 const everything = walk(".");
 
 for (const f of everything) {
-  if (!/\.(md|markdown|mdx|html?|json)$/i.test(f)) continue;
+  const kind = nameKind(basename(f));
+  if (!kind) continue;
+
+  /*
+   * A content name with something appended, like VOICE.md.new. No glob will ever cover it, so it is
+   * unprotected and unmeasured while looking exactly like the file beside it. One of these sat here
+   * for a day holding a voice somebody had chosen, and the check below could not see it because it
+   * required the name to end in a content extension.
+   */
+  if (kind === "copy") {
+    const m = readMeta(root, f);
+    say(3, "a copy left beside the original", f,
+      m?.state
+        ? `carries state ${m.state}, and no glob can cover this name, so nothing protects or checks it`
+        : "no glob can cover this name, so nothing checks it. Rename it or delete it");
+    continue;
+  }
+
   if (files.includes(f)) continue;
   const m = readMeta(root, f);
   if (m?.state) {

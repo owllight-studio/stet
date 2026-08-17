@@ -11,7 +11,9 @@ import { join, extname, relative, basename } from "node:path";
 import { matchesAny } from "./glob.mjs";
 
 const CONTENT_DIRS = ["content", "docs", "posts", "pages", "src/content", "_posts", "data/content"];
-const CONTENT_EXT = new Set([".md", ".mdx", ".mdoc", ".json", ".yaml", ".yml", ".html"]);
+/* Kept in step with two siblings that disagreed with it: lib/meta.mjs writes frontmatter into
+   .markdown, and markupOf treats .htm as HTML, and neither extension was discoverable here. */
+const CONTENT_EXT = new Set([".md", ".markdown", ".mdx", ".mdoc", ".json", ".yaml", ".yml", ".html", ".htm"]);
 const SKIP = new Set([
   "node_modules", ".git", ".next", "dist", "build", "out", ".vercel", ".cache",
   "coverage", "__pycache__", ".venv", "vendor",
@@ -53,6 +55,23 @@ export const KINDS = {
 };
 
 export const kindOf = (root = process.cwd()) => KINDS[config(root)?.kind] ?? KINDS.site;
+
+/**
+ * What a filename claims to be: `"content"`, `"copy"`, or null.
+ *
+ * A copy is a content name with something appended, like `VOICE.md.new` or `page.html.bak`. It
+ * exists as a category because one of those sat tracked in this repository carrying Stet metadata
+ * and was invisible to every check in the project for a day. The check written to catch exactly
+ * that case filtered on the name *ending* in a content extension, so it could never fire on the
+ * shape it was looking for.
+ */
+export function nameKind(name) {
+  const parts = String(name).toLowerCase().split(".");
+  if (parts.length < 2) return null;
+  if (CONTENT_EXT.has(`.${parts.at(-1)}`)) return "content";
+  if (parts.length > 2 && CONTENT_EXT.has(`.${parts.at(-2)}`)) return "copy";
+  return null;
+}
 
 export function config(root = process.cwd()) {
   const path = join(root, "stet.config.json");
