@@ -87,6 +87,7 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `cite` | Evaluate | Does the source exist, is it retracted, is it the version to cite | [reference/cite.md](reference/cite.md) |
 | `standing` | Evaluate | What every cited source was last time, and what has moved since | [reference/standing.md](reference/standing.md) |
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
+| `sums` | Evaluate | The arithmetic a document does on itself, recomputed | [reference/sums.md](reference/sums.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |

@@ -1,0 +1,153 @@
+#!/usr/bin/env node
+/**
+ * The arithmetic a document does on itself.
+ *
+ * verify checks a figure against the command that produced it, and says nothing at all for a
+ * project that declares no sources, which is most projects. This checks the numbers against each
+ * other instead, so it needs no config, no network, no sources and no model. It is the cheapest
+ * check in the set and the one most likely to be run.
+ *
+ * Half of the psychology articles reporting a null-hypothesis test contain a p-value inconsistent
+ * with its own test statistic, 8,273 of 16,695, and 12.9 percent contain one large enough to change
+ * the conclusion (Nuijten, Hartgerink, van Assen, Epskamp and Wicherts, Behavior Research Methods
+ * 48(4): 1205-1226, 2015). All of it found by recomputation, with no access to anybody's data.
+ *
+ * Run: node sums.mjs [file ...]
+ */
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { findContent } from "./lib/find.mjs";
+import { relations, statistics, checkFraction, checkStat, alphaIn, hidden } from "./lib/sums.mjs";
+
+const root = process.cwd();
+const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const files = only.length ? only : findContent(root).files;
+
+const found = [];
+const unread = [];
+const wholeFiles = [];
+let checked = 0;
+let hiddenByQuoting = 0;
+let hiddenByMarking = 0;
+for (const file of files) {
+  let text;
+  try {
+    /* resolve rather than join, so a path the caller gave as absolute is read where they meant.
+       join glues an absolute path onto the working directory and produces one that does not
+       exist, which then vanished into the catch below and the command said it had found nothing. */
+    text = readFileSync(resolve(root, file), "utf8");
+  } catch (err) {
+    /* Never silent. A file somebody named and this could not open is the single most important
+       thing to say, and saying nothing turns it into "there was no arithmetic here", which is a
+       different and false statement. */
+    unread.push({ file, why: String(err.code ?? err.message ?? err) });
+    continue;
+  }
+  /* HTML has to be blanked as HTML. Treating a page as Markdown leaves its script blocks and its
+     attribute values sitting in the text as though somebody had written them as prose. */
+  const markup = /\.x?html?$/i.test(file) ? "html" : "md";
+  const alpha = alphaIn(text);
+
+  /* Quoting a claim and marking a line are both legitimate, and both are ways a real finding can
+     disappear. What is counted is arithmetic hidden, not text removed: a span or a line count
+     fires on nearly every file in a real corpus and teaches a reader to stop reading it. A file
+     exempted whole is different in kind, since none of its arithmetic was even attempted, so it is
+     named rather than counted. */
+  const h = hidden(text, markup);
+  if (h.wholeFile) wholeFiles.push(file);
+  else {
+    hiddenByQuoting += h.quoted;
+    hiddenByMarking += h.marked;
+  }
+
+  for (const r of relations(text, markup)) {
+    checked++;
+    const v = checkFraction(r);
+    if (v.state !== "consistent") found.push({ file, ...r, ...v });
+  }
+  for (const s of statistics(text, markup)) {
+    checked++;
+    const v = checkStat(s, alpha);
+    if (v.state !== "consistent") found.push({ file, ...s, ...v });
+  }
+}
+
+const sayUnread = () => {
+  if (!unread.length) return;
+  console.log(`COULD NOT READ  ${unread.length}`);
+  for (const u of unread) console.log(`  ${u.file}: ${u.why}`);
+  console.log("");
+};
+
+/* Disclosure, not a finding. An exemption is legitimate, so this never touches the exit code, but
+   quoting a claim or marking a line are also how a real inconsistency disappears, so a hidden
+   count of zero stays silent and a count above zero says so. A file exempted whole is named rather
+   than counted, every time, since somebody made that decision and none of that file's arithmetic
+   was even attempted. */
+const sayNotChecked = () => {
+  for (const file of wholeFiles) console.log(`NOT CHECKED  ${file}, exempted whole`);
+
+  const parts = [];
+  if (hiddenByQuoting) parts.push(`${hiddenByQuoting} ${hiddenByQuoting === 1 ? "relation" : "relations"} inside quotation marks`);
+  if (hiddenByMarking) parts.push(hiddenByMarking === 1 ? "1 on a marked line" : `${hiddenByMarking} on marked lines`);
+  if (parts.length) console.log(`NOT CHECKED  ${parts.join(", ")}`);
+};
+
+/* Before anything else in the run, on every path, which is what reference/sums.md says it does.
+   It was called only where nothing had been checked, so a file that could not be opened vanished
+   from the report the moment any other file yielded a relation, while still being counted in the
+   header: "3 relations across 2 files" is a claim about a file this never opened. `sayNotChecked`
+   is the same kind of disclosure written for the same reason and it was wired into both paths from
+   the start; this one was wired into one of them. */
+sayUnread();
+
+if (!checked) {
+  /* Nothing was checked because nothing was read. Explaining what was not found in the content
+     would be a claim about content this never opened, which is the same class of false statement
+     the unread list exists to prevent. */
+  if (unread.length && unread.length === files.length) process.exit(1);
+  console.log("No arithmetic to check: no fraction or reported test statistic in the content.");
+  console.log("");
+  console.log("This looks for numbers a document states about itself: a count of a total beside a");
+  console.log("percentage, or a test statistic reported with its p-value. A document that states");
+  console.log("neither has nothing here to disagree with.");
+  sayNotChecked();
+  process.exit(0);
+}
+
+/* The files this actually opened. Counting the ones it could not read into "across N files" is a
+   claim about text it never saw, which is the thing the unread list exists to prevent. */
+const opened = files.length - unread.length;
+console.log(`${checked} ${checked === 1 ? "relation" : "relations"} across ${opened} ${opened === 1 ? "file" : "files"}.\n`);
+
+const loud = found.filter((f) => f.tier === "loud");
+for (const f of loud) {
+  console.log(`WRONG    ${f.file}, line ${f.line}`);
+  console.log(`         ${f.saw}`);
+  console.log(`         ${f.detail}\n`);
+}
+
+const quiet = found.filter((f) => f.tier === "quiet");
+if (quiet.length) {
+  console.log(`WORTH A LOOK  ${quiet.length}`);
+  console.log("  the arithmetic is off and the claim it supports still stands\n");
+  for (const f of quiet) {
+    console.log(`  ${f.file}, line ${f.line}`);
+    console.log(`    ${f.detail}`);
+    if (f.assumption) console.log(`    consistent if ${f.assumption}`);
+    console.log("");
+  }
+}
+
+console.log(`${checked - found.length} consistent, ${loud.length} wrong, ${quiet.length} worth a look`);
+sayNotChecked();
+
+if (loud.length) {
+  console.log("");
+  console.log("Every one of these is arithmetic, so it is either a number to correct or a sentence");
+  console.log("to reword. Neither is a thing this command will do for you: a figure can be right");
+  console.log("while the sentence around it is wrong, and that is a reading.");
+}
+
+process.exit(loud.length ? 1 : 0);

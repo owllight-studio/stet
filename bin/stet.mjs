@@ -53,6 +53,7 @@ const COMMANDS = {
   check: { group: "Check", script: "style.mjs", args: ["check"], blurb: "where the content disagrees with the style sheet" },
   audit: { group: "Check", script: "audit.mjs", blurb: "the sweep, ranked by what it costs" },
   verify: { group: "Check", script: "verify.mjs", blurb: "every figure against the command that produced it" },
+  sums: { group: "Check", script: "sums.mjs", blurb: "the arithmetic a document does on itself" },
   cite: { group: "Check", script: "cite.mjs", blurb: "does the source exist, is it retracted, is it the right version" },
   standing: { group: "Check", script: "standing.mjs", blurb: "what every cited source was last time, and what moved" },
   tells: { group: "Check", script: "tells.mjs", blurb: "the constructions that read as machine-written" },
