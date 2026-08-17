@@ -36,6 +36,12 @@ about it.
 asks one thing is a worse conversation with an extra step. `proof` earns its page because there are
 fifty blocks. A sheet asking whether to proceed does not.
 
+## The one to copy
+
+`claims.mjs` is the reference implementation. Read it before writing a new sheet: it is short, it
+uses every part of the library, and it is the only sheet that has been built on this rather than
+hand-rolled before it existed.
+
 ## The shape
 
 `serve()` handles the server, the routes, the wait, and writing the answer out. A sheet supplies

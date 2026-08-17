@@ -88,6 +88,7 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
 | `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
+| `claims` | Evaluate | The fact checker's sheet: every claim that failed, and what to do about it | [reference/claims.md](reference/claims.md) |
 | `sheets` | Operate | Build a page somebody works through, and take the answer back | [reference/sheets.md](reference/sheets.md) |
 | `kinds` | Operate | What kind of written thing this is, and which checks that switches off | [reference/kinds.md](reference/kinds.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |

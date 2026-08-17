@@ -65,7 +65,8 @@ and you have not approved anything you did not check.
 
 Twenty claims with a verdict each is twenty judgements, and a transcript is the wrong place to make
 them. A page where each claim sits in its context with its verdict, and the author accepts, disputes
-or rewrites it, is the same work done in a tenth of the time. `reference/sheets.md` has the shape.
+or rewrites it, is the same work done in a tenth of the time. Write `.stet/claims.json` and run `claims.mjs`, which
+already does exactly this. `reference/claims.md` has the shape of the file it expects.
 
 ## Never
 
