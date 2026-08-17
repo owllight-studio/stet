@@ -1011,6 +1011,10 @@ const sayUnread = () => {
 
 if (!checked) {
   sayUnread();
+  /* Nothing was checked because nothing was read. Explaining what was not found in the content
+     would be a claim about content this never opened, which is the same class of false statement
+     the unread list exists to prevent. */
+  if (unread.length && unread.length === files.length) process.exit(1);
   console.log("No arithmetic to check: no fraction, range or reported test statistic in the content.");
   console.log("");
   console.log("This looks for numbers a document states about itself: a count of a total beside a");
