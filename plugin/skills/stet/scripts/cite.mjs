@@ -24,7 +24,7 @@
  * The retraction check is the one nobody runs and the cheapest of the three. Retraction data has
  * been free and keyless since Crossref acquired the Retraction Watch database in 2023, and across
  * 13,252 post-retraction citation contexts only 5.4 percent acknowledged the retraction
- * (Hsiao and Schneider, Quantitative Science Studies, 2022).
+ * (Hsiao and Schneider, Quantitative Science Studies 2(4), 2021).
  *
  * Run: node cite.mjs [file ...]
  */
@@ -32,14 +32,12 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { findContent } from "./lib/find.mjs";
+import { ask } from "./lib/citations.mjs";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
 const files = args.filter((a) => !a.startsWith("--"));
 const quiet = args.includes("--quiet");
-
-const MAILTO = process.env.STET_CROSSREF_MAILTO ?? "";
-const UA = `stet/0.1 (https://github.com/owllight-studio/stet${MAILTO ? `; mailto:${MAILTO}` : ""})`;
 
 /* --- finding citations ---------------------------------------------------- */
 
@@ -71,43 +69,6 @@ function citations(text) {
   return { dois: [...found.values()], bare };
 }
 
-/* --- asking, once per citation -------------------------------------------- */
-
-async function ask(doi) {
-  const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}${MAILTO ? `?mailto=${MAILTO}` : ""}`;
-  try {
-    const res = await fetch(url, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(20000) });
-    if (res.status === 404) return { doi, state: "not found" };
-    if (!res.ok) return { doi, state: "unreachable", detail: `Crossref returned ${res.status}` };
-    const { message } = await res.json();
-
-    /* Retraction Watch has been inline in Crossref since 2023, so this costs nothing extra. */
-    const updates = message["update-to"] ?? [];
-    const updatedBy = message["updated-by"] ?? [];
-    const retraction = updatedBy.find((u) => /retract/i.test(u.type ?? ""));
-    const concern = updatedBy.find((u) => /concern|withdraw/i.test(u.type ?? ""));
-
-    /* A preprint with a version of record. ICMJE requires citing the published one. */
-    const published = (message.relation?.["is-preprint-of"] ?? [])[0];
-
-    return {
-      doi,
-      state: retraction ? "retracted" : concern ? "flagged" : published ? "superseded" : "current",
-      // Crossref titles carry markup and hard-wrapped whitespace from the publisher's own record.
-      title: ((message.title ?? [])[0] ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim(),
-      year: message.issued?.["date-parts"]?.[0]?.[0],
-      container: (message["container-title"] ?? [])[0],
-      type: message.type,
-      retraction: retraction?.DOI,
-      concern: concern?.type,
-      published: published?.id,
-      updates: updates.length,
-    };
-  } catch (err) {
-    return { doi, state: "unreachable", detail: String(err.message ?? err).slice(0, 80) };
-  }
-}
-
 /* --- run ------------------------------------------------------------------ */
 
 const targets = files.length ? files : findContent(root).files;
@@ -129,7 +90,8 @@ if (!work.length) {
 
 const total = work.reduce((n, w) => n + w.dois.length, 0);
 console.log(`Checking ${total} ${total === 1 ? "DOI" : "DOIs"} across ${work.length} ${work.length === 1 ? "file" : "files"}.`);
-if (!MAILTO) console.log("Set STET_CROSSREF_MAILTO to use Crossref's polite pool and get better service.\n");
+if (!process.env.STET_CROSSREF_MAILTO)
+  console.log("Set STET_CROSSREF_MAILTO to use Crossref's polite pool and get better service.\n");
 else console.log("");
 
 const results = [];

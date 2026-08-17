@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { references, normaliseQuoted } from "../plugin/skills/stet/scripts/lib/citations.mjs";
+import { titleOf, digestOf, classify, anchorsPresent } from "../plugin/skills/stet/scripts/lib/citations.mjs";
 
 test("a bare URL is found, with the line it is on", () => {
   const { urls } = references("one\ntwo https://example.com/a there\n", "md");
@@ -95,4 +96,38 @@ test("a blank line carrying a stray space does not throw off the line number aft
   const text = "Para one text end.\n \nhttps://example.com/b starts here.\n";
   const { urls } = references(text, "md");
   assert.equal(urls[0].line, 3);
+});
+
+test("the title comes out of the head, whitespace folded", () => {
+  assert.equal(titleOf("<html><head><title>  A\n  page </title></head>"), "A page");
+});
+
+test("a page with no title reports none rather than guessing", () => {
+  assert.equal(titleOf("<html><body>hello</body></html>"), "");
+});
+
+test("the digest ignores whitespace, because reflowing is not drift", () => {
+  assert.equal(digestOf("one two   three"), digestOf("one\ntwo three\n"));
+});
+
+test("the digest changes when a word does", () => {
+  assert.notEqual(digestOf("one two three"), digestOf("one two four"));
+});
+
+test("a 404 is dead and a 503 is a server having a bad day", () => {
+  assert.equal(classify(200), "live");
+  assert.equal(classify(404), "dead");
+  assert.equal(classify(410), "dead");
+  assert.equal(classify(503), "unreachable");
+});
+
+test("an anchor matches through curly quotes and reflowed whitespace", () => {
+  const page = "the paper found that “more than 70% of\nthe URLs” had rotted";
+  const [a] = anchorsPresent(page, ['more than 70% of the URLs']);
+  assert.equal(a.present, true);
+});
+
+test("an anchor that is genuinely gone reports gone", () => {
+  const [a] = anchorsPresent("this page is for sale", ["more than 70% of the URLs"]);
+  assert.equal(a.present, false);
 });
