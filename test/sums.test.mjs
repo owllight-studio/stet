@@ -23,8 +23,15 @@ test("a construction shown inside quotation marks is named, not committed", () =
 });
 
 test("a line marked stet-allow is exempt, the way tells already allows", () => {
-  const text = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow -->";
+  const text = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow: illustration -->";
   assert.deepEqual(relations(readable(text)), []);
+});
+
+test("a bare stet-allow exempts the whole file, and a suffixed one exempts only its line", () => {
+  const marked = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow: illustration -->\n\nSeparately, 1 of 2 is 50 percent.";
+  assert.equal(relations(readable(marked)).length, 1);
+  const whole = "<!-- stet-allow -->\n\nAn early version read 8,273 of 16,695 as 12.9 percent.\n\nSeparately, 1 of 2 is 50 percent.";
+  assert.deepEqual(relations(readable(whole)), []);
 });
 
 test("a sentence carrying two percentages is ambiguous, so nothing is paired", () => {

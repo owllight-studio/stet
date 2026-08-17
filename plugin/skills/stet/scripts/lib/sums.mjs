@@ -84,10 +84,14 @@ const GAP = 80;
 const blank = (m) => " ".repeat(m.length);
 
 export function readable(text, markup = "md") {
+  /* Bare marker, whole file. Colon-suffixed marker, that line only. Those are the two forms
+     tells.mjs already defines, and the colon is what distinguishes them: the bare pattern does not
+     match a suffixed marker, so a line exempting itself does not exempt everything around it.
+     Getting that backwards silently exempted three correct relations elsewhere in one document. */
   if (/<!--\s*stet-allow\s*-->/.test(text)) return "";
   return withoutCode(text, markup)
     .split("\n")
-    .map((line) => (/<!--\s*stet-allow\s*-->/.test(line) ? "" : line))
+    .map((line) => (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line) ? "" : line))
     .join("\n")
     .replace(/"[^"\n]{0,200}"/g, blank)
     .replace(/“[^”\n]{0,200}”/g, blank);

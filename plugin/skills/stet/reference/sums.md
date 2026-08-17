@@ -104,16 +104,23 @@ has to write one down, and a checker that cannot tell the difference between an 
 reports the example as an error. This document was caught by its own command for exactly that,
 quoting the worked examples above, before quoting was exempted.
 
-Where an example cannot be put in quotes without weakening the sentence, an explicit
-`<!-- stet-allow -->` marks it, the same marker and the same rule `tells` already documents: per
-line, or for a whole file. This document uses it once, below, on the sentence recounting the
-8,273 of 16,695 bug, because that sentence is prose rather than a quotation and rewording it to
-dodge the checker would have made it worse.
+Where an example cannot be put in quotes without weakening the sentence, an explicit marker exempts
+it, the same marker `tells` already defines. It has two forms and they mean different things. The
+line form is `<!-- stet-allow: reason -->`, with a colon and a word naming why, and it exempts only
+the line it sits on. Drop the colon and the reason and the same comment exempts the whole file
+instead, which is why this document never writes that shorter form on a line of its own: doing so
+would silently stop checking everything below it, the way an early version of this very marker did
+to three other, correct, relations in this file, before the colon existed to tell the two forms
+apart. That distinction lives in `tells.mjs` too, but was not written down anywhere until here.
+
+This document uses the line form once, below, on the sentence recounting the 8,273 of 16,695 bug,
+because that sentence is prose rather than a quotation and rewording it to dodge the checker would
+have made it worse.
 
 A relation needs exactly one fraction and exactly one percentage in the sentence, no more than 80
 characters apart. A sentence carrying two of either is ambiguous, and nothing is paired: pairing the
 first fraction to the first percentage is how an early version of this reported that 8,273 of 16,695
-was 12.9 percent, having taken the two figures from different clauses of one sentence. <!-- stet-allow -->
+was 12.9 percent, having taken the two figures from different clauses of one sentence. <!-- stet-allow: illustration -->
 That is the same rule the sources half of this project already follows: a claim we cannot locate is
 a claim we must not touch.
 
