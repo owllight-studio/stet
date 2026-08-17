@@ -61,6 +61,12 @@ the list.
 Then, at the end: **claims you could not evaluate, and why.** Silence on a claim reads as approval,
 and you have not approved anything you did not check.
 
+## Consider handing back a sheet
+
+Twenty claims with a verdict each is twenty judgements, and a transcript is the wrong place to make
+them. A page where each claim sits in its context with its verdict, and the author accepts, disputes
+or rewrites it, is the same work done in a tenth of the time. `reference/sheets.md` has the shape.
+
 ## Never
 
 - Never confirm a claim because it sounds right or because the page is confident.

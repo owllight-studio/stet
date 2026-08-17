@@ -17,6 +17,43 @@ const SKIP = new Set([
   "coverage", "__pycache__", ".venv", "vendor",
 ]);
 
+/**
+ * What kind of written thing this project is.
+ *
+ * Not decoration. Several checks are statements about one kind and nonsense about another: an
+ * orphan is a real finding in a documentation tree and meaningless in a novel, where nothing links
+ * to chapter nine and nothing should. Running every check on every project is how a tool teaches
+ * people to stop reading it.
+ */
+export const KINDS = {
+  site: {
+    label: "a site",
+    linked: true,
+    hasIA: true,
+    note: "pages a reader arrives at, in no fixed order, reached by links",
+  },
+  manuscript: {
+    label: "a manuscript",
+    linked: false,
+    hasIA: false,
+    note: "one long work in a fixed order. Nothing links to chapter nine and nothing should",
+  },
+  papers: {
+    label: "papers",
+    linked: false,
+    hasIA: false,
+    note: "argued work standing on its citations, where a claim without a source is the failure",
+  },
+  collection: {
+    label: "a collection",
+    linked: false,
+    hasIA: false,
+    note: "independent pieces. Poems, songs, essays. Order is an editor's decision rather than a structure",
+  },
+};
+
+export const kindOf = (root = process.cwd()) => KINDS[config(root)?.kind] ?? KINDS.site;
+
 export function config(root = process.cwd()) {
   const path = join(root, "stet.config.json");
   if (!existsSync(path)) return null;

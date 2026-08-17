@@ -19,7 +19,7 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { findContent, words, config } from "./lib/find.mjs";
+import { findContent, words, config, kindOf } from "./lib/find.mjs";
 import { read as readMeta, mayEdit, mayRefresh, ownedSpans } from "./lib/meta.mjs";
 import { declared } from "./lib/sources.mjs";
 
@@ -53,7 +53,9 @@ const admin = (() => {
   }
 })();
 
-console.log(`STET  ${files.length} content files, ${total.toLocaleString()} words`);
+const kind = kindOf(root);
+console.log(`STET  ${kind.label}, ${files.length} files, ${total.toLocaleString()} words`);
+console.log(`      ${kind.note}`);
 console.log("");
 
 if (admin?.hook?.off) {

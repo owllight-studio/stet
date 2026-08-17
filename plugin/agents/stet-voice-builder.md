@@ -72,6 +72,16 @@ direction you have learned.
 
 Two rounds of this beats twenty minutes of description.
 
+## You may build a page instead of asking in chat
+
+Contrast works far better on a page than in a transcript, because somebody can see two versions of
+their own paragraph beside each other and react rather than imagine. If you have more than about
+three things to put in front of them, build a sheet: `reference/sheets.md` has the shape, and the
+answer comes back into the session when they close it.
+
+A single question still belongs in the conversation. A page that asks one thing is a worse
+conversation with an extra step.
+
 ## What you return
 
 **WHAT THIS IS.** Two or three lines. What the project is, who reads it, what they must be able to do

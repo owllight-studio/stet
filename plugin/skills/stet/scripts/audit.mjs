@@ -22,7 +22,7 @@
 
 import { readFileSync } from "node:fs";
 import { join, dirname, resolve, relative } from "node:path";
-import { findContent, words, config } from "./lib/find.mjs";
+import { findContent, words, config, kindOf } from "./lib/find.mjs";
 import { read as readMeta, mayEdit, mayRefresh } from "./lib/meta.mjs";
 import { runAll, lock, check, typedFigures, declared } from "./lib/sources.mjs";
 import { targets, drift } from "./lib/prose.mjs";
@@ -158,12 +158,18 @@ for (const [f, body] of text) {
     if (files.includes(target)) linked.add(target);
   }
 }
+/* Orphans mean nothing outside a linked structure. In a manuscript nothing links to chapter nine,
+   in a collection the order is an editor's decision, and reporting either as a fault is how a
+   checker teaches people to ignore it. */
+const kind = kindOf(root);
+if (kind.linked) {
 /* Orphans are reported for reader-facing pages only. Reference material is reached by a tool rather
    than by a link, and calling seventeen preset files orphans because no page links to each one is a
    finding that is technically true and entirely noise. */
 for (const f of files.filter(isProse)) {
   if (ENTRY.has(f) || linked.has(f)) continue;
   add(3, "orphan", f, `${words(root, f) ?? 0} words that nothing links to`, "link it, or decide it is not a page");
+}
 }
 
 /* --- 4. Hygiene ----------------------------------------------------------- */

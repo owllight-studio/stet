@@ -40,6 +40,17 @@ because it is invisible until the author reads their own site and finds a strang
 **Leaving what you should refresh.** A sentence quotes a figure that moved. Nothing in the file
 records where the figure came from, so nothing noticed, and the page states it with confidence.
 
+## What this is for
+
+Anything written, and that is not a slogan: the model is about words and who owns them. A landing
+page, a novel, a research paper, a script, a collection of songs. The states, the voice, the proof
+sheet and every measurement apply the same way to all of them, because a line of a lyric and a line
+of marketing copy are both somebody's words and the question of whether an agent may rewrite them
+has the same answer.
+
+A handful of checks are about structure rather than words and only make sense for some kinds, so a
+project declares its kind and those switch off. See [reference/kinds.md](reference/kinds.md).
+
 ## Setup
 
 **Run `context` first, every session.** One call, and it answers what is enforced, what you may
@@ -77,6 +88,8 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
 | `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
+| `sheets` | Operate | Build a page somebody works through, and take the answer back | [reference/sheets.md](reference/sheets.md) |
+| `kinds` | Operate | What kind of written thing this is, and which checks that switches off | [reference/kinds.md](reference/kinds.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |
 | `context` | Operate | What an agent needs to know before touching a word | [reference/context.md](reference/context.md) |
 | `admin` | Operate | When the hook is in your way: unlock, relock, and the record of why | [reference/admin.md](reference/admin.md) |
@@ -105,6 +118,11 @@ those, and that is the normal condition rather than an edge case.
 **Two of them are separations of concern rather than of size.** The researcher must resist writing
 from memory; the sample reader must resist generalising from too little. The fact checker and the
 critic ask different questions of the same page: is this true, and does this work.
+
+**An agent can return a surface rather than prose.** A page somebody works through, with the
+decisions coming back into the session. See [reference/sheets.md](reference/sheets.md). That is what
+makes the builder and the fact checker worth having: their output is a series of judgements, and a
+transcript is the wrong place to make fifty of those.
 
 Do not delegate the writing. `write`, `tighten`, `clarify` and `restructure` are the work, and an
 agent that hands its prose to another agent has added a layer and lost the thread.
