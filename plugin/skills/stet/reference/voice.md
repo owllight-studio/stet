@@ -110,8 +110,8 @@ Send `stet-voice-researcher` at the actual texts. It counts sentence length and 
 register refuses, and which of its famous features are actually rare in it. Then write the rules
 from the counts.
 
-The evidence for making this a step rather than a suggestion is Stet's own library. Six presets were
-first written from instinct by someone who knew the registers well, then measured. **All six had
+The evidence for making this a step rather than a suggestion is Stet's own library. Ten presets were
+first written from instinct by someone who knew the registers well, then measured. **All ten had
 their central mechanic wrong, and wrong in direction rather than magnitude.**
 
 - Nature documentary was written as long-then-short rhythm. Measured autocorrelation is +0.16, so

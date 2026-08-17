@@ -58,19 +58,17 @@
     <article class="voice" id="field-notes">
       <header>
         <h3>Field Notes</h3>
-        <p class="desc">Observational and dated. First person, specific, and deliberately unfinished.</p>
-        <p class="feeling"><span>The feeling</span> Honesty about not knowing yet.</p>
+        <p class="desc">The notebook, not the write-up. Subjectless, present tense, and mostly not in sentences.</p>
+        <p class="feeling"><span>The feeling</span> Being in the middle of it, before you know what it means.</p>
       </header>
-      <dl class="measured"><div><dt>median sentence</dt><dd>14</dd></div><div><dt>you</dt><dd>5%</dd></div><div><dt>hedges</dt><dd>18%</dd></div></dl>
-      <p class="onerule"><b>Write it down before you understand it.</b> The value of a note is that it was taken at the time. Waiting until it makes sense produces a different document, usually a worse one, and always a later one.</p>
-      <p class="unresearched">Written from instinct. Nobody has counted this one against real
-             texts, so its figures are estimates and it names no failure modes. Treat it as a
-             sketch.</p>
+      <dl class="measured"><div><dt>median sentence</dt><dd>8</dd></div><div><dt>mean sentence</dt><dd>13.5</dd></div><div><dt>sd / mean</dt><dd>1.14</dd></div><div><dt>under 6 words</dt><dd>38%</dd></div><div><dt>longSentences</dt><dd>0.12</dd></div><div><dt>unterminatedShare</dt><dd>0.84</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>hedges</dt><dd>7%</dd></div></dl>
+      <p class="onerule"><b>Delete the subject.</b> The notebook runs first-person pronouns at 87 per 10,000 words. Darwin's own write-up of the same days runs 242, and his published book 177. The &quot;I&quot; is what retrospection adds, because you only narrate yourself once you have stepped back far enough to watch yourself doing it.</p>
+      
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Date everything</li><li>First person, and say what you did</li><li>Record the wrong turn</li><li>Hedge honestly</li><li>Leave it rough</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Retconning. Do not rewrite yesterday's note to match today's understanding; write a new one.</li><li>A conclusion the evidence does not support yet.</li><li>Deleting the thing that turned out wrong.</li></ul></div>
-          
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Present tense for the thing in front of you, bare past for what you did</li><li>The doubt is a question mark, not a hedge</li><li>Numbers, at eight to eleven times the write-up's rate</li><li>The colon abuts, it does not argue</li><li>The admin stays in the book</li><li>The date is a header, not a sentence</li><li>One adjective, then stop</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never second person.</b> 9 tokens in 110,671 words, most of them reported speech.</li><li><b>Never state a relation between two observations.</b> The colon abuts. The argument comes later or not at all.</li><li><b>Never close the line.</b> 84 percent of units do not end in terminal punctuation.</li><li><b>Never frame retrospectively.</b> No &quot;as it turned out&quot;, no &quot;in the event&quot;, no summary of the day. Summary is the diary's job and the diary does it 1,661 times.</li><li><b>Never write a paragraph.</b> The notebook's unit median is 10 words. It has lines, not paragraphs.</li><li><b>Never tidy out the admin.</b></li><li><b>Never round a number.</b></li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Pronoun inflation, about three times.</li><li>Hedge inflation, about 2.5 times, on the wrong instrument.</li><li>Second person, 40 to 50 times over.</li><li>Variance collapse.</li><li>Terminal punctuation.</li><li>Numeral starvation.</li><li>Standard deviation over mean.</li><li>First-person pronouns per 100 words.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Darwin's 15 Beagle field notebooks, Darwin Online; Darwin, Beagle Diary F1925; Darwin, Voyage of the Beagle; Lewis and Clark journals; Scott, Last Expedition vol I; Thoreau, Journal I</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/field-notes.md">Read the whole file</a></p>
         </div>
       </details>
@@ -132,19 +130,18 @@
     <article class="voice" id="the-catalogue">
       <header>
         <h3>The Catalogue</h3>
-        <p class="desc">Dense. Every sentence a fact, no connective tissue, nothing said twice.</p>
-        <p class="feeling"><span>The feeling</span> None, on purpose. It is a surface to scan.</p>
+        <p class="desc">The object record. Fields rather than sentences, and the same words on purpose.</p>
+        <p class="feeling"><span>The feeling</span> Authority, manufactured by the format rather than earned by the words.</p>
       </header>
-      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>hedges</dt><dd>0%</dd></div></dl>
-      <p class="onerule"><b>Every sentence is a fact, and no fact appears twice.</b> This register is a reference to be scanned, not read. Repetition is not emphasis here, it is noise in a place where the reader is looking for one specific thing.</p>
-      <p class="unresearched">Written from instinct. Nobody has counted this one against real
-             texts, so its figures are estimates and it names no failure modes. Treat it as a
-             sketch.</p>
+      <dl class="measured"><div><dt>median sentence</dt><dd>4</dd></div><div><dt>mean sentence</dt><dd>6.9</dd></div><div><dt>sd / mean</dt><dd>1.19</dd></div><div><dt>under 6 words</dt><dd>62%</dd></div><div><dt>finiteVerbShare</dt><dd>0.02</dd></div><div><dt>exactRepeatShare</dt><dd>0.32</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>questions</dt><dd>0</dd></div><div><dt>exclamations</dt><dd>1</dd></div><div><dt>hedges</dt><dd>1%</dd></div></dl>
+      <p class="onerule"><b>The same words, on purpose.</b> Between 23 and 50 percent of the sentences in these documents are verbatim repeats of another sentence in the same document. The commonest way to begin a lot in the 1898 catalogue is the single word &quot;Another.&quot;, which opens 69 of its 301 lots.</p>
+      
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Facts, not sentences about facts</li><li>Parallel structure, always</li><li>No connective tissue</li><li>Absent is a value</li><li>Order by what is looked up</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>A sentence whose only job is transition.</li><li>An adjective standing in for a measurement.</li><li>Prose paragraphs. If it needs one, it belongs on a different page.</li><li>Personality of any kind.</li></ul></div>
-          
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Fields, not sentences</li><li>The adjective and the measurement both, in separate slots</li><li>Use the worn-out evaluative</li><li>Field order fixed, field contents free</li><li>Uncertainty occupies the slot rather than emptying it</li><li>Close on the measurement</li><li>Leave the gaps</li><li>Discussion goes somewhere else, physically</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never a question.</b> 0 in 14,218. Also 0 across 3,433 interpretive notes.</li><li><b>Never an exclamation.</b> 1 in 14,218. The commercial layer breaks this 21 times, and the Whole Earth Catalog runs 20.1 per 10,000 words, so it is a rule about object records alone.</li><li><b>Never second person.</b> 0.00 here, and untrue of anything commercial.</li><li><b>Never open on an article.</b> Between 0 and 9 percent of entries begin with &quot;The&quot;, &quot;A&quot; or &quot;An&quot;.</li><li><b>Never a connective.</b> Between 0.0 and 0.4 per 10,000 words in the tightest corpora. The auction catalogue at 16.0 and Burpee at 26.9 are not obeying this, and both are looser registers.</li><li><b>Never a hedge about your own confidence.</b> 0.01 per sentence.</li><li><b>Never a paragraph inside an entry.</b> Two rules that were on this list and are measured off it: never repeat, and never evaluate. Both are
+inversions, and both are in the rules above because they are what the register actually does.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>It writes sentences, so the field count collapses.</li><li>It is too smooth.</li><li>It never repeats itself.</li><li>It avoids &quot;very&quot;.</li><li>It picks one layer and runs it all page.</li><li>It fills every field.</li></ul></div>
+          <p class="sources"><span>Measured from</span> American Antiquities auction catalogue 1898; Rock, Textile Fabrics, South Kensington Museum 1870; Catalogue of the Gallery of Art, New York Historical Society 1915; Cleveland Museum of Art open access records; V&amp;A physicalDescription; Sears Roebuck Consumers Guide 1897; Burpee's Farm Annual 1885; Whole Earth Catalog 1968</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-catalogue.md">Read the whole file</a></p>
         </div>
       </details>
@@ -152,19 +149,21 @@
     <article class="voice" id="the-manual">
       <header>
         <h3>The Manual</h3>
-        <p class="desc">Reference writing. Imperative, second person, no personality, complete before readable.</p>
+        <p class="desc">Reference writing. It describes behaviour, and only the steps give orders.</p>
         <p class="feeling"><span>The feeling</span> None, on purpose, and for a reader who is already frustrated.</p>
       </header>
-      <dl class="measured"><div><dt>median sentence</dt><dd>12</dd></div><div><dt>you</dt><dd>45%</dd></div><div><dt>hedges</dt><dd>2%</dd></div></dl>
+      <dl class="measured"><div><dt>median sentence</dt><dd>12</dd></div><div><dt>mean sentence</dt><dd>13.4</dd></div><div><dt>longest</dt><dd>321</dd></div><div><dt>sd / mean</dt><dd>0.73</dd></div><div><dt>under 6 words</dt><dd>20%</dd></div><div><dt>longSentences</dt><dd>0.06</dd></div><div><dt>you</dt><dd>13%</dd></div><div><dt>secondPersonReference</dt><dd>0.035</dd></div><div><dt>secondPersonProcedure</dt><dd>0.257</dd></div><div><dt>questions</dt><dd>0.003</dd></div><div><dt>exclamations</dt><dd>0</dd></div><div><dt>hedges</dt><dd>3%</dd></div></dl>
       <p class="onerule"><b>Complete beats readable.</b> A reference page is not read, it is consulted, by somebody who already has a problem. Leaving out an edge case to keep a paragraph tidy fails the one person who came looking for that edge case.</p>
-      <p class="unresearched">Written from instinct. Nobody has counted this one against real
-             texts, so its figures are estimates and it names no failure modes. Treat it as a
-             sketch.</p>
+      
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Tell them what to do</li><li>One instruction per step</li><li>Say what happens next</li><li>Name the failure and the fix together</li><li>No voice</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>A preamble before the steps.</li><li>&quot;Simply&quot;, &quot;just&quot;, &quot;easy&quot;. If it were, they would not be reading this.</li><li>A cross-reference where the answer would fit. Say it twice rather than send them away.</li><li>Explaining why before saying what. The why goes after, for the reader who wants it.</li></ul></div>
-          
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Condition before instruction</li><li>Qualify with a modal, never with an adverb</li><li>Put the edge case in brackets</li><li>State the default with its alternatives</li><li>Document the precedence</li><li>Send the reader somewhere</li><li>Open a task page by saying what it does</li><li>Contractions are fine</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never a question.</b> 0.003 of sentences, and zero across the Python and MDN samples.</li><li><b>Never an exclamation mark.</b> 39 in 385,405 words.</li><li><b>Never an em dash.</b> 136 in the corpus, and zero in both the GNU coreutils manual and the man page option glosses. Procedure documentation runs one em dash in 161,019 words.</li><li><b>Never first person singular.</b> 0.9 per 10,000, and nearly all of that is &quot;I/O&quot;.</li><li><b>Never the marketing verbs.</b> &quot;leverage&quot;, &quot;robust&quot; and &quot;seamless&quot; are at 0.0 per 10,000 in reference.</li><li><b>Never past tense for current behaviour.</b> Where reference uses it, it is version history.</li><li><b>Never a uniform sentence length.</b> The standard deviation over mean is 0.73 with a tail to 321 words, the longest being in the GNU coreutils manual. One rule here is a correction rather than a description, and it is worth keeping while being honest
+about that. <b>Never &quot;simply&quot;, &quot;just&quot; or &quot;easy&quot;.</b> Google bans them, and the practice does not obey:
+they run at 4.9 per 10,000 across the corpus, 11.1 in the GNU coreutils manual, and <code>open(2)</code> uses
+&quot;simply&quot;. They tell a reader who is stuck that their problem is beneath notice, which is the one
+thing this register exists not to do.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Second person inflation, by three to thirteen times.</li><li>Tail flattening.</li><li>Hedge substitution.</li><li>Cross-reference suppression.</li><li>The missing conditional.</li><li>Parenthesis avoidance.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Linux man-pages (18 pages); GNU coreutils manual 9.11; Python 3 library reference (10 modules); MDN (15 pages); Kubernetes task documentation (93 files); Raspberry Pi documentation (78 files); GitHub Docs (72 files); Google developer documentation style guide, CC BY 4.0 (15 pages)</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-manual.md">Read the whole file</a></p>
         </div>
       </details>
@@ -214,19 +213,21 @@
     <article class="voice" id="the-pitch">
       <header>
         <h3>The Pitch</h3>
-        <p class="desc">A landing page. One claim, its proof, the obvious objection, and what to do next.</p>
-        <p class="feeling"><span>The feeling</span> Recognition. The reader seeing their own problem described accurately.</p>
+        <p class="desc">A landing page. Each block makes one claim, and the blocks do not connect.</p>
+        <p class="feeling"><span>The feeling</span> Landing in the middle of it and knowing at once what this is.</p>
       </header>
-      <dl class="measured"><div><dt>median sentence</dt><dd>11</dd></div><div><dt>you</dt><dd>35%</dd></div><div><dt>hedges</dt><dd>4%</dd></div></dl>
-      <p class="onerule"><b>One claim, and everything else serves it.</b> A page making three claims makes none. Decide which sentence the reader should be able to repeat to somebody else, and cut anything that competes.</p>
-      <p class="unresearched">Written from instinct. Nobody has counted this one against real
-             texts, so its figures are estimates and it names no failure modes. Treat it as a
-             sketch.</p>
+      <dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>mean sentence</dt><dd>9.8</dd></div><div><dt>longest</dt><dd>36</dd></div><div><dt>sd / mean</dt><dd>0.62</dd></div><div><dt>under 6 words</dt><dd>28%</dd></div><div><dt>longSentences</dt><dd>0.0013</dd></div><div><dt>blocksOneSentence</dt><dd>0.71</dd></div><div><dt>blockMedianWords</dt><dd>10</dd></div><div><dt>you</dt><dd>33%</dd></div><div><dt>imperativeOpeners</dt><dd>0.27</dd></div><div><dt>addressedSentences</dt><dd>0.48</dd></div><div><dt>connectiveOpeners</dt><dd>0.042</dd></div><div><dt>questions</dt><dd>0.067</dd></div><div><dt>pastTenseMarkers</dt><dd>0.009</dd></div><div><dt>semicolons</dt><dd>0</dd></div><div><dt>hedges</dt><dd>4%</dd></div></dl>
+      <p class="onerule"><b>Each block makes one claim, and the blocks do not connect.</b></p>
+      
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Lead with what it does, not what it is</li><li>Name the reader's problem in their words</li><li>Proof immediately after the claim</li><li>Proof a stranger can evaluate</li><li>Handle the obvious objection before they leave</li><li>One action</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Superlatives without a measurement behind them. Best, leading, revolutionary, seamless.</li><li>A feature list where a claim belongs.</li><li>Words that mean nothing when negated. Nobody ships an unscalable, insecure product, so neither word is doing any work.</li><li>Fake urgency. A deadline that is not real teaches the reader to distrust the real ones.</li><li>A testimonial doing the job of a fact.</li></ul></div>
-          
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Address by verb, not by pronoun</li><li>The claim as a subtraction</li><li>The objection asked as a question, answered in the next block</li><li>The consequence, not the feature</li><li>Name the incumbent</li><li>Present tense, to the point of an absolute</li><li>The signed letter as its own movement</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never a semicolon.</b> 0 in 7,457 words.</li><li><b>Never a sentence of 40 words.</b> 0 in 759, and only one reaches 30.</li><li><b>Never manufactured urgency.</b> It appears three times in sixteen pages, all on one page, all of it explicit parody of the direct-response cadence.</li><li><b>Never past tense except in an origin story.</b></li><li><b>Never glue the blocks together.</b> The reader did not start at the top. One rule here is advice rather than observation, and it should be labelled as such. **Superlatives
+without a measurement** run at 27 per 10,000 words in this corpus, and Hopkins runs 24, so the man
+whose preset carries the prohibition breaks it at the same rate. The distribution is the useful part:
+five pages run zero, and Mailchimp runs 149. The pages people cite for their copy cluster at the
+bottom. Keep it as craft advice and do not pretend it describes the register.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>It writes a page-length argument.</li><li>It grows a tail.</li><li>It proves things.</li><li>It reaches for the pronoun and misses the verb.</li><li>It runs one branch's habits on the other.</li></ul></div>
+          <p class="sources"><span>Measured from</span> 16 software home pages fetched 17 August 2026 (stripe, basecamp, hey, fly.io, buttondown, plausible, posthog, linear, intercom, ghost, honeycomb, tailwind, obsidian, supabase, mailchimp, wistia), 759 sentences and 528 copy blocks; compared against Hopkins, Scientific Advertising 1923, 1,853 sentences</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/the-pitch.md">Read the whole file</a></p>
         </div>
       </details>
@@ -390,7 +391,7 @@
   </section>
 
   <section id="tells">
-    <p class="eyebrow">Cross-cutting &middot; 77 named failures</p>
+    <p class="eyebrow">Cross-cutting &middot; 102 named failures</p>
     <h2 class="measure">Read together, the failure modes are one catalogue.</h2>
     <p class="measure">
       Every voice file ends by naming how imitation of it fails. Collected out of their contexts,
@@ -409,13 +410,28 @@
       <li><span>chrome 14, black 140, neon 31, mirror 29.</span> <a href="#hard-sf">Hard SF</a></li>
       <li><span>claim-altitude with no evidence under it</span> <a href="#the-argument">The Argument</a></li>
       <li><span>Costume nouns instead of world nouns.</span> <a href="#noir">Noir</a></li>
+      <li><span>Cross-reference suppression.</span> <a href="#the-manual">The Manual</a></li>
       <li><span>Deadpan with no straight man.</span> <a href="#noir">Noir</a></li>
       <li><span>Deliberate long-short alternation.</span> <a href="#nature-documentary">Nature Documentary</a></li>
       <li><span>Enthusiasm standing in for structure.</span> <a href="#the-teacher">The Teacher</a></li>
       <li><span>Even sentences mistaken for cool distance.</span> <a href="#hard-sf">Hard SF</a></li>
+      <li><span>First-person pronouns per 100 words.</span> <a href="#field-notes">Field Notes</a></li>
+      <li><span>Hedge inflation, about 2.5 times, on the wrong instrument.</span> <a href="#field-notes">Field Notes</a></li>
+      <li><span>Hedge substitution.</span> <a href="#the-manual">The Manual</a></li>
       <li><span>Hedge-stripping</span> <a href="#plainspoken">Plainspoken</a></li>
       <li><span>Implausibility the prose cannot carry.</span> <a href="#the-locked-room">The Locked Room</a></li>
       <li><span>In-jokes needing context the reader lacks.</span> <a href="#patch-notes">Patch Notes</a></li>
+      <li><span>It avoids &quot;very&quot;.</span> <a href="#the-catalogue">The Catalogue</a></li>
+      <li><span>It fills every field.</span> <a href="#the-catalogue">The Catalogue</a></li>
+      <li><span>It grows a tail.</span> <a href="#the-pitch">The Pitch</a></li>
+      <li><span>It is too smooth.</span> <a href="#the-catalogue">The Catalogue</a></li>
+      <li><span>It never repeats itself.</span> <a href="#the-catalogue">The Catalogue</a></li>
+      <li><span>It picks one layer and runs it all page.</span> <a href="#the-catalogue">The Catalogue</a></li>
+      <li><span>It proves things.</span> <a href="#the-pitch">The Pitch</a></li>
+      <li><span>It reaches for the pronoun and misses the verb.</span> <a href="#the-pitch">The Pitch</a></li>
+      <li><span>It runs one branch's habits on the other.</span> <a href="#the-pitch">The Pitch</a></li>
+      <li><span>It writes a page-length argument.</span> <a href="#the-pitch">The Pitch</a></li>
+      <li><span>It writes sentences, so the field count collapses.</span> <a href="#the-catalogue">The Catalogue</a></li>
       <li><span>Journalese standing in for reporting.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
       <li><span>Length inflation.</span> <a href="#patch-notes">Patch Notes</a></li>
       <li><span>Mechanical de-Latinising</span> <a href="#plainspoken">Plainspoken</a></li>
@@ -426,16 +442,24 @@
       <li><span>No baseline, so no rhythm.</span> <a href="#noir">Noir</a></li>
       <li><span>No clock forces the compression.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
       <li><span>no more accurate</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>Numeral starvation.</span> <a href="#field-notes">Field Notes</a></li>
       <li><span>One subject, one shape, three times.</span> <a href="#plainspoken">Plainspoken</a></li>
       <li><span>Optimism performed instead of demonstrated.</span> <a href="#the-bridge">The Bridge</a></li>
+      <li><span>Parenthesis avoidance.</span> <a href="#the-manual">The Manual</a></li>
       <li><span>Period voice performed at the wrong length.</span> <a href="#the-locked-room">The Locked Room</a></li>
       <li><span>Preparation shows more in writing, not less.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
+      <li><span>Pronoun inflation, about three times.</span> <a href="#field-notes">Field Notes</a></li>
       <li><span>Prose length instead of command length.</span> <a href="#the-bridge">The Bridge</a></li>
       <li><span>Puns on the product name.</span> <a href="#patch-notes">Patch Notes</a></li>
       <li><span>Reassurance with no content.</span> <a href="#the-teacher">The Teacher</a></li>
+      <li><span>Second person inflation, by three to thirteen times.</span> <a href="#the-manual">The Manual</a></li>
+      <li><span>Second person, 40 to 50 times over.</span> <a href="#field-notes">Field Notes</a></li>
       <li><span>Simile inflation, twenty to forty times over.</span> <a href="#noir">Noir</a></li>
       <li><span>Specificity inverts into invented precision.</span> <a href="#direct-response">Direct Response</a></li>
+      <li><span>Standard deviation over mean.</span> <a href="#field-notes">Field Notes</a></li>
+      <li><span>Tail flattening.</span> <a href="#the-manual">The Manual</a></li>
       <li><span>Technobabble built wrong, not merely invented.</span> <a href="#the-bridge">The Bridge</a></li>
+      <li><span>Terminal punctuation.</span> <a href="#field-notes">Field Notes</a></li>
       <li><span>The &quot;ye olde&quot; problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
       <li><span>The analogy that is never taken away.</span> <a href="#the-teacher">The Teacher</a></li>
       <li><span>The aphorism with no referent.</span> <a href="#the-argument">The Argument</a></li>
@@ -448,6 +472,7 @@
       <li><span>The joke replaces the fact.</span> <a href="#patch-notes">Patch Notes</a></li>
       <li><span>The lede that summarises rather than reports.</span> <a href="#the-broadsheet">The Broadsheet</a></li>
       <li><span>The map-and-appendix problem.</span> <a href="#epic-fantasy">Epic Fantasy</a></li>
+      <li><span>The missing conditional.</span> <a href="#the-manual">The Manual</a></li>
       <li><span>The over-clued mystery.</span> <a href="#the-locked-room">The Locked Room</a></li>
       <li><span>The personality is templated.</span> <a href="#direct-response">Direct Response</a></li>
       <li><span>The proof order reverses</span> <a href="#direct-response">Direct Response</a></li>
@@ -472,6 +497,7 @@
       <li><span>There is no crowd.</span> <a href="#the-sportscaster">The Sportscaster</a></li>
       <li><span>Uniform short sentences.</span> <a href="#the-teacher">The Teacher</a></li>
       <li><span>Unrelenting irony.</span> <a href="#nature-documentary">Nature Documentary</a></li>
+      <li><span>Variance collapse.</span> <a href="#field-notes">Field Notes</a></li>
       <li><span>Vehicle drift.</span> <a href="#noir">Noir</a></li>
       <li><span>Warm tone, expert sequencing.</span> <a href="#the-teacher">The Teacher</a></li>
       <li><span>Written from screen memory rather than page memory.</span> <a href="#hard-sf">Hard SF</a></li>
