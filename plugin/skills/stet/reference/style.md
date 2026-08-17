@@ -10,6 +10,7 @@ The decisions, as opposed to the voice.
 
 ```
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority [<guide>]
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs decide <term> <as> --why "<why>"
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs check [file ...]
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs discover [file ...]
@@ -34,6 +35,45 @@ could go two ways it gets decided and recorded; the second time nobody has to re
 **It gets handed on.** The proofreader applies it and extends it, the typesetter implements its
 formatting decisions, and the author receives it to understand what happened to their manuscript.
 Its purpose is to stop the next person second-guessing a decision somebody already made.
+
+## Name the authority first, and the sheet gets short
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority            # the register
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority chicago    # set one
+```
+
+A sheet written from nothing has to settle the serial comma, the numeral threshold and the
+quotation-mark placement from first principles, and every one of those is arbitrary. Naming a guide
+answers all of them at once, and **the sheet then carries only the departures**. That is the whole
+reason a professional style sheet is two pages rather than four hundred.
+
+**Chicago 18th (2024) is the default**, because it is the only guide in the register that claims the
+whole territory. AP is scoped to news, APA and MLA to scholarship, Microsoft and Google to software,
+the Guardian and BBC to their own newsrooms. Novels and scripts live in book publishing, which is
+Chicago's ground and which none of the others addresses at all, and it carries both citation systems
+so it covers papers without a switch.
+
+There is no honest "most used overall", and any tool that claims one has picked the measure that
+flatters its answer. Nobody publishes an auditable count and the per-domain answers genuinely
+differ. **If the writing is British, use the Guardian**, not New Hart's: the Guardian is free,
+current and quotable, where New Hart's is paywalled, print-only and last revised in 2014.
+
+Two properties of the register are load-bearing:
+
+**Quotable is tracked separately from free.** Chicago is paywalled, so a rule may be cited by
+section and never reproduced. Google's guide is CC BY 4.0, so its actual wording may be used with
+attribution. A tool that pastes CMOS 6.19's text at a user is infringing; one that says "Chicago
+requires it, CMOS 6.19" is not.
+
+**An unverified position is stored as `null` and said out loud.** Chicago has four: percent, dates,
+internet, and full stops in abbreviations, all behind the paywall. `null` means nobody checked, not
+that the guide is silent, and the difference matters because those four are precisely the ones the
+project has to decide for itself. A table that looked complete because the gaps were filled in with
+what everybody knows would be worse than a gapped one.
+
+For songs and screenplays there is **no dominant editorial style guide at all**. Offering an
+authority there would be inventing a category rather than choosing from one.
 
 ## What goes on one
 

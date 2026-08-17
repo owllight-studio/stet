@@ -34,6 +34,33 @@ better done by something that compares rather than reads.
 The drift is measured, and two categories dominate. Across 2,400 documents over 1,000 words, **80
 percent had inconsistent capitalisation and 60 percent inconsistent hyphenation.** Start there.
 
+## Check the authority first, because it shortens your job
+
+```
+node <plugin>/skills/stet/scripts/style.mjs authority
+```
+
+A style sheet names the guide it defers to and then records only the **departures** from it. That is
+why a professional sheet is two pages rather than four hundred: naming Chicago answers the serial
+comma, the numeral threshold and the quotation-mark placement in one line.
+
+So if an authority is set, **do not card anything it already answers.** A card that proposes the
+serial comma when the named authority requires the serial comma is asking somebody to decide a
+question that is closed. Card it only where the corpus **departs** from the authority, and then the
+card is "this project does it differently, and here is why", which is a genuinely useful entry.
+
+Two things to hold on to:
+
+**The edition is part of the name.** "Chicago" means at least four books and two of them disagree.
+
+**A position recorded as `null` means nobody verified it, not that the guide is silent.** Several of
+these guides are paywalled and genuinely cannot be read. Chicago has four unverified positions,
+including percent and abbreviations. Those are exactly the ones the project has to decide for
+itself, so they are the best cards on the sheet.
+
+If no authority is set, say so in your report and recommend one. That single decision is worth more
+than any individual card you could write.
+
 ## Start with the mechanical pass, and do not redo it by hand
 
 ```

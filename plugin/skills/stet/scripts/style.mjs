@@ -32,6 +32,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { findContent, config, kindOf } from "./lib/find.mjs";
 import { prose, markupOf } from "./lib/prose.mjs";
+import { AUTHORITIES, DECISIONS, DEFAULT, BRITISH_DEFAULT } from "./lib/authorities.mjs";
 
 const root = process.cwd();
 const argv = process.argv.slice(2);
@@ -145,6 +146,103 @@ if (cmd === "decide") {
   writeFileSync(PATH, text);
   console.log(`${term} → ${as}${why ? `, because ${why}` : ""}`);
   console.log(`Recorded. \`style check\` will find anywhere the content still says "${term}".`);
+  process.exit(0);
+}
+
+/* --- authority ------------------------------------------------------------- */
+
+/*
+ * Name the guide this project defers to, and the sheet gets shorter.
+ *
+ * A style sheet written from nothing has to decide the serial comma, the numeral threshold and the
+ * quotation-mark placement from first principles, and every one of those is arbitrary. Naming an
+ * authority answers all of them in one line, and the sheet then carries only what is unusual about
+ * this project. That is why a professional sheet is two pages rather than four hundred.
+ *
+ * The edition is part of the name. "Chicago" means at least four books and two of them disagree.
+ */
+
+const SAYS = (a, k) => AUTHORITIES[a]?.says?.[k] ?? null;
+
+/* Some editions are a year. Printing "2026 (2026)" reads as a bug because it is one. */
+const named = (a) => `${a.name}, ${a.edition}${a.year && String(a.year) !== a.edition ? ` (${a.year})` : ""}`;
+
+function describe(key) {
+  const a = AUTHORITIES[key];
+  const known = Object.keys(DECISIONS).filter((k) => SAYS(key, k));
+  console.log(named(a));
+  console.log(`  ${a.domain}`);
+  console.log(`  ${a.free ? "free to read" : "paywalled"}, ${a.quotable ? "and its wording may be reproduced with attribution" : "so a rule can be cited by section but never quoted"}`);
+  if (a.note) console.log(`  ${a.note}`);
+  console.log("");
+  for (const [k, label] of Object.entries(DECISIONS)) {
+    const v = SAYS(key, k);
+    if (!v) continue;
+    console.log(`  ${label.padEnd(30)} ${v.position}`);
+    if (v.cite) console.log(`  ${"".padEnd(30)} ${v.cite}`);
+  }
+  const missing = Object.keys(DECISIONS).length - known.length;
+  if (missing) {
+    console.log("");
+    console.log(`  ${missing} of ${Object.keys(DECISIONS).length} not established from a primary source:`);
+    console.log(`  ${Object.entries(DECISIONS).filter(([k]) => !SAYS(key, k)).map(([, l]) => l.toLowerCase()).join(", ")}.`);
+    console.log("  That means nobody checked, not that the guide is silent. Decide those here instead.");
+  }
+}
+
+if (cmd === "authority") {
+  const pick = argv[1];
+  const current = (load() ?? "").match(/^\*\*(.+?)\*\*/m);
+
+  if (!pick) {
+    console.log("A style sheet names its authority first, then records only the departures from it.\n");
+    for (const [k, a] of Object.entries(AUTHORITIES)) {
+      const mark = k === DEFAULT ? "  default" : k === BRITISH_DEFAULT ? "  British default" : "";
+      console.log(`  ${k.padEnd(11)} ${named(a)}${mark}`);
+      console.log(`  ${"".padEnd(11)} ${a.domain}`);
+    }
+    console.log("");
+    console.log(`Set one:  style.mjs authority ${DEFAULT}`);
+    console.log("");
+    console.log("Chicago is the default because it is the only one of these that claims the whole");
+    console.log("territory. AP is scoped to news, APA and MLA to scholarship, Microsoft and Google to");
+    console.log("software, the Guardian and BBC to their own newsrooms. Novels and scripts live in book");
+    console.log("publishing, which is Chicago's ground and which none of the others addresses at all.");
+    console.log("");
+    console.log("There is no honest 'most used overall'. Nobody publishes an auditable count and the");
+    console.log("per-domain answers genuinely differ. If the writing is British, use the Guardian: it is");
+    console.log("free, current and quotable, where New Hart's is paywalled and eleven years old.");
+    if (current) console.log(`\nCurrently set: ${current[1]}`);
+    process.exit(0);
+  }
+
+  if (!AUTHORITIES[pick]) {
+    console.log(`No such authority: ${pick}`);
+    console.log(`Try one of: ${Object.keys(AUTHORITIES).join(", ")}`);
+    process.exit(1);
+  }
+
+  const a = AUTHORITIES[pick];
+  const title = `**${named(a)}.**`;
+  let body = load() ?? HEAD;
+
+  if (/^\*\*.+?\*\*/m.test(body.split("## Authorities")[1] ?? "")) {
+    console.log("An authority is already named. Changing it changes the answer to every decision it");
+    console.log(`covers, so edit ${PATH.replace(root + "/", "")} by hand and say why it moved.`);
+    process.exit(1);
+  }
+
+  const line = `${title} ${a.domain}. Everything under Decisions is a departure from it.\n\n${a.url}\n`;
+  body = body.includes("\n## Authorities\n")
+    ? body.replace(/(\n## Authorities\n\n?)(Name them with their edition[^\n]*\n)?/, `$1${line}`)
+    : `${body.replace(/\n*$/, "")}\n\n## Authorities\n\n${line}`;
+  writeFileSync(PATH, body);
+
+  console.log(`Set. ${PATH.replace(root + "/", "")} now defers to:\n`);
+  describe(pick);
+  console.log("");
+  console.log("Those are answered now and do not belong on the sheet. Record only where this project");
+  console.log("departs from them, and say why it departs.");
   process.exit(0);
 }
 
@@ -376,7 +474,15 @@ if (cmd === "check") {
      */
     const raw = readFileSync(join(root, file), "utf8");
     let fenced = false;
-    const lines = raw.split("\n").map((line) => {
+    /* YAML frontmatter is metadata, not prose. Without this, deciding that the product is written
+       "Stet" reports every `stet:` key in every file's own frontmatter as a disagreement, which was
+       49 of one run's 78 hits for that entry. */
+    let front = /^---\r?\n/.test(raw);
+    const lines = raw.split("\n").map((line, i) => {
+      if (front) {
+        if (i > 0 && /^---\s*$/.test(line)) front = false;
+        return "";
+      }
       if (/^\s*```/.test(line)) { fenced = !fenced; return ""; }
       if (fenced) return "";
       if (/^\s{4,}\S/.test(line)) return "";
