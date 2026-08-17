@@ -2,6 +2,7 @@
   "content": [
     "README.md",
     "VOICE.md",
+    "STYLE.md",
     "docs/**/*.md",
     "plugin/skills/stet/**/*.md",
     "site/index.html"
