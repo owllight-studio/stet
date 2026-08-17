@@ -72,6 +72,7 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | Command | Group | What it does | Reference |
 |---|---|---|---|
 | `init` | Establish | What this project is, who reads it, what it must do | [reference/init.md](reference/init.md) |
+| `style` | Establish | The decisions, as opposed to the voice. Built while editing, handed on | [reference/style.md](reference/style.md) |
 | `voice` | Establish | Derive or define the house voice | [reference/voice.md](reference/voice.md) |
 | `ia` | Establish | What exists, how it relates, what each page is for | [reference/ia.md](reference/ia.md) |
 | `ingest` | Establish | Read existing content, claim it, report what is there | [reference/ingest.md](reference/ingest.md) |
@@ -83,6 +84,7 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
 | `critique` | Evaluate | A scored review of one piece | [reference/critique.md](reference/critique.md) |
+| `cite` | Evaluate | Does the source exist, is it retracted, is it the version to cite | [reference/cite.md](reference/cite.md) |
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
@@ -100,7 +102,7 @@ Commands without a reference file yet are not built. Say so rather than improvis
 
 ## Agents
 
-Five, and each exists because the work is either too large for this conversation or too close to it
+Eight, and each exists because the work is either too large for this conversation or too close to it
 to judge honestly.
 
 | Agent | Called by | Why not do it here |
@@ -109,6 +111,8 @@ to judge honestly.
 | `stet-voice-researcher` | `voice`, with a persona | Six presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
 | `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
+| `stet-citation-checker` | `cite` | Whether a source exists is arithmetic; whether it supports the sentence is not |
+| `stet-continuity` | long works | No single reading holds four hundred pages, and the contradiction is never in one place |
 | `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |
 | `stet-critic` | `critique` | Fresh eyes on a finished piece, outside the attention gravity of having written it |
 
