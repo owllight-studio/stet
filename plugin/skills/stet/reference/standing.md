@@ -85,6 +85,61 @@ than an identifier, because this corpus writes its DOIs in backticks as plain ty
 is not a word variant, it is a globally unique document identifier. A URL in backticks is still
 skipped, because that usually means "read this as a command", the way `curl <url>` does.
 
+## Archiving
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/standing.mjs archive [--all]
+```
+
+Reporting rot after the fact is reporting a loss. A snapshot taken while a page still exists is
+the only remedy, and it is what Perma.cc was built for: the same 2014 paper behind the 70 percent
+figure above proposed it (Zittrain, Albert and Lessig, *Harvard Law Review Forum* 127, 2014).
+
+`archive` is a subcommand, never a default. Submitting a URL to the Wayback Machine publishes the
+fact that this project cites it, to a third party, and that is the author's decision rather than a
+side effect of a routine run. It works from the record alone: run `standing` on the content first
+so the record exists, then `archive` to snapshot what it found.
+
+For every URL in the record, `archive` asks the CDX API whether a snapshot already exists before
+it writes anything, so no save happens for a page that already has one somewhere. That read needs
+no permission from anybody and costs the page nothing. Only when CDX answers that nothing exists,
+and only for a URL currently recorded `live`, does `archive` ask for a new one. `--all` re-checks
+and re-submits every live URL regardless of what is already recorded, for the case where the
+author wants a copy as of today rather than whatever already exists. A `dead` or `unreachable`
+URL is still looked up, because a snapshot taken while it stood is exactly the citation this is
+for, but it is never submitted: there is nothing live to hand Save Page Now.
+
+CDX answers 503 often, and that is a transient failure of the endpoint rather than a fact about
+the URL: five consecutive 503s over about 40 seconds for one page were followed by a plain 200 for
+that same page on a later retry, during the testing that built this. `archive` retries a few times
+before giving up, and giving up is reported as "could not ask", never as "no snapshot exists".
+Those are different facts. Treating a 503 as "no snapshot" would submit a duplicate save for a
+page that already has one, and treating it as "found nothing" for a page that has a snapshot would
+be worse than not checking.
+
+**As of 2026-08-16, requesting a new snapshot does not work without an account.** Save Page Now's
+unauthenticated `GET` request, once accepted, now returns 404 in under 300 milliseconds against a
+page confirmed live and confirmed to have no existing snapshot; archive.org's own documentation
+now describes an authenticated `POST` carrying S3-style credentials from an archive.org account.
+`stet` asks nobody for a key, and that is a design decision rather than an oversight, so it will
+not add one to route around this. `archive` still finds and records any snapshot that already
+exists, which is most of the value, and it still reports every save attempt honestly rather than
+claiming success it cannot verify. Saving a page yourself, by hand or with your own account, still
+works; `archive` will pick up the result on its next run.
+
+A dead finding that carries a snapshot is printed under the finding in the main run, not only in
+`archive`'s own output:
+
+```
+DEAD           https://example.com/a-page-that-is-gone
+               content/page.md, line 12
+               returned 404, held since 2024-11-02
+               archived 2024-11-02: https://web.archive.org/web/20241102.../https://example.com/a-page-that-is-gone
+```
+
+That line is the whole reason archiving is here. A dead link with a snapshot is a citation
+somebody can fix. A dead link without one is a loss.
+
 ## Never
 
 - Never treat "could not check" as fine. A timeout is not evidence the source is fine, it is
