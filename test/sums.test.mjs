@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { relations, checkFraction, checkRange, precisionOf, readable } from "../plugin/skills/stet/scripts/lib/sums.mjs";
+import { relations, checkFraction, checkRange, precisionOf, readable, exemptions } from "../plugin/skills/stet/scripts/lib/sums.mjs";
 
 test("a fraction and a percentage in the same sentence become one relation", () => {
   const [r] = relations("Content drift ran at 76.35 percent, 184,065 of 241,091 references.");
@@ -32,6 +32,17 @@ test("a bare stet-allow exempts the whole file, and a suffixed one exempts only 
   assert.equal(relations(readable(marked)).length, 1);
   const whole = "<!-- stet-allow -->\n\nAn early version read 8,273 of 16,695 as 12.9 percent.\n\nSeparately, 1 of 2 is 50 percent.";
   assert.deepEqual(relations(readable(whole)), []);
+});
+
+test("exemptions counts what readable took out, rather than just taking it out", () => {
+  const quoting = 'A backwards range looks like "between 0.61 and 0.34" when somebody writes one.';
+  assert.deepEqual(exemptions(quoting), { quoted: 1, marked: 0, wholeFile: false });
+
+  const marking = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow: illustration -->";
+  assert.deepEqual(exemptions(marking), { quoted: 0, marked: 1, wholeFile: false });
+
+  const whole = "<!-- stet-allow -->\n\nAn early version read 8,273 of 16,695 as 12.9 percent.";
+  assert.deepEqual(exemptions(whole), { quoted: 0, marked: 0, wholeFile: true });
 });
 
 test("a sentence carrying two percentages is ambiguous, so nothing is paired", () => {

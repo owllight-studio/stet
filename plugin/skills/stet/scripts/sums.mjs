@@ -18,7 +18,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { findContent } from "./lib/find.mjs";
-import { relations, statistics, checkFraction, checkRange, checkStat, alphaIn } from "./lib/sums.mjs";
+import { relations, statistics, checkFraction, checkRange, checkStat, alphaIn, exemptions } from "./lib/sums.mjs";
 
 const root = process.cwd();
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -27,6 +27,9 @@ const files = only.length ? only : findContent(root).files;
 const found = [];
 const unread = [];
 let checked = 0;
+let quotedSpans = 0;
+let markedLines = 0;
+let exemptFiles = 0;
 for (const file of files) {
   let text;
   try {
@@ -45,6 +48,15 @@ for (const file of files) {
      attribute values sitting in the text as though somebody had written them as prose. */
   const markup = /\.x?html?$/i.test(file) ? "html" : "md";
   const alpha = alphaIn(text);
+
+  /* Quoting a claim and marking a line are both legitimate, and both are ways a real finding can
+     disappear. Counted here rather than left to bury themselves in a clean run, on the same
+     principle as the file this could not read: silence reads as "there was nothing here". */
+  const ex = exemptions(text, markup);
+  quotedSpans += ex.quoted;
+  markedLines += ex.marked;
+  if (ex.wholeFile) exemptFiles++;
+
   for (const r of relations(text, markup)) {
     checked++;
     const v = r.kind === "fraction" ? checkFraction(r) : checkRange(r);
@@ -64,6 +76,18 @@ const sayUnread = () => {
   console.log("");
 };
 
+/* Disclosure, not a finding. An exemption is legitimate, so this never touches the exit code, but
+   the command that reports a p-value inconsistent by one part in ten thousand does not get to stay
+   quiet about having skipped three quoted sentences and a whole file on the way there. */
+const sayNotChecked = () => {
+  const parts = [];
+  if (quotedSpans) parts.push(`${quotedSpans} quoted ${quotedSpans === 1 ? "span" : "spans"}`);
+  if (markedLines) parts.push(`${markedLines} marked ${markedLines === 1 ? "line" : "lines"}`);
+  if (exemptFiles) parts.push(`${exemptFiles} ${exemptFiles === 1 ? "file" : "files"} exempted whole`);
+  if (!parts.length) return;
+  console.log(`NOT CHECKED  ${parts.join(", ")}`);
+};
+
 if (!checked) {
   sayUnread();
   /* Nothing was checked because nothing was read. Explaining what was not found in the content
@@ -75,6 +99,7 @@ if (!checked) {
   console.log("This looks for numbers a document states about itself: a count of a total beside a");
   console.log("percentage, a range, or a test statistic reported with its p-value. A document that");
   console.log("states none of those has nothing here to disagree with.");
+  sayNotChecked();
   process.exit(0);
 }
 
@@ -100,6 +125,7 @@ if (quiet.length) {
 }
 
 console.log(`${checked - found.length} consistent, ${loud.length} wrong, ${quiet.length} worth a look`);
+sayNotChecked();
 
 if (loud.length) {
   console.log("");

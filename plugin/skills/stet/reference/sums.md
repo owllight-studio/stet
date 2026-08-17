@@ -52,9 +52,9 @@ every one of those as an error. So where a disagreement would vanish under one s
 finding says which reading rather than asserting an error or hiding one. "Consistent if the test was
 one-tailed" is true, useful, and not an accusation.
 
-Only one assumption is offered, and only from a closed list: one-tailed, a different rounding
-precision, or truncation instead of rounding. Searching for whichever reading rescues the number is
-a machine talking itself out of a finding.
+Only one assumption is offered, and only from a closed list of three: the test was one-tailed, the
+figure was truncated rather than rounded, or the figure was rounded half to even. Searching for
+whichever reading rescues the number is a machine talking itself out of a finding.
 
 ## Two tiers
 
@@ -108,14 +108,25 @@ Where an example cannot be put in quotes without weakening the sentence, an expl
 it, the same marker `tells` already defines. It has two forms and they mean different things. The
 line form is `<!-- stet-allow: reason -->`, with a colon and a word naming why, and it exempts only
 the line it sits on. Drop the colon and the reason and the same comment exempts the whole file
-instead, which is why this document never writes that shorter form on a line of its own: doing so
-would silently stop checking everything below it, the way an early version of this very marker did
-to three other, correct, relations in this file, before the colon existed to tell the two forms
-apart. That distinction lives in `tells.mjs` too, but was not written down anywhere until here.
+instead, and not just from that point down: the check runs against the raw text before anything is
+split into lines, so a bare marker blanks the entire file regardless of where in it the marker sits,
+before the marker as well as after. That is why this document never writes the bare form on a line
+of its own: doing so silently stopped checking three other, correct, relations in this file, on both
+sides of the sentence it was meant to mark, before the colon existed to tell the two forms apart.
+That distinction lives in `tells.mjs` too, but was not written down anywhere until here.
 
 This document uses the line form once, below, on the sentence recounting the 8,273 of 16,695 bug,
 because that sentence is prose rather than a quotation and rewording it to dodge the checker would
 have made it worse.
+
+**Neither form is a way to silence a finding you would rather not deal with.** Quoting a claim
+removes it from checking, and a marker on one line or one bare marker anywhere in a file does the
+same, more widely. Both are legitimate uses, and both are also how a real inconsistency disappears:
+the command cannot tell an illustrative quotation from a live claim somebody happened to put in
+quotation marks, so it trusts the quote marks either way. Every quoted span skipped, every marked
+line, and every file exempted whole is counted and printed as `NOT CHECKED` at the foot of the
+report, next to the summary, so an exemption stays visible rather than reading as a clean run. It
+never changes the exit code: an exemption is a disclosure, not a finding.
 
 A relation needs exactly one fraction and exactly one percentage in the sentence, no more than 80
 characters apart. A sentence carrying two of either is ambiguous, and nothing is paired: pairing the

@@ -83,18 +83,51 @@ const GAP = 80;
  */
 const blank = (m) => " ".repeat(m.length);
 
-export function readable(text, markup = "md") {
+/*
+ * The one place that actually does the blanking. `readable` and `exemptions` both call this and
+ * keep it private, rather than each doing its own pass: two passes over the same rules is how the
+ * whole-file check and the per-line check drifted apart once already.
+ *
+ * Exempting a claim is not free. It is also how a real finding disappears, quoted into an example
+ * or waved past with a marker, so what was taken out is counted here and reported by the command,
+ * on the same principle as the file it could not read: silence reads as "there was nothing here".
+ */
+function strip(text, markup) {
   /* Bare marker, whole file. Colon-suffixed marker, that line only. Those are the two forms
      tells.mjs already defines, and the colon is what distinguishes them: the bare pattern does not
      match a suffixed marker, so a line exempting itself does not exempt everything around it.
-     Getting that backwards silently exempted three correct relations elsewhere in one document. */
-  if (/<!--\s*stet-allow\s*-->/.test(text)) return "";
-  return withoutCode(text, markup)
+     Getting that backwards silently exempted three correct relations elsewhere in one document.
+     It is not directional either: the check runs against the raw text before anything is split
+     into lines, so a bare marker exempts the whole file regardless of where in it the marker sits. */
+  if (/<!--\s*stet-allow\s*-->/.test(text)) return { text: "", quoted: 0, marked: 0, wholeFile: true };
+
+  let marked = 0;
+  const lines = withoutCode(text, markup)
     .split("\n")
-    .map((line) => (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line) ? "" : line))
-    .join("\n")
-    .replace(/"[^"\n]{0,200}"/g, blank)
-    .replace(/“[^”\n]{0,200}”/g, blank);
+    .map((line) => {
+      if (!/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line)) return line;
+      marked++;
+      return "";
+    })
+    .join("\n");
+
+  let quoted = 0;
+  const blankQuoted = (m) => {
+    quoted++;
+    return blank(m);
+  };
+  const out = lines.replace(/"[^"\n]{0,200}"/g, blankQuoted).replace(/“[^”\n]{0,200}”/g, blankQuoted);
+  return { text: out, quoted, marked, wholeFile: false };
+}
+
+export function readable(text, markup = "md") {
+  return strip(text, markup).text;
+}
+
+/** What `readable` took out, for the command to disclose rather than bury. */
+export function exemptions(text, markup = "md") {
+  const { quoted, marked, wholeFile } = strip(text, markup);
+  return { quoted, marked, wholeFile };
 }
 
 export function relations(text, markup = "md") {
