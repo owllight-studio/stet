@@ -104,3 +104,84 @@ test("the line number points at the sentence, not at the file's first line", () 
   const [r] = relations("One.\n\nTwo.\n\nAt 50 percent, 1 of 2 passed.");
   assert.equal(r.line, 5);
 });
+
+import { statistics, checkStat, alphaIn } from "../plugin/skills/stet/scripts/lib/sums.mjs";
+
+test("a t test with its degrees of freedom and p is extracted whole", () => {
+  const [s] = statistics("The effect held, t(28) = 2.048, p = .05.");
+  assert.equal(s.test, "t");
+  assert.equal(s.df1, 28);
+  assert.equal(s.value, 2.048);
+  assert.equal(s.comparator, "=");
+  assert.equal(s.reported, 0.05);
+});
+
+test("an F test carries both degrees of freedom", () => {
+  const [s] = statistics("F(2, 10) = 4.103, p = .05");
+  assert.equal(s.test, "F");
+  assert.equal(s.df1, 2);
+  assert.equal(s.df2, 10);
+});
+
+test("chi-squared is recognised written as a word and as a symbol", () => {
+  assert.equal(statistics("chi2(1) = 3.841, p = .05")[0].test, "chi");
+  assert.equal(statistics("χ²(1) = 3.841, p = .05")[0].test, "chi");
+});
+
+test("a correlation and a z are extracted", () => {
+  assert.equal(statistics("r(28) = .36, p = .05")[0].test, "r");
+  assert.equal(statistics("z = 1.96, p = .05")[0].test, "z");
+});
+
+test("a statistic with no p reported is not a relation to check", () => {
+  assert.deepEqual(statistics("The statistic was t(28) = 2.048 in that condition."), []);
+});
+
+test("a p that matches its own test statistic is consistent", () => {
+  const v = checkStat({ test: "t", df1: 28, value: 2.048, comparator: "=", reported: 0.05, precision: 2 }, 0.05);
+  assert.equal(v.state, "consistent");
+});
+
+test("a p that disagrees and crosses the threshold is loud", () => {
+  /* t(28) = 1.0 is nowhere near significant, so reporting p = .01 is not a rounding matter: the
+     sentence claims significance the statistic does not support. */
+  const v = checkStat({ test: "t", df1: 28, value: 1.0, comparator: "=", reported: 0.01, precision: 2 }, 0.05);
+  assert.equal(v.state, "inconsistent");
+  assert.equal(v.tier, "loud");
+});
+
+test("a p that disagrees without crossing the threshold is quiet", () => {
+  const v = checkStat({ test: "t", df1: 28, value: 1.0, comparator: "=", reported: 0.4, precision: 2 }, 0.05);
+  assert.equal(v.state, "inconsistent");
+  assert.equal(v.tier, "quiet");
+});
+
+test("a disagreement a one-tailed test would explain says so, and does not accuse", () => {
+  /* Halving the two-tailed p is exactly what a one-tailed test reports. */
+  const v = checkStat({ test: "t", df1: 28, value: 2.048, comparator: "=", reported: 0.025, precision: 3 }, 0.05);
+  assert.equal(v.state, "only-if");
+  assert.match(v.assumption, /one-tailed/);
+});
+
+test("a p reported as less than a bound is consistent when it really is", () => {
+  const v = checkStat({ test: "t", df1: 28, value: 5, comparator: "<", reported: 0.05, precision: 2 }, 0.05);
+  assert.equal(v.state, "consistent");
+});
+
+test("a p reported as less than a bound it does not meet is loud", () => {
+  const v = checkStat({ test: "t", df1: 28, value: 0.5, comparator: "<", reported: 0.05, precision: 2 }, 0.05);
+  assert.equal(v.tier, "loud");
+});
+
+test("the alpha the text declares is the one used", () => {
+  assert.equal(alphaIn("All tests used an alpha of .01 throughout."), 0.01);
+  assert.equal(alphaIn("No alpha is stated here."), 0.05);
+});
+
+test("a declared alpha changes which side of the line a p falls on", () => {
+  /* p recomputes near .03: significant at .05, not at .01. The tier must follow the stated alpha
+     rather than an assumed one, or the tool invents an error in a paper that was stricter. */
+  const stat = { test: "t", df1: 28, value: 2.3, comparator: "=", reported: 0.6, precision: 2 };
+  assert.equal(checkStat(stat, 0.05).tier, "loud");
+  assert.equal(checkStat(stat, 0.01).tier, "quiet");
+});

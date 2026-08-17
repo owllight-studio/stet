@@ -10,6 +10,7 @@
  */
 
 import { withoutCode } from "./citations.mjs";
+import { tP, fP, chiP, zP } from "./dist.mjs";
 
 const num = (s) => Number(String(s).replace(/,/g, ""));
 
@@ -173,4 +174,96 @@ export function checkRange({ from, to }) {
   return from > to
     ? { state: "inconsistent", tier: "loud", detail: `the range runs from ${from} down to ${to}` }
     : consistent();
+}
+
+/*
+ * The reported statistic, with its degrees of freedom and its p.
+ *
+ * A statistic with no p beside it is not checkable, because there is nothing to disagree with, and
+ * a p with no statistic is somebody quoting a result rather than reporting one. Both are skipped
+ * rather than guessed at.
+ */
+const P_PART = /,?\s*p\s*(=|<|>)\s*(\d*\.\d+|\d+)/;
+const TESTS = [
+  { test: "t", re: /\bt\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
+  { test: "F", re: /\bF\s*\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
+  { test: "r", re: /\br\s*\(\s*(\d+)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
+  { test: "chi", re: /(?:chi2|chi-squared|χ²|χ\s*2)\s*\(\s*(\d+)\s*(?:,[^)]*)?\)\s*=\s*(-?\d*\.?\d+)/i },
+  { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/ },
+];
+
+export function statistics(text) {
+  const out = [];
+  for (const s of sentences(text)) {
+    const p = s.text.match(P_PART);
+    if (!p) continue;
+    for (const { test, re } of TESTS) {
+      const m = s.text.match(re);
+      if (!m) continue;
+      const g = m.slice(1).map(Number);
+      out.push({
+        test,
+        df1: test === "z" ? null : g[0],
+        df2: test === "F" ? g[1] : null,
+        value: test === "F" ? g[2] : test === "z" ? g[0] : g[1],
+        comparator: p[1],
+        reported: Number(p[2]),
+        precision: precisionOf(p[2]),
+        line: s.line,
+        saw: s.text.trim().slice(0, 90),
+      });
+      break;
+    }
+  }
+  return out;
+}
+
+/** The alpha the text declares, or the convention. Assuming 0.05 against a stricter paper invents errors. */
+export function alphaIn(text) {
+  const m = text.match(/alpha\s+(?:of|=|was)\s*(\d*\.\d+)/i);
+  return m ? Number(m[1]) : 0.05;
+}
+
+const compute = (s) => {
+  if (s.test === "t") return tP(Math.abs(s.value), s.df1);
+  if (s.test === "F") return fP(s.value, s.df1, s.df2);
+  if (s.test === "chi") return chiP(s.value, s.df1);
+  if (s.test === "z") return zP(Math.abs(s.value));
+  /* A correlation is a t in disguise, so it goes through the same path rather than getting its own. */
+  const t = Math.abs(s.value) * Math.sqrt(s.df1 / (1 - s.value * s.value));
+  return tP(t, s.df1);
+};
+
+const agrees = (computed, s) => {
+  if (s.comparator === "<") return computed < s.reported;
+  if (s.comparator === ">") return computed > s.reported;
+  return Number(computed.toFixed(s.precision)) === s.reported;
+};
+
+export function checkStat(s, alpha = 0.05) {
+  const computed = compute(s);
+  if (agrees(computed, s)) return consistent();
+
+  /* One assumption, from a closed list. An open-ended search for a reading that rescues the number
+     is a machine talking itself out of a finding, so only the halving a one-tailed test would
+     produce is offered, and only for the tests where one-tailed is meaningful. */
+  if (["t", "z", "r"].includes(s.test) && agrees(computed / 2, s)) {
+    return {
+      state: "only-if",
+      tier: "quiet",
+      detail: `p recomputes as ${computed.toFixed(4)} two-tailed, and ${(computed / 2).toFixed(4)} one-tailed`,
+      assumption: "the test was one-tailed",
+    };
+  }
+
+  /* Loud only when the sentence's claim changes. The difference between an inconsistency and one
+     that crosses the threshold ran four to one in the study this check comes from, so reporting
+     them identically would bury the ones that matter. */
+  const claimed = s.comparator === "<" ? s.reported <= alpha : s.reported < alpha;
+  const actual = computed < alpha;
+  return {
+    state: "inconsistent",
+    tier: claimed === actual ? "quiet" : "loud",
+    detail: `reported ${s.comparator} ${s.reported}, recomputes as ${computed.toFixed(4)}`,
+  };
 }
