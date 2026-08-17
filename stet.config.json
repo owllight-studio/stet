@@ -5,7 +5,8 @@
     "STYLE.md",
     "docs/**/*.md",
     "plugin/skills/stet/**/*.md",
-    "site/index.html"
+    "site/index.html",
+    "site/VOICE.md"
   ],
   "format": "auto",
   "voice": "VOICE.md",

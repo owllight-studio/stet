@@ -5,7 +5,16 @@ stet:
   policy: refresh
 ---
 
-# Voice
+# The website's voice
+
+**This is the voice of stet.style and of nothing else.** It is not the project's voice, which is
+`VOICE.md` at the root and was derived from Stet's own writing. It is not a library preset and it
+must never become one: `plugin/skills/stet/voices/README.md` states the rule, and the rule is that a
+voice somebody defined for their own project belongs to them. This one was defined by this project's
+author, for one website, from a custom brief.
+
+Nothing distributed carries it. Not the README, not the reference documents, not the presets. The
+scope is `site/`.
 
 Chosen on a proof sheet, from a custom brief: Anthony Bourdain, *Kitchen Confidential*, *No
 Reservations*, his more obscure articles, with a dash of James Earl Jones inflection.
