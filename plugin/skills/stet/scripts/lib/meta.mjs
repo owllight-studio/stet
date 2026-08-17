@@ -131,9 +131,36 @@ export function write(root, file, meta) {
   const block = render(meta);
 
   if (extname(file) === ".json") {
-    const doc = JSON.parse(text);
-    const indent = text.match(/\n(\s+)"/)?.[1]?.length ?? 2;
-    writeFileSync(full, JSON.stringify({ ...doc, stet: meta }, null, indent) + "\n");
+    /*
+     * Inserted as text rather than re-serialised.
+     *
+     * Round-tripping through JSON.stringify reformats the whole document: compact one-line objects
+     * become multi-line, and a file somebody wanted one key added to comes back with forty changed
+     * lines. This function's stated contract is that it changes nothing else in the file, and
+     * re-serialising breaks it while the content stays semantically identical, which is the worst
+     * kind of breakage because the diff looks like work somebody did.
+     */
+    JSON.parse(text); // parse to validate, then leave the bytes alone
+    const indent = text.match(/\n([ \t]+)"/)?.[1] ?? "  ";
+    const block = JSON.stringify(meta, null, indent.length)
+      .split("\n")
+      .map((l, i) => (i === 0 ? l : indent + l))
+      .join("\n");
+
+    const existing = text.match(/^[ \t]*"stet"\s*:\s*\{[\s\S]*?\n[ \t]*\}[ \t]*,?[ \t]*\n/m);
+    if (existing) {
+      writeFileSync(full, text.replace(existing[0], `${indent}"stet": ${block},\n`));
+      return "json";
+    }
+
+    const open = text.indexOf("{");
+    if (open < 0) throw new Error(`${file} is not an object`);
+    const after = text.slice(open + 1);
+    const empty = /^\s*\}/.test(after);
+    writeFileSync(
+      full,
+      `${text.slice(0, open + 1)}\n${indent}"stet": ${block}${empty ? "\n" : ","}${after}`,
+    );
     return "json";
   }
 
