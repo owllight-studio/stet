@@ -103,7 +103,7 @@ Commands without a reference file yet are not built. Say so rather than improvis
 
 ## Agents
 
-Eight, and each exists because the work is either too large for this conversation or too close to it
+Ten, and each exists because the work is either too large for this conversation or too close to it
 to judge honestly.
 
 | Agent | Called by | Why not do it here |
@@ -114,6 +114,7 @@ to judge honestly.
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
 | `stet-style-sheet` | `style` | The error hides in the string a reader skips. A machine comparing repeated strings does not skip it |
 | `stet-citation-checker` | `cite` | Whether a source exists is arithmetic; whether it supports the sentence is not |
+| `stet-source-integrity` | `standing` | Whether a source still exists is arithmetic; whether the claim survives the source changing is not |
 | `stet-continuity` | long works, and across them | No single reading holds four hundred pages, and the contradiction is never in one place |
 | `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |
 | `stet-critic` | `critique` | Fresh eyes on a finished piece, outside the attention gravity of having written it |
