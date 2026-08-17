@@ -113,7 +113,7 @@ direction, which is a gap in the ownership model rather than a bug in the code.
 
 Early, and honest about it.
 
-Built: the Establish group (`ingest`, `init`, `voice`, `ia`), the Authorship model, and the hook
+Built: the Establish group (`ingest`, `init`, `voice`, `ia`), the ownership model, and the hook
 that enforces it. Designed and not written: everything else.
 
 Stet's own content is marked `draft`, not `approved`, because the author has directed it and not

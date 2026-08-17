@@ -21,6 +21,12 @@ Name them with their edition, because "Chicago" means four different books.
 
 ## Decisions
 
+**Ownership is the property. Authorship is the command group.** The thing a file has is ownership,
+because `owned` is the key the hook reads and the own- verb carries the idea 166 times. `Authorship`
+capitalised is the name of the group holding `claim`, `release`, `approve`, `proof` and `policy`,
+and it is that in the tables and nowhere else. Ordinary English use of the word, meaning who wrote
+something, is untouched by either.
+
 **stet is three words.** `Stet` the product takes a capital. `stet` the command does not, so
 `# stet check` and `stet audit` are right as written. *stet* the proofreader's mark does not either,
 and is set in italics where it is being named rather than used.
@@ -31,7 +37,9 @@ below are narrowed to the positions where the word can only be the product. They
 and are a guard against drift rather than a fix for it. The sense rule above is what does the work,
 and it is here because a rule that lives only in somebody's head gets broken by the third page.
 
-- `authorship` → `ownership` `owned` is the metadata key the hook actually reads and the verb carries the idea 166 times across the corpus, so ownership is the name of the property; Authorship stays the name of the command group and nothing else
+- `authorship model` → `ownership model` `owned` is the metadata key the hook actually reads and the verb carries the idea 166 times across the corpus, so ownership is the name of the property
+- `agent authorship` → `agent ownership` as above
+- `confers authorship` → `confers ownership` as above
 - `47%` → `47 percent` the corpus writes the word in running sentences 42 times against three uses of the symbol, and reference/refresh.md states the rule the site is breaking: a page that says 47 percent becomes 52 percent, not 52%
 - `stet is` → `Stet is` the product takes a capital, and these are the positions where the word can only be the product
 - `stet was` → `Stet was` as above
