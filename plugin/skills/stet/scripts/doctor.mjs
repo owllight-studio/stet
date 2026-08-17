@@ -152,6 +152,14 @@ for (const name of Object.keys(lock(root))) {
 
 /* --- 4. The plugin against itself ----------------------------------------- */
 
+const allRefsEarly = existsSync(join(skill, "reference"))
+  ? readdirSync(join(skill, "reference"))
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => readFileSync(join(skill, "reference", f), "utf8"))
+      .join("\n")
+  : "";
+const skillText0 = existsSync(join(skill, "SKILL.md")) ? readFileSync(join(skill, "SKILL.md"), "utf8") : "";
+
 const skillMd = join(skill, "SKILL.md");
 if (existsSync(skillMd)) {
   const text = readFileSync(skillMd, "utf8");
@@ -173,6 +181,19 @@ if (existsSync(skillMd)) {
     : [];
   for (const r of onDisk) {
     if (!refs.includes(r)) say(3, "reference with no command", r, "nothing in SKILL.md routes to it");
+  }
+}
+
+/* Agents nothing routes to. Same failure as an undocumented script: it ships and nobody calls it. */
+const agentDir = join(plugin, "agents");
+if (existsSync(agentDir)) {
+  const agents = readdirSync(agentDir).filter((f) => f.endsWith(".md"));
+  const everything = [skillText0, allRefsEarly].join("\n");
+  for (const a of agents) {
+    const name = a.replace(/\.md$/, "");
+    if (!everything.includes(name)) {
+      say(3, "agent nothing calls", a, "no reference or SKILL.md mentions it, so it will never run");
+    }
   }
 }
 

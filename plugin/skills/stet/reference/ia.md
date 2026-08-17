@@ -103,6 +103,12 @@ argument, and the structure drifts one reasonable decision at a time.
   only by search, are still in the structure.
 - **Do not skip the paths.** A page list is inventory. Paths are the part that finds the problems.
 
+## Read it with an agent
+
+`stet-corpus-reader` returns what exists and, more usefully, what job each page does. A page's job is
+not what it says, it is what somebody can do afterwards, and a page whose job nobody can name is
+usually the problem this command exists to find.
+
 ## Done when
 
 `IA.md` exists, every page has a one-sentence job, every reader from `CONTENT.md` has a traced path,

@@ -84,6 +84,26 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 
 Commands without a reference file yet are not built. Say so rather than improvising one.
 
+## Agents
+
+Five, and each exists because the work is either too large for this conversation or too close to it
+to judge honestly.
+
+| Agent | Called by | Why not do it here |
+|---|---|---|
+| `stet-voice-researcher` | `voice`, with a persona | Six presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
+| `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
+| `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
+| `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |
+| `stet-critic` | `critique` | Fresh eyes on a finished piece, outside the attention gravity of having written it |
+
+**Two of them are separations of concern rather than of size.** The researcher must resist writing
+from memory; the sample reader must resist generalising from too little. The fact checker and the
+critic ask different questions of the same page: is this true, and does this work.
+
+Do not delegate the writing. `write`, `tighten`, `clarify` and `restructure` are the work, and an
+agent that hands its prose to another agent has added a layer and lost the thread.
+
 ## Routing
 
 - **A named command:** load its reference and follow it.

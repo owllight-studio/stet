@@ -96,6 +96,15 @@ links to.
   confirming. Your notes here are observations, not a definition.
 - **Do not skip the boring files.** The one nobody thinks about is where the contradictions live.
 
+## Read it with an agent
+
+Send `stet-corpus-reader` at the project rather than reading it here. It returns the inventory, what
+job each page does, the content boundary it recommends, what overlaps, and every figure typed into
+prose that nothing is watching.
+
+It changes nothing, which is not a formality: this command confirms the boundary with the author
+before a single file is touched, because claiming a source file as prose is a mess to undo.
+
 ## Done when
 
 Every content file carries `owner: human`, nothing else in any file changed, and the author has a

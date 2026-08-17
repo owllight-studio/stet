@@ -77,6 +77,17 @@ Years, small counts and version numbers are skipped, since those are prose rathe
 It does not write to content. Ever, including files it could legally change. The reading half and
 the writing half are separate commands so that running the reading half is never a decision.
 
+## The half this cannot check
+
+This command checks figures against the commands that produce them. Most of what a page asserts is
+not a figure.
+
+Send `stet-fact-checker` at the same content for the rest. It is adversarial by design: it tries to
+refute each claim rather than confirm it, and its most valuable verdict is *true but misleading*, a
+sentence where every word is defensible and the impression is wrong. Nothing mechanical catches
+that, and this project shipped a whole section on exactly that failure once, with every figure
+correct and the reasoning inverted on top of them.
+
 ## Done when
 
 Every stale claim is either refreshed, rewritten by hand, or knowingly left. Every broken source is

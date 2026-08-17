@@ -73,9 +73,13 @@ doing to a paragraph, only at the scale of a whole voice.
 
 ### On samples
 
-The strongest evidence there is, because it already happened. Read whatever they can point at: files
-in the repo, a URL, a Google Doc, text pasted into the conversation. Read enough for range: their
-best piece and their most ordinary one say different things and the voice is both.
+The strongest evidence there is, because it already happened. Send `stet-sample-reader` at whatever
+they can point at: files in the repo, a URL, a document, text pasted into the conversation.
+
+It reads for range rather than for quality, because their best piece and their most ordinary one say
+different things and the voice is both, and it reports the spread across kinds of page rather than
+averaging two registers into one nobody writes in. Delegated so a back catalogue never enters the
+conversation that is about to write the voice file.
 
 ### On the project
 
@@ -89,8 +93,9 @@ start, and where the current corpus can correct a preset that does not quite fit
 **Mandatory whenever the persona names a real person, a real publication, or a named register.** Not
 optional, not skippable because the voice seems obvious, and least skippable when it seems obvious.
 
-Send subagents at the actual texts. Have them count: sentence length and variance, what the register
-refuses, which of its famous features are actually rare in it. Then write the rules from the counts.
+Send `stet-voice-researcher` at the actual texts. It counts sentence length and variance, what the
+register refuses, and which of its famous features are actually rare in it. Then write the rules
+from the counts.
 
 The evidence for making this a step rather than a suggestion is Stet's own library. Six presets were
 first written from instinct by someone who knew the registers well, then measured. **All six had

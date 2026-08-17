@@ -72,6 +72,13 @@ The four things it prints at the end, which are the ones that need a reader:
 lower bar and a different one. The command exists so a reader can spend their attention on the four
 questions above instead of on the eight below them.
 
+## The four it cannot compute
+
+Send `stet-critic` at the piece afterwards. It answers the four questions this command prints and
+cannot answer, each through its own lens, quoting the sentence it means every time.
+
+Run this first so the critic is not spending attention on something arithmetic already settled.
+
 ## Never
 
 - Never treat the tally as a verdict on the writing. It is a count of clean dimensions.
