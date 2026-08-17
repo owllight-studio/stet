@@ -18,7 +18,7 @@ in the middle of it.
 
 **Approval confers ownership.** Keeping a draft makes it `approved`. It stops being yours to change.
 
-**Editing confers authorship, sentence by sentence.** If the author corrects a line, that line
+**Editing confers ownership, sentence by sentence.** If the author corrects a line, that line
 becomes theirs and closes to you permanently. Only that line. The paragraph around it, and the rest
 of the file, stay exactly as owned as they were. Recording it any wider would have the tool claim
 they wrote things they never touched.

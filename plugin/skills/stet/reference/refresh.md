@@ -16,7 +16,7 @@ Run `verify` first. Run this with `--dry` before running it for real.
 
 ## The thing this exists for
 
-`authored` plus `policy: refresh` is the combination the authorship model was built to make
+`authored` plus `policy: refresh` is the combination the ownership model was built to make
 sayable. **These are my words, and I want the numbers in them kept true.**
 
 Nothing else in the product can express that. `approved` and `authored` close a file; a policy of

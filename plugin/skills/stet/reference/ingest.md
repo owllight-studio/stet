@@ -17,7 +17,7 @@ A project adopting Stet has content written by a person who did not ask you for 
 default is not "unknown ownership" and it is certainly not "yours". It is **theirs**.
 
 So `ingest` writes `owner: human` onto everything it finds, and the author hands pieces over
-afterwards with `release`. Opt-in to agent authorship, never opt-out.
+afterwards with `release`. Opt-in to agent ownership, never opt-out.
 
 This is also what makes Stet useful in the first minute rather than the first week. Point it at two
 hundred files with no metadata and it becomes protective immediately.

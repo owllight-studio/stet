@@ -10,8 +10,11 @@ The decisions, as opposed to the voice.
 
 ```
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority [<guide>]
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs decide <term> <as> --why "<why>"
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs check [file ...]
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs discover [file ...]
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style-sheet.mjs
 ```
 
 ## A style sheet is not a voice, and Stet was missing one
@@ -32,6 +35,45 @@ could go two ways it gets decided and recorded; the second time nobody has to re
 **It gets handed on.** The proofreader applies it and extends it, the typesetter implements its
 formatting decisions, and the author receives it to understand what happened to their manuscript.
 Its purpose is to stop the next person second-guessing a decision somebody already made.
+
+## Name the authority first, and the sheet gets short
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority            # the register
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/style.mjs authority chicago    # set one
+```
+
+A sheet written from nothing has to settle the serial comma, the numeral threshold and the
+quotation-mark placement from first principles, and every one of those is arbitrary. Naming a guide
+answers all of them at once, and **the sheet then carries only the departures**. That is the whole
+reason a professional style sheet is two pages rather than four hundred.
+
+**Chicago 18th (2024) is the default**, because it is the only guide in the register that claims the
+whole territory. AP is scoped to news, APA and MLA to scholarship, Microsoft and Google to software,
+the Guardian and BBC to their own newsrooms. Novels and scripts live in book publishing, which is
+Chicago's ground and which none of the others addresses at all, and it carries both citation systems
+so it covers papers without a switch.
+
+There is no honest "most used overall", and any tool that claims one has picked the measure that
+flatters its answer. Nobody publishes an auditable count and the per-domain answers genuinely
+differ. **If the writing is British, use the Guardian**, not New Hart's: the Guardian is free,
+current and quotable, where New Hart's is paywalled, print-only and last revised in 2014.
+
+Two properties of the register are load-bearing:
+
+**Quotable is tracked separately from free.** Chicago is paywalled, so a rule may be cited by
+section and never reproduced. Google's guide is CC BY 4.0, so its actual wording may be used with
+attribution. A tool that pastes CMOS 6.19's text at a user is infringing; one that says "Chicago
+requires it, CMOS 6.19" is not.
+
+**An unverified position is stored as `null` and said out loud.** Chicago has four: percent, dates,
+internet, and full stops in abbreviations, all behind the paywall. `null` means nobody checked, not
+that the guide is silent, and the difference matters because those four are precisely the ones the
+project has to decide for itself. A table that looked complete because the gaps were filled in with
+what everybody knows would be worse than a gapped one.
+
+For songs and screenplays there is **no dominant editorial style guide at all**. Offering an
+authority there would be inventing a category rather than choosing from one.
 
 ## What goes on one
 
@@ -72,16 +114,65 @@ inconsistent capitalisation and 60 percent inconsistent hyphenation**, with "lon
 "long term" the single commonest at 10 percent of documents. Those are the two things `discover`
 looks for.
 
-**Two exclusions do the work**, and both were learned by running it. A match at the start of a
-sentence is never recorded, because a capital there is grammar rather than spelling. And a case-only
-difference is only reported on a word that is not ordinary English, because there it is a name being
-spelled two ways rather than a word being quoted.
+**The exclusions are most of the work**, and every one was learned by running it against a real
+corpus rather than reasoning about it. The first run on this repo returned **293 terms**, which is
+the "list nobody reads" failure arriving immediately. It now returns 63, and the difference is all
+exclusions:
+
+- **A capital that means nothing.** Four positions, not one: the start of the text, of a sentence, of
+  a line, and of a quotation. Opening quote marks, brackets and emphasis markers are stripped first,
+  because `**"Don't worry` is a sentence start wearing three hats. Without the line rule, a corpus
+  written mostly in bullets reports every `- Never ...` item against its own ordinary use.
+- **A capital inside a name.** "Code" in "Claude Code" is not a variant of "code".
+- **An apostrophe is part of the word.** Stripping it collapsed "we're" into "were" and ranked the
+  pair near the top on 42 against 7.
+- **A pair that spans a sentence boundary.** The full stop is stripped when normalising, so "it. The"
+  and "it the" would otherwise collapse to one key.
+- **A case-only difference on ordinary English**, because there a capital is a word being quoted
+  rather than a name being spelled two ways.
+
+Adjacent word pairs are recorded whatever their case. They were once restricted to capitalised pairs
+on the grounds that an uncapitalised pair is "and the", and that reasoning was wrong: a pair is only
+ever reported when some other surface normalises to the same key, and nothing normalises to "andthe".
+The restriction was excluding "per cent" against "percent", which is the archetypal entry.
+
+**`discover` reads prose, not code.** A term that only ever appears inside backticks is an
+identifier and is invisible to it. That is correct and occasionally surprising: this repo looks like
+it writes `fact-checker` and `fact checker` about equally, and in prose it never writes the
+hyphenated form at all.
+
+## Building the first sheet
+
+`discover` finds the variation mechanically. Deciding thirty of them is thirty judgements, and a
+transcript is the wrong place to make thirty of anything.
+
+```
+node <plugin>/skills/stet/scripts/style-sheet.mjs
+```
+
+`stet-style-sheet` reads the corpus, runs `discover`, adds the categories a word-frequency pass
+cannot see (numbers, dates, acronyms, punctuation habits), and writes `.stet/style-candidates.json`.
+The sheet opens that as a page: each word with both forms, how often each appears and where, and the
+agent's suggestion. You pick and say why.
+
+**The reason is required.** The sheet will not record a card without one, because a decision without
+a reason is one the next person reverses on the grounds that it looks arbitrary.
+
+Nothing but `decide` writes STYLE.md. The sheet shells out to it, so the guards below apply to
+everything the sheet does too.
 
 ## Changing a decision
 
 `decide` refuses to overwrite one silently. **Changing a decision is a decision**, so it has to be
 edited by hand with the reason it moved, and the next person sees that it changed rather than
 finding two answers to the same question.
+
+It refuses two more shapes, and both were found by driving the sheet rather than by reading the
+code. A **reversal** is a different term, so the same-term guard cannot see it: recording
+`fact-checker` becomes `fact checker` while `fact checker` becomes `fact-checker` is already there
+leaves both forms disagreeing with the sheet whichever one the content uses, and `check` can never
+come back clean. A **chain** does the same more quietly: deciding `a` becomes `b` when `b` is itself
+decided against tells the corpus to write a word the sheet bans.
 
 ## A disagreement is not automatically an error
 
