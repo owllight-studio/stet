@@ -695,7 +695,7 @@ EOF
 **Interfaces:**
 - Consumes: `tP`, `fP`, `chiP`, `zP` from Task 1.
 - Produces:
-  - `statistics(text) -> Stat[]` where a `Stat` is `{test, df1, df2, value, comparator, reported, precision, line, saw}`
+  - `statistics(text, markup) -> Stat[]` where a `Stat` is `{test, df1, df2, value, comparator, reported, precision, line, saw}`
   - `checkStat(stat, alpha) -> Verdict`
   - `alphaIn(text) -> number`, the alpha the text declares, defaulting to 0.05
 
@@ -760,6 +760,12 @@ test("a statistic is skipped when the p in its sentence belongs to something els
 
 test("a statistic with no p reported is not a relation to check", () => {
   assert.deepEqual(statistics("The statistic was t(28) = 2.048 in that condition."), []);
+});
+
+test("a statistic inside a fenced code block is a fixture, not a claim", () => {
+  const fence = "`".repeat(3);
+  const text = `${fence}js\nassert.equal(check({ test: "t", df1: 28, value: 2.048 }), 0.05); // p = .99\n${fence}\n`;
+  assert.deepEqual(statistics(text), []);
 });
 
 test("a p that matches its own test statistic is consistent", () => {
@@ -855,9 +861,13 @@ const TESTS = [
   { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/g },
 ];
 
-export function statistics(text) {
+export function statistics(text, markup = "md") {
+  /* Code is blanked here for the same reason it is blanked in the general family, and leaving it
+     out was an oversight rather than a decision: run against this repository, the unblanked version
+     read ten statistics out of fenced test fixtures and treated every one as a live claim. */
+  const clean = withoutCode(text, markup);
   const out = [];
-  for (const s of sentences(text)) {
+  for (const s of sentences(clean)) {
     for (const { test, re } of TESTS) {
       /* A global regex carries lastIndex between uses, and reusing one across sentences starts the
          next search partway in and quietly misses real matches. */
@@ -1038,7 +1048,7 @@ for (const file of files) {
     const v = r.kind === "fraction" ? checkFraction(r) : checkRange(r);
     if (v.state !== "consistent") found.push({ file, ...r, ...v });
   }
-  for (const s of statistics(text)) {
+  for (const s of statistics(text, markup)) {
     checked++;
     const v = checkStat(s, alpha);
     if (v.state !== "consistent") found.push({ file, ...s, ...v });
