@@ -117,15 +117,26 @@ Those are different facts. Treating a 503 as "no snapshot" would submit a duplic
 page that already has one, and treating it as "found nothing" for a page that has a snapshot would
 be worse than not checking.
 
-**As of 2026-08-16, requesting a new snapshot does not work without an account.** Save Page Now's
-unauthenticated `GET` request, once accepted, now returns 404 in under 300 milliseconds against a
-page confirmed live and confirmed to have no existing snapshot; archive.org's own documentation
-now describes an authenticated `POST` carrying S3-style credentials from an archive.org account.
-`stet` asks nobody for a key, and that is a design decision rather than an oversight, so it will
-not add one to route around this. `archive` still finds and records any snapshot that already
-exists, which is most of the value, and it still reports every save attempt honestly rather than
-claiming success it cannot verify. Saving a page yourself, by hand or with your own account, still
-works; `archive` will pick up the result on its next run.
+**As of 2026-08-16, the unauthenticated `GET` save request is confirmed gone.** It returned 404
+twice, in under 300 milliseconds, against a page confirmed live and confirmed by CDX to have no
+existing snapshot: too fast to be archive.org having a bad day, and not the shape of a target that
+could not be reached. archive.org's own documentation confirms the path it has replaced this
+with: an authenticated `POST` to `https://web.archive.org/save`, carrying S3-style credentials
+from an archive.org account, generated at `archive.org/account/s3.php` and sent as an
+`authorization: LOW accesskey:secret` header.
+
+Whether an **unauthenticated `POST`** would also be refused is not established. It was tried once
+and answered 503, and this document has just spent a paragraph arguing that a 503 is a transient
+failure of the endpoint rather than a fact about anything, so it cannot turn around and read this
+one 503 as proof either. What is verified is narrower than "an account is required": the `GET`
+path is gone, and the documented path wants an account. Nothing here has ruled out an
+unauthenticated `POST` succeeding.
+
+None of that changes what `stet` does. It asks nobody for a key, and that is a design decision
+rather than an oversight, so it will not add one to route around this. `archive` still finds and
+records any snapshot that already exists, which is most of the value, and it still reports every
+save attempt honestly rather than claiming success it cannot verify. Saving a page yourself, by
+hand or with your own account, still works; `archive` will pick up the result on its next run.
 
 A dead finding that carries a snapshot is printed under the finding in the main run, not only in
 `archive`'s own output:

@@ -186,11 +186,13 @@ async function runArchive(root, all) {
       console.log(`       immediately; run \`archive\` again later to record it against this URL.`);
     } else {
       /* Verified against https://stet.style on 2026-08-16: the unauthenticated GET this sends
-         returned 404 in 297ms, far too fast to have crawled a live page, and archive.org's own
-         documentation confirms Save Page Now now wants a POST carrying S3-style credentials from
-         an account. That is a key requirement, and this tool's whole pitch is that it needs none,
-         so the request is still made, honestly, and its failure is reported rather than hidden or
-         worked around with a credential this tool does not ask anybody to hold. */
+         returned 404 twice, in under 300ms, far too fast to have crawled a live page, and
+         archive.org's own documentation describes the path it has replaced this with: an
+         authenticated POST carrying S3-style account credentials. Whether an unauthenticated
+         POST would also be refused was not established; a single attempt at it answered 503,
+         which this same file argues elsewhere is not evidence of anything. Either way this tool
+         asks nobody for a key, so the GET request is still made, honestly, and its failure is
+         reported rather than hidden or worked around with a credential nobody was asked to hold. */
       saveFailed++;
       console.log(`FAILED  ${url}`);
       console.log(`        ${result.error}`);
