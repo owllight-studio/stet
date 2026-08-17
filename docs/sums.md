@@ -57,7 +57,25 @@ writing:
 - a count of a total, with a percentage in the same sentence: `184,065 of 241,091` and
   `76.35 percent`
 - a percentage of a stated total, with the resulting count in the same sentence
-- a range written `between X and Y` or `X to Y` whose endpoints are the wrong way round
+
+**A range whose endpoints are the wrong way round was the third of these, and it is gone.** It was
+specified here, built, and shipped as `between X and Y`, having already been narrowed once: `X to Y`
+was refused during the build because "took the variance from 0.61 to 0.34" is ordinary English for a
+decrease. Across the whole of this branch's development the narrowed rule found no real error
+anywhere in this corpus, and at final review it produced three false positives in five minutes: "the
+difference between 90 and 10", a pair of years running 2013 to 1985 in a citation, and a pair of
+endpoints straddling a percentage. Narrowing it further and demoting it below the exit code was
+drafted and rejected: a rule that fires on correct prose while never firing on incorrect prose costs
+more to keep than it returns, at any volume, so the family went. This is recorded here rather than
+deleted for the same reason the closed list of assumptions below is: the design was wrong, and the
+reference document inherits from here.
+
+**Two figures pair only inside one block.** Sentences are split on sentence-ending punctuation and a
+table row or a bullet carries none, so a table arrives as one sentence and its rows pair across each
+other. A blank line, a heading, a list item or a table row between two figures refuses the pair. A
+line break on its own does not: this repository's prose is hard-wrapped, and measured over its 7
+fractions a line-break rule costs 1 and a rule refusing any sentence containing a line break costs
+all 7, while the block rule costs none.
 
 **The NHST family** reads a reported test statistic and recomputes the p-value: `t(df)`,
 `F(df1, df2)`, `r(df)`, chi-squared with its degrees of freedom, and `z`. A correlation is converted

@@ -18,7 +18,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { findContent } from "./lib/find.mjs";
-import { relations, statistics, checkFraction, checkRange, checkStat, alphaIn, hidden } from "./lib/sums.mjs";
+import { relations, statistics, checkFraction, checkStat, alphaIn, hidden } from "./lib/sums.mjs";
 
 const root = process.cwd();
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
@@ -63,7 +63,7 @@ for (const file of files) {
 
   for (const r of relations(text, markup)) {
     checked++;
-    const v = r.kind === "fraction" ? checkFraction(r) : checkRange(r);
+    const v = checkFraction(r);
     if (v.state !== "consistent") found.push({ file, ...r, ...v });
   }
   for (const s of statistics(text, markup)) {
@@ -94,22 +94,32 @@ const sayNotChecked = () => {
   if (parts.length) console.log(`NOT CHECKED  ${parts.join(", ")}`);
 };
 
+/* Before anything else in the run, on every path, which is what reference/sums.md says it does.
+   It was called only where nothing had been checked, so a file that could not be opened vanished
+   from the report the moment any other file yielded a relation, while still being counted in the
+   header: "3 relations across 2 files" is a claim about a file this never opened. `sayNotChecked`
+   is the same kind of disclosure written for the same reason and it was wired into both paths from
+   the start; this one was wired into one of them. */
+sayUnread();
+
 if (!checked) {
-  sayUnread();
   /* Nothing was checked because nothing was read. Explaining what was not found in the content
      would be a claim about content this never opened, which is the same class of false statement
      the unread list exists to prevent. */
   if (unread.length && unread.length === files.length) process.exit(1);
-  console.log("No arithmetic to check: no fraction, range or reported test statistic in the content.");
+  console.log("No arithmetic to check: no fraction or reported test statistic in the content.");
   console.log("");
   console.log("This looks for numbers a document states about itself: a count of a total beside a");
-  console.log("percentage, a range, or a test statistic reported with its p-value. A document that");
-  console.log("states none of those has nothing here to disagree with.");
+  console.log("percentage, or a test statistic reported with its p-value. A document that states");
+  console.log("neither has nothing here to disagree with.");
   sayNotChecked();
   process.exit(0);
 }
 
-console.log(`${checked} ${checked === 1 ? "relation" : "relations"} across ${files.length} ${files.length === 1 ? "file" : "files"}.\n`);
+/* The files this actually opened. Counting the ones it could not read into "across N files" is a
+   claim about text it never saw, which is the thing the unread list exists to prevent. */
+const opened = files.length - unread.length;
+console.log(`${checked} ${checked === 1 ? "relation" : "relations"} across ${opened} ${opened === 1 ? "file" : "files"}.\n`);
 
 const loud = found.filter((f) => f.tier === "loud");
 for (const f of loud) {

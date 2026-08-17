@@ -1,10 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { relations, checkFraction, checkRange, precisionOf, readable, hidden } from "../plugin/skills/stet/scripts/lib/sums.mjs";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { relations, checkFraction, precisionOf, readable, hidden } from "../plugin/skills/stet/scripts/lib/sums.mjs";
+
+const repo = fileURLToPath(new URL("..", import.meta.url));
 
 test("a fraction and a percentage in the same sentence become one relation", () => {
   const [r] = relations("Content drift ran at 76.35 percent, 184,065 of 241,091 references.");
-  assert.equal(r.kind, "fraction");
   assert.equal(r.part, 184065);
   assert.equal(r.whole, 241091);
   assert.equal(r.stated, 76.35);
@@ -18,13 +21,23 @@ test("a figure inside a fenced code block is not prose and is not checked", () =
 });
 
 test("a construction shown inside quotation marks is named, not committed", () => {
-  const text = 'A backwards range looks like "between 0.61 and 0.34" when somebody writes one.';
+  const text = 'A wrong percentage looks like "8,273 of 16,695, or 12.9 percent" when somebody writes one.';
   assert.deepEqual(relations(readable(text)), []);
 });
 
 test("a line marked stet-allow is exempt, the way tells already allows", () => {
   const text = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow: illustration -->";
   assert.deepEqual(relations(readable(text)), []);
+});
+
+test("a marked line in HTML is exempt too, and the disclosure says what it hid", () => {
+  /* The marker is an HTML comment, and `withoutCode` blanks every comment in HTML mode. Blanking
+     code first therefore left nothing for the marker to be found in: the finding went out anyway
+     and the disclosure reported nothing hidden, which is the worst of both. `site/index.html` is
+     declared content in this repository, so this path is live rather than hypothetical. */
+  const html = "<p>An early version read 8,273 of 16,695 as 12.9 percent.</p> <!-- stet-allow: illustration -->";
+  assert.equal(relations(html, "html").length, 0);
+  assert.deepEqual(hidden(html, "html"), { quoted: 0, marked: 1, wholeFile: false });
 });
 
 test("a bare stet-allow exempts the whole file, and a suffixed one exempts only its line", () => {
@@ -35,7 +48,7 @@ test("a bare stet-allow exempts the whole file, and a suffixed one exempts only 
 });
 
 test("hidden counts arithmetic quoting or marking concealed, not text removed", () => {
-  const quoting = 'A backwards range looks like "between 0.61 and 0.34" when somebody writes one.';
+  const quoting = 'A wrong percentage looks like "8,273 of 16,695, or 12.9 percent" when somebody writes one.';
   assert.deepEqual(hidden(quoting), { quoted: 1, marked: 0, wholeFile: false });
 
   const marking = "An early version read 8,273 of 16,695 as 12.9 percent. <!-- stet-allow: illustration -->";
@@ -68,10 +81,44 @@ test("a percentage far from the fraction in a long sentence is not paired with i
   assert.deepEqual(relations(text), []);
 });
 
-test("a decrease written from one figure to another is not a range", () => {
-  /* reference/tighten.md says a tighten took the variance from 0.61 to 0.34. That is a decrease
-     described in ordinary English, and an earlier draft of this reported it as a broken range. */
-  assert.deepEqual(relations("It took the variance from 0.61 to 0.34."), []);
+test("two rows of a table are two claims, not one sentence", () => {
+  /* A row usually ends without sentence-ending punctuation, so the splitter hands the whole table
+     over as one sentence and the rows pair across each other. This table is entirely correct and it
+     was reported as 3 of 4 being 75 percent rather than 12, loudly, which exits 1 and fails CI. */
+  const table = "| Converted | 3 of 4 |\n| Bounce rate | 12 percent |";
+  assert.deepEqual(relations(table), []);
+});
+
+test("two bullets are two claims as well", () => {
+  const list = "- Shipped 3 of 4 milestones\n- Churn ran at 12 percent";
+  assert.deepEqual(relations(list), []);
+});
+
+test("a heading between two figures separates them", () => {
+  const text = "Shipped 3 of 4 milestones\n## Churn\nChurn ran at 12 percent";
+  assert.deepEqual(relations(text), []);
+});
+
+test("a blank line separates them, even where a marked line left one behind", () => {
+  /* A marked line is blanked to nothing, so two bullets with a marked line between them arrive as
+     one sentence with a blank line in it. That is a block boundary and not a pairing. */
+  const marked = "- Shipped 3 of 4 milestones\n<!-- stet-allow: illustration -->\nChurn ran at 12 percent";
+  assert.deepEqual(relations(readable(marked)), []);
+});
+
+test("a sentence that wraps onto the next line is still one sentence", () => {
+  /* The boundary is a block, not a newline. Refusing every pair that crosses a line end reads well
+     until it is measured: against this repository's 7 fractions it costs 1, and refusing every pair
+     in a sentence containing a line break at all costs all 7, because prose here is hard-wrapped
+     and a paragraph is not a table. The block rule costs none of them. */
+  const wrapped = "Content drift ran at 76.35 percent,\n184,065 of 241,091 references.";
+  assert.equal(relations(wrapped).length, 1);
+});
+
+test("a percentage point is not a percentage", () => {
+  /* A percentage point is definitionally not a percentage, and the phrase is ordinary in exactly
+     the analytical prose this command is pointed at. */
+  assert.deepEqual(relations("It rose 12 percentage points while 3 of 4 teams shipped."), []);
 });
 
 test("a fraction with no percentage beside it is not a relation", () => {
@@ -117,14 +164,14 @@ test("a figure on an exact rounding boundary is quiet, and names the convention"
   assert.match(v.assumption, /half to even/);
 });
 
-test("a range with its endpoints the wrong way round is loud", () => {
-  const v = checkRange({ from: 90, to: 10 });
-  assert.equal(v.state, "inconsistent");
-  assert.equal(v.tier, "loud");
-});
-
-test("a range in the right order says nothing", () => {
-  assert.equal(checkRange({ from: 10, to: 90 }).state, "consistent");
+test("a range is not read at all, in either direction", () => {
+  /* The range family is gone. It never found a real error anywhere in this corpus and it produced
+     three false positives in five minutes: a difference between two figures, a descending pair of
+     years, and endpoints straddling a percentage. That is the argument this command already
+     accepted when it refused `from X to Y`, applied to the sibling construction. */
+  assert.deepEqual(relations("Sales fell steadily between 2013 and 1985 in the archive series."), []);
+  assert.deepEqual(relations("The difference between 90 and 10 is what the chart is showing."), []);
+  assert.deepEqual(relations("Conversion sat between 90 and 10 percent depending on the cohort."), []);
 });
 
 test("a whole of zero is not a division, it is a sentence to leave alone", () => {
@@ -243,10 +290,43 @@ test("the alpha the text declares is the one used", () => {
   assert.equal(alphaIn("No alpha is stated here."), 0.05);
 });
 
+test("a correlation of one or more is impossible, and never recomputes as NaN", () => {
+  /* Converting r to t divides by 1 - r squared, so a correlation at 1 divides by zero and one above
+     it roots a negative. What came out was "recomputes as NaN", printed by the one file whose whole
+     purpose is never to print a confident wrong number, and a typo'd correlation is exactly what the
+     literature this points at contains. */
+  for (const value of [1, -1, 1.02]) {
+    const v = checkStat({ test: "r", df1: 28, value, comparator: "=", reported: 0.05, precision: 2 }, 0.05);
+    assert.notEqual(v.state, "consistent", `r = ${value}`);
+    assert.doesNotMatch(v.detail, /NaN/, `r = ${value}`);
+    assert.match(v.detail, /cannot reach 1/, `r = ${value}`);
+  }
+});
+
+test("a correlation just under one still recomputes to a number", () => {
+  const v = checkStat({ test: "r", df1: 28, value: 0.99, comparator: "<", reported: 0.05, precision: 2 }, 0.05);
+  assert.equal(v.state, "consistent");
+});
+
 test("a declared alpha changes which side of the line a p falls on", () => {
   /* p recomputes near .03: significant at .05, not at .01. The tier must follow the stated alpha
      rather than an assumed one, or the tool invents an error in a paper that was stricter. */
   const stat = { test: "t", df1: 28, value: 2.3, comparator: "=", reported: 0.6, precision: 2 };
   assert.equal(checkStat(stat, 0.05).tier, "loud");
   assert.equal(checkStat(stat, 0.01).tier, "quiet");
+});
+
+test("a file that could not be read is reported before anything else, and not counted", () => {
+  /* The whole run, because this is the command's ordering rather than the library's. A file named
+     and not opened is the most important thing in the report, and printing it after the findings
+     hid it entirely whenever any other file yielded a relation. "Across 2 files" was also a claim
+     about a file this never opened. */
+  const out = execFileSync(
+    process.execPath,
+    ["plugin/skills/stet/scripts/sums.mjs", "nosuchfile.md", "docs/sums.md"],
+    { cwd: repo, encoding: "utf8" },
+  );
+  assert.match(out, /COULD NOT READ  1/);
+  assert.ok(out.indexOf("COULD NOT READ") < out.search(/relations across/), "the unread report comes first");
+  assert.match(out, /across 1 file\./);
 });

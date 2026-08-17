@@ -26,10 +26,9 @@ so it works on any text in any project, offline, and it is the cheapest check in
 
 ## Two families
 
-**The general family** reads a relation a sentence states about itself: a count of a total beside a
-percentage, or a range. "184,065 of 241,091 references, 76.35 percent" is one relation: does the
-count divided by the total round to the stated figure. "between 0.61 and 0.34" is another: does the
-first endpoint sit below the second.
+**The general family** reads one relation a sentence states about itself: a count of a total beside
+a percentage. "184,065 of 241,091 references, 76.35 percent" is that relation, and the question is
+whether the count divided by the total rounds to the stated figure.
 
 **The statistical family** reads a reported test statistic and recomputes the p-value that should
 follow it: `t(df)`, `F(df1, df2)`, `r(df)`, chi-squared, `z`. A correlation goes through the same
@@ -99,7 +98,7 @@ the extractor reads straight through a code sample and pairs numbers that were n
 other.
 
 Quoted text is blanked too, for the same reason `tells` blanks it: naming a construction is not
-committing it. A sentence that shows a reader what a backwards range or a wrong p-value looks like
+committing it. A sentence that shows a reader what a wrong percentage or a wrong p-value looks like
 has to write one down, and a checker that cannot tell the difference between an example and a claim
 reports the example as an error. This document was caught by its own command for exactly that,
 quoting the worked examples above, before quoting was exempted.
@@ -124,14 +123,13 @@ removes it from checking, and a marker on one line or one bare marker anywhere i
 same, more widely. Both are legitimate uses, and both are also how a real inconsistency disappears:
 the command cannot tell an illustrative quotation from a live claim somebody happened to put in
 quotation marks, so it trusts the quote marks either way. So hiding a real finding is not a decision
-that passes unnoticed: whenever a quotation or a marked line concealed a fraction, a range or a
-statistic this command would otherwise have checked, it says so, printed as `NOT CHECKED` at the
-foot of the report, next to the summary. A quoted example with no arithmetic in it, which is most of
-them, is not mentioned at all, because counting how much text was skipped rather than how much
-arithmetic was skipped fires on nearly every file in a real corpus and teaches a reader to stop
-reading it. A file exempted whole is named by its path every time, whether or not it happened to
-contain any arithmetic, because that exemption was a decision somebody made and none of that file was
-even attempted. None of this changes the exit code: an exemption is a disclosure, not a finding.
+that passes unnoticed: whenever a quotation or a marked line concealed a fraction or a statistic this
+command would otherwise have checked, it says so, printed as `NOT CHECKED` at the foot of the report,
+next to the summary. A quoted example with no arithmetic in it, which is most of them, is not
+mentioned at all, because counting how much text was skipped rather than how much arithmetic was
+skipped fires on nearly every file in a real corpus and teaches a reader to stop reading it. A file
+exempted whole is named by its path every time, whether or not it happened to contain any arithmetic,
+because that exemption was a decision somebody made and none of that file was even attempted. None of this changes the exit code: an exemption is a disclosure, not a finding.
 
 A relation needs exactly one fraction and exactly one percentage in the sentence, no more than 80
 characters apart. A sentence carrying two of either is ambiguous, and nothing is paired: pairing the
@@ -144,12 +142,44 @@ Every one of these rules exists because the first draft, run against this projec
 produced four findings, and every one of them was wrong. What a checker like this refuses to pair is
 most of what makes it trustworthy, not a limitation apologised for.
 
-## A range means `between X and Y`, and nothing else
+## Two figures only pair inside one block
 
-`from X to Y` is ordinary English for a change, not a malformed range. "Took the variance from 0.61
-to 0.34" in `reference/tighten.md` describes a decrease, and an earlier draft of this command read it
-as a range running backwards and reported it as an error. A rule that fires on correct prose is worse
-than no rule, so only `between X and Y` is read as a range at all.
+A relation holds inside a sentence, and a sentence ends with sentence-ending punctuation, which a
+table row and a bullet usually do not have. So a table arrives as a single sentence and its rows
+would pair across each other: a row reading `3 of 4` beside a row reading `12 percent` was reported
+as wrong arithmetic, loudly, and loud exits 1, so a table of entirely correct metrics failed the
+build.
+
+A pair is refused when a block boundary sits between the two figures: a blank line, a heading, a
+list item or a table row. Not a line break on its own. Prose here is hard-wrapped, and refusing
+every pair that crosses a line end costs 1 of the 7 fractions this repository states, while refusing
+every pair in a sentence containing a line break at all costs all 7. The block rule costs none.
+
+`12 percentage points` is not a percentage either, and the word has to end where `percent` ends. A
+percentage point is definitionally not a percentage, and "it rose 12 percentage points while 3 of 4
+teams shipped" is ordinary in the analytical prose this is pointed at.
+
+## Ranges are not checked at all
+
+A backwards range is not a finding here, and a reader expecting `between 90 and 10` to be caught
+should know that it is not.
+
+It was checked, until the end of the branch that built this. Across the whole of that development it
+found no real error anywhere in this corpus, and it produced three false positives in five minutes: a
+difference between two figures, a descending pair of years in a citation, and endpoints straddling a
+percentage. `from X to Y` had already been refused for the same reason, since "took the variance from
+0.61 to 0.34" in `reference/tighten.md` is ordinary English for a decrease rather than a malformed
+range. A rule that fires on correct prose and has never once fired on incorrect prose is not worth
+its own maintenance, so the family was removed rather than narrowed. `docs/sums.md` records the
+decision, because the design specified the family.
+
+## A statistic that cannot exist
+
+A correlation of 1 or more is not a correlation, and converting one to its `t` equivalent divides by
+zero or takes the root of a negative. Rather than print `NaN` beside the author's figure, which is a
+confident wrong number out of the one command whose whole purpose is never to print one, the finding
+says the statistic is impossible and gives no p at all. It is worth a look rather than loud: this is
+not a disagreement with somebody's arithmetic, it is a figure there is no arithmetic to do on.
 
 ## A file it cannot read
 

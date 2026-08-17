@@ -46,16 +46,42 @@ export function sentences(text) {
 }
 
 const FRACTION = /(\d[\d,]*(?:\.\d+)?)\s+(?:of|out of)\s+(\d[\d,]*(?:\.\d+)?)/g;
-const PERCENT = /(\d[\d,]*(?:\.\d+)?)\s*(?:%|percent|per cent)/g;
 
 /*
- * Only `between X and Y`, never `from X to Y`.
+ * The word has to end there.
  *
- * The second was in the first draft of this and it is wrong. "Took the variance from 0.61 to 0.34"
- * is ordinary English for a decrease, not a malformed range, and this repository says exactly that
- * in reference/tighten.md. A rule that fires on correct prose is worse than no rule.
+ * A percentage point is definitionally not a percentage, so "it rose 12 percentage points while 3
+ * of 4 teams shipped" was pairing a number of points with a fraction and calling the result wrong.
+ * The phrase is standard in exactly the analytical prose this command is pointed at.
  */
-const RANGE = /between\s+(\d[\d,]*(?:\.\d+)?)\s+and\s+(\d[\d,]*(?:\.\d+)?)/g;
+const PERCENT = /(\d[\d,]*(?:\.\d+)?)\s*(?:%|percent|per cent)(?![A-Za-z])/g;
+
+/*
+ * There is no range family, and there was.
+ *
+ * `between X and Y` with its endpoints the wrong way round was read as a broken range until the end
+ * of this branch's development, during which it found no real error anywhere in this corpus and
+ * produced three false positives in five minutes: "the difference between 90 and 10", a descending
+ * pair of years, and endpoints straddling a percentage. That is the same argument this file already
+ * accepted when it refused `from X to Y`, which is ordinary English for a decrease rather than a
+ * malformed range. A rule that fires on correct prose and has never fired on incorrect prose is not
+ * worth its own maintenance. docs/sums.md records the decision, since the design specified it.
+ */
+
+/*
+ * A block boundary between two figures, which is a refusal to pair them.
+ *
+ * `sentences` splits on sentence-ending punctuation, and a table row or a bullet usually carries
+ * none, so a whole table arrives as one sentence and its rows pair across each other: a row reading
+ * 3 of 4 beside a row reading 12 percent became a loud finding, and loud exits 1, so a table of
+ * entirely correct metrics failed the build.
+ *
+ * A blank line, a heading, a list item or a table row. Deliberately not any newline, because prose
+ * wraps. Measured over this repository's 7 fractions: refusing a pair whose two figures fall on
+ * different lines declines 1 of them, refusing every pair inside a sentence that contains a line
+ * break at all declines all 7, since these paragraphs are hard-wrapped, and this rule declines none.
+ */
+const BLOCK_BOUNDARY = /\n[^\S\n]*(?:\n|#|[-*+][^\S\n]|\d{1,9}[.)][^\S\n]|\|)/;
 
 /**
  * How far apart a fraction and a percentage may sit and still be about each other.
@@ -91,6 +117,25 @@ const blankMarked = (text) => text
 
 const blankQuoted = (text) => text.replace(/"[^"\n]{0,200}"/g, blank).replace(/“[^”\n]{0,200}”/g, blank);
 
+/**
+ * The blanking sequence, in its stages, written once.
+ *
+ * `readable` wants the end of it and `hidden` wants the differences between the stages, and they
+ * were two copies of the same three lines in one file. Two copies of one sequence is how the next
+ * change to `readable` becomes a silently wrong disclosure, which is a worse failure than either
+ * copy having a bug, because the disclosure exists to be trusted without being checked.
+ *
+ * Marking runs on the raw text, before code. In HTML a marker is a comment and `withoutCode` blanks
+ * every comment, so blanking code first meant `blankMarked` never saw a marker at all: the finding
+ * went out anyway and the disclosure reported nothing hidden, which is the worst of both. This
+ * repository declares `site/index.html` as content, so that path was live.
+ */
+const stages = (text, markup) => {
+  const code = withoutCode(text, markup);
+  const marks = withoutCode(blankMarked(text), markup);
+  return { code, marks, quotes: blankQuoted(marks) };
+};
+
 export function readable(text, markup = "md") {
   /* Bare marker, whole file. Colon-suffixed marker, that line only. Those are the two forms
      tells.mjs already defines, and the colon is what distinguishes them: the bare pattern does not
@@ -99,7 +144,7 @@ export function readable(text, markup = "md") {
      It is not directional either: the check runs against the raw text before anything is split
      into lines, so a bare marker exempts the whole file regardless of where in it the marker sits. */
   if (/<!--\s*stet-allow\s*-->/.test(text)) return "";
-  return blankQuoted(blankMarked(withoutCode(text, markup)));
+  return stages(text, markup).quotes;
 }
 
 function extractRelations(clean) {
@@ -117,28 +162,25 @@ function extractRelations(clean) {
      * It is the same rule the sources half already follows: a claim we cannot locate is a claim we
      * must not touch.
      */
-    if (fracs.length === 1 && pcts.length === 1) {
-      const f = fracs[0];
-      const p = pcts[0];
-      const gap = f.index < p.index
-        ? p.index - (f.index + f[0].length)
-        : f.index - (p.index + p[0].length);
-      if (gap <= GAP) {
-        out.push({
-          kind: "fraction",
-          line: s.line,
-          part: num(f[1]),
-          whole: num(f[2]),
-          stated: num(p[1]),
-          precision: precisionOf(p[1]),
-          saw: s.text.trim().slice(0, 90),
-        });
-      }
-    }
+    if (fracs.length !== 1 || pcts.length !== 1) continue;
 
-    for (const r of s.text.matchAll(RANGE)) {
-      out.push({ kind: "range", line: s.line, from: num(r[1]), to: num(r[2]), saw: s.text.trim().slice(0, 90) });
-    }
+    const f = fracs[0];
+    const p = pcts[0];
+    const [first, second] = f.index < p.index ? [f, p] : [p, f];
+    if (second.index - (first.index + first[0].length) > GAP) continue;
+
+    /* The span from the start of the first figure to the end of the second, so a boundary inside
+       either figure counts as well as one between them. */
+    if (BLOCK_BOUNDARY.test(s.text.slice(first.index, second.index + second[0].length))) continue;
+
+    out.push({
+      line: s.line,
+      part: num(f[1]),
+      whole: num(f[2]),
+      stated: num(p[1]),
+      precision: precisionOf(p[1]),
+      saw: s.text.trim().slice(0, 90),
+    });
   }
   return out;
 }
@@ -204,12 +246,6 @@ export function checkFraction({ part, whole, stated, precision }) {
     tier: "loud",
     detail: `${part} of ${whole} is ${computed.toFixed(Math.max(precision, 2))} percent, not ${stated}`,
   };
-}
-
-export function checkRange({ from, to }) {
-  return from > to
-    ? { state: "inconsistent", tier: "loud", detail: `the range runs from ${from} down to ${to}` }
-    : consistent();
 }
 
 /*
@@ -293,13 +329,11 @@ export function hidden(text, markup = "md") {
 
   const count = (clean) => extractRelations(clean).length + extractStatistics(clean).length;
 
-  const code = withoutCode(text, markup);
-  const afterMarks = blankMarked(code);
-  const afterQuotes = blankQuoted(afterMarks);
+  const { code, marks, quotes } = stages(text, markup);
 
   return {
-    marked: count(code) - count(afterMarks),
-    quoted: count(afterMarks) - count(afterQuotes),
+    marked: count(code) - count(marks),
+    quoted: count(marks) - count(quotes),
     wholeFile: false,
   };
 }
@@ -327,7 +361,28 @@ const agrees = (computed, s) => {
 };
 
 export function checkStat(s, alpha = 0.05) {
-  const computed = compute(s);
+  /*
+   * A statistic that cannot exist gets said out loud, and never gets a number.
+   *
+   * A correlation of 1 makes the conversion to t divide by zero and anything above 1 makes it root
+   * a negative, so a typo'd correlation printed "recomputes as NaN" out of the one file in this
+   * project whose entire purpose is never to print a confident wrong number. The literature this
+   * points at is full of typo'd correlations. Quiet rather than loud because this is not a
+   * disagreement with the author's arithmetic, it is a figure there is no arithmetic to do on, and
+   * a check that fails a build over a value it could not even attempt is a check people switch off.
+   */
+  const correlationTooLarge = s.test === "r" && Math.abs(s.value) >= 1;
+  const computed = correlationTooLarge ? NaN : compute(s);
+  if (!Number.isFinite(computed)) {
+    return {
+      state: "inconsistent",
+      tier: "quiet",
+      detail: correlationTooLarge
+        ? `r = ${s.value} is not a correlation, since a correlation cannot reach 1, so no p follows from it`
+        : `${s.test} = ${s.value} yields no p at all, so the statistic as written is impossible`,
+    };
+  }
+
   if (agrees(computed, s)) return consistent();
 
   /* One assumption, from a closed list. An open-ended search for a reading that rescues the number
