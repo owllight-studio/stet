@@ -91,11 +91,16 @@ to judge honestly.
 
 | Agent | Called by | Why not do it here |
 |---|---|---|
+| `stet-voice-builder` | `voice`, when there is nothing to go on | Most people cannot name the voice they want, and asking them to describe it returns adjectives |
 | `stet-voice-researcher` | `voice`, with a persona | Six presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
 | `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
 | `stet-fact-checker` | `verify`, `audit` | Adversarial by design. A checker that also wrote the claim finds it convincing |
 | `stet-critic` | `critique` | Fresh eyes on a finished piece, outside the attention gravity of having written it |
+
+**The builder is the one that runs when the other four have nothing to work with.** A persona needs
+naming, samples need existing, a corpus needs writing. Somebody starting from nothing has none of
+those, and that is the normal condition rather than an edge case.
 
 **Two of them are separations of concern rather than of size.** The researcher must resist writing
 from memory; the sample reader must resist generalising from too little. The fact checker and the

@@ -29,6 +29,19 @@ four feed one derivation, and the output is always the same file.
 Ask which they have. Do not assume the project is the only source just because it is the one you can
 read without asking.
 
+**And accept that the answer is often none of them.** Somebody who knows their writing sounds wrong
+and cannot say what they want instead has no preset in mind, no persona, no samples they trust and
+no corpus worth deriving from. That is the normal condition, not an edge case.
+
+Send `stet-voice-builder` at it. It reads the project, asks what would be embarrassing to publish,
+which is the question that gets a specific answer where "how should it sound" gets an adjective, and
+returns three to five candidate readings far enough apart to be a real choice, with the dials that
+separate them. Then the sheet does the rest.
+
+**Do not hand somebody a questionnaire.** Friendly or authoritative, formal or conversational: they
+will answer, because people answer questionnaires, and you will come away with a confident
+description of a voice nobody wants.
+
 ### On presets
 
 Offer the library rather than describing it. Show the list, grouped, and let them pick. A preset is
