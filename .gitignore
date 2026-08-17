@@ -5,8 +5,13 @@ node_modules/
 .env.*
 !.env.example
 
-# Per-project working state: the proof sheet spec and the choice it wrote back.
-.stet/
+# Per-project working state: the sheet specs and the choices they wrote back.
+.stet/*
+!.stet/sources.json
+!.stet/standing.json
+
+# Scratch directory for the development process itself, not part of the shipped project.
+.superpowers/
 
 # npm pack output.
 *.tgz

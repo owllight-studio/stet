@@ -51,9 +51,10 @@ node site/build-voices.mjs       rebuilds site/voices.html from the voice files
 npm pack                 the tarball. Test from the pack, not from the working tree.
 ```
 
-There is no test framework and no linter. `npm test` is the suite: `node --check`, then `doctor`
-(drift between config, content and plugin), then `tells` (the constructions that read as
-machine-written). To run one check alone, run its script directly:
+There is no linter, and the only test framework is Node's own runner. `npm test` is the suite:
+`node --check`, then `node --test test/*.test.mjs`, then `doctor` (drift between config, content
+and plugin), then `tells` (the constructions that read as machine-written). To run one check alone,
+run its script directly:
 `node plugin/skills/stet/scripts/<name>.mjs`. Every script runs standalone and takes file arguments,
 so `node plugin/skills/stet/scripts/style.mjs check README.md` is how you narrow a run.
 
