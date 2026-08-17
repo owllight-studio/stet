@@ -964,8 +964,11 @@ for (const file of files) {
   } catch {
     continue;
   }
+  /* HTML has to be blanked as HTML. Treating a page as Markdown leaves its script blocks and its
+     attribute values sitting in the text as though somebody had written them as prose. */
+  const markup = /\.x?html?$/i.test(file) ? "html" : "md";
   const alpha = alphaIn(text);
-  for (const r of relations(text)) {
+  for (const r of relations(text, markup)) {
     checked++;
     const v = r.kind === "fraction" ? checkFraction(r) : checkRange(r);
     if (v.state !== "consistent") found.push({ file, ...r, ...v });
