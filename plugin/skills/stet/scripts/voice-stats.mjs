@@ -12,11 +12,13 @@
 import { readFileSync } from "node:fs";
 import { join, extname } from "node:path";
 import { findContent } from "./lib/find.mjs";
+/* One definition of each word list, shared with measure(). This file carried its own copy of the
+   hedge list until the two were found to be the same list under a name that described neither. */
+import { SOFTENERS, HEDGES, MODALS, INTENSIFIERS } from "./lib/prose.mjs";
 
 const root = process.cwd();
 const { files } = findContent(root);
 
-const HEDGES = /\b(perhaps|maybe|somewhat|fairly|quite|rather|arguably|generally|typically|usually|often|might|could be|tends to|relatively|essentially|basically|actually|really|very|just)\b/gi;
 const AI_TICS = /\b(delve|dive in|leverage|utilize|robust|seamless|unlock|elevate|game.chang|cutting.edge|it'?s important to note|in today'?s|landscape|realm|tapestry|testament)\b/gi;
 
 /** Strip the parts of a file that are not prose, so code and frontmatter do not skew the numbers. */
@@ -42,7 +44,10 @@ let listItems = 0;
 let questions = 0;
 let exclamations = 0;
 let secondPerson = 0;
+let softeners = 0;
 let hedges = 0;
+let modals = 0;
+let intensifiers = 0;
 let tics = 0;
 let passive = 0;
 let read = 0;
@@ -71,7 +76,10 @@ for (const file of files) {
       if (s.includes("?")) questions++;
       if (s.includes("!")) exclamations++;
       if (/\b(you|your|yours)\b/i.test(s)) secondPerson++;
+      softeners += (s.match(SOFTENERS) ?? []).length;
       hedges += (s.match(HEDGES) ?? []).length;
+      modals += (s.match(MODALS) ?? []).length;
+      intensifiers += (s.match(INTENSIFIERS) ?? []).length;
       tics += (s.match(AI_TICS) ?? []).length;
       if (/\b(is|are|was|were|be|been|being)\s+\w+(ed|en)\b/i.test(s)) passive++;
     }
@@ -106,7 +114,10 @@ console.log(`  second person   ${pct(secondPerson)} of sentences say "you"`);
 console.log(`  questions       ${pct(questions)}`);
 console.log(`  exclamations    ${pct(exclamations)}${exclamations === 0 ? "  (never)" : ""}`);
 console.log(`  passive-ish     ${pct(passive)}`);
-console.log(`  hedges          ${(hedges / sentences.length).toFixed(2)} per sentence`);
+console.log(`  softeners       ${(softeners / sentences.length).toFixed(2)} per sentence`);
+console.log(`  hedges          ${(hedges / sentences.length).toFixed(2)} per sentence, doubt about what is true`);
+console.log(`  modals          ${(modals / sentences.length).toFixed(2)} per sentence, may can must should`);
+console.log(`  intensifiers    ${(intensifiers / sentences.length).toFixed(2)} per sentence, the opposite of a hedge`);
 console.log(`  common AI tics  ${tics} total${tics === 0 ? "  (none)" : "  <- worth looking at"}`);
 console.log();
 

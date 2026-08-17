@@ -135,8 +135,14 @@ from memory, and the gaps become the next round of work.
 ### 2. Measure what can be measured
 
 Run `node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/voice-stats.mjs` for the mechanical half:
-sentence length distribution, paragraph length, question rate, second-person rate, hedge words,
-passive constructions, list-to-prose ratio, heading density.
+sentence length distribution, paragraph length, question rate, second-person rate, passive
+constructions, list-to-prose ratio, heading density, and four separate word rates: softeners,
+hedges, modals and intensifiers.
+
+**Those four used to be one list called hedges, and it counted intensifiers as hedges.** Measuring
+Darwin's field notebooks found that 52 percent of their hedges were the word "very". Read them
+apart: doubt is the hedge rate, and a register qualified by grammar rather than by adverb, which is
+most technical writing, shows up in the modal rate and nowhere else.
 
 Numbers here beat impressions. "Median sentence 14 words, and the longest 5% carry the arguments"
 is a usable instruction. "Concise" is not.

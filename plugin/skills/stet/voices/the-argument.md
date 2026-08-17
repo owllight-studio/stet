@@ -9,7 +9,7 @@ measured:
   sentenceSdOverMean: 0.7
   sentenceMax: 90
   shortSentences: 0.28
-  hedgesPerSentence: 0.15
+  softenersPerSentence: 0.15
 sources: Orwell, Didion, Baldwin, Paul Graham, McPhee, Pullum, Zadie Smith, Hitchens
 stet:
   state: draft

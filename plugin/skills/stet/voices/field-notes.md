@@ -16,6 +16,7 @@ measured:
   numeralsPer10kWords: 418
   secondPerson: 0.0
   hedgesPerSentence: 0.07
+  softenersPerSentence: 0.15
 sources: Darwin's 15 Beagle field notebooks, Darwin Online; Darwin, Beagle Diary F1925; Darwin, Voyage of the Beagle; Lewis and Clark journals; Scott, Last Expedition vol I; Thoreau, Journal I
 stet:
   state: draft
@@ -88,8 +89,10 @@ per sentence against 0.126.
 **Yes:** "Corals branches are yet on Bald Head: Where is it?" (Rio notebook, undated)
 **No:** "It seems possible that the coral may perhaps have originated elsewhere."
 
-Beware the project's own hedge list here. It scores these notebooks at 0.15 per sentence, and 52
-percent of those hits are the single word "very", which is an intensifier rather than a hedge.
+Measuring this register is part of what split this project's word lists in four. The old single
+list scored these notebooks at 0.15 per sentence and 52 percent of those hits were the word "very",
+which is an intensifier and the opposite of a hedge. That figure is now `softenersPerSentence`, and
+`hedgesPerSentence` counts doubt alone.
 
 ### Numbers, at eight to eleven times the write-up's rate
 

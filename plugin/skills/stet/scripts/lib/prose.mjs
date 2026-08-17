@@ -42,7 +42,40 @@ export function prose(text, markup) {
     .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1");
 }
 
-const HEDGES = /\b(perhaps|maybe|somewhat|fairly|quite|rather|arguably|generally|typically|usually|often|might|could be|tends to|relatively|essentially|basically|actually|really|very|just)\b/gi;
+/*
+ * Four lists, because the first one was doing four jobs and getting one of them backwards.
+ *
+ * The original single list was called HEDGES and contained "very" and "really", which are
+ * intensifiers and the opposite of a hedge. Measuring Darwin's field notebooks found that 52 percent
+ * of their "hedges" were the word "very", and an 1898 auction catalogue scored as heavily hedged on
+ * 130 instances of "very" per 10,000 words. Both readings were nonsense, and both were used to set a
+ * target in a voice preset.
+ *
+ * It also contained no modals, which is the qualification system of technical writing: documentation
+ * runs 130 modals per 10,000 words, one every 77 words, so the most systematically qualified prose
+ * in the library was scoring as the least.
+ *
+ * The lists deliberately overlap. "might" is both a modal and a hedge and is counted in both, because
+ * these are four lenses rather than a partition.
+ */
+
+/**
+ * The original list, unchanged, under the name of what it actually counts.
+ *
+ * Kept exactly as it was so that every figure ever measured with it stays true. Renaming it was the
+ * honest fix: the count was never wrong, only its name, and the name is what made people reason
+ * from it incorrectly.
+ */
+export const SOFTENERS = /\b(perhaps|maybe|somewhat|fairly|quite|rather|arguably|generally|typically|usually|often|might|could be|tends to|relatively|essentially|basically|actually|really|very|just)\b/gi;
+
+/** Doubt about whether the thing is true. */
+export const HEDGES = /\b(perhaps|maybe|possibly|probably|arguably|presumably|apparently|seemingly|likely|might|may be|could be|seems?|seemed|appears?|appeared|suggests?|tends? to|roughly|approximately)\b/gi;
+
+/** Qualification by grammar rather than by adverb, and the thing documentation actually uses. */
+export const MODALS = /\b(may|might|can|cannot|can't|could|must|should|shall|will|would)\b/gi;
+
+/** The opposite of a hedge, counted separately so it can never again be mistaken for one. */
+export const INTENSIFIERS = /\b(very|really|extremely|incredibly|hugely|massively|utterly|totally|absolutely|highly)\b/gi;
 
 export function measure(raw, markup) {
   const text = prose(raw, markup);
@@ -80,7 +113,10 @@ export function measure(raw, markup) {
     secondPerson: Number(share(sentences.filter((s) => /\b(you|your|yours)\b/i.test(s)).length).toFixed(2)),
     questions: Number(share(sentences.filter((s) => s.endsWith("?")).length).toFixed(2)),
     exclamations: count(/!(?!=)/g),
+    softenersPerSentence: Number((count(SOFTENERS) / sentences.length).toFixed(2)),
     hedgesPerSentence: Number((count(HEDGES) / sentences.length).toFixed(2)),
+    modalsPerSentence: Number((count(MODALS) / sentences.length).toFixed(2)),
+    intensifiersPerSentence: Number((count(INTENSIFIERS) / sentences.length).toFixed(2)),
   };
 }
 
@@ -98,6 +134,9 @@ const LABELS = [
   [/second person/i, "secondPerson"],
   [/questions/i, "questions"],
   [/exclamation/i, "exclamations"],
+  [/soften|filler/i, "softenersPerSentence"],
+  [/modal/i, "modalsPerSentence"],
+  [/intensif|booster/i, "intensifiersPerSentence"],
   [/hedge/i, "hedgesPerSentence"],
 ];
 
@@ -147,6 +186,7 @@ export function targets(root) {
 const RATIOS = new Set([
   "sentenceSdOverMean", "shortSentences", "longSentences",
   "secondPerson", "questions", "hedgesPerSentence",
+  "softenersPerSentence", "modalsPerSentence", "intensifiersPerSentence",
 ]);
 
 /**

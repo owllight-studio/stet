@@ -7,7 +7,7 @@ measured:
   sentenceMedian: 9
   sentenceP95: 20
   secondPerson: 0.05
-  hedgesPerSentence: 0.0
+  softenersPerSentence: 0.0
 sources: Valve (Team Fortress 2, Counter-Strike 2), Blizzard (World of Warcraft, Overwatch), Supergiant (Hades), Slack, Apple, 37signals
 stet:
   state: draft
