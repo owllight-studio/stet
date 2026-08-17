@@ -42,6 +42,10 @@ records where the figure came from, so nothing noticed, and the page states it w
 
 ## Setup
 
+**Run `context` first, every session.** One call, and it answers what is enforced, what you may
+edit, what it sounds like and what to do next. Without it you discover all four by being refused.
+
+
 1. Run `node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/context.mjs` once per session, from the
    project root. It loads `stet.config.json`, `CONTENT.md`, `VOICE.md` and `IA.md` if they exist,
    reports what is missing, and tells you which command to run first. Follow its directives and do
@@ -74,6 +78,9 @@ records where the figure came from, so nothing noticed, and the page states it w
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
 | `refresh` | Maintain | Change the figure, leave the sentence | [reference/refresh.md](reference/refresh.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |
+| `context` | Operate | What an agent needs to know before touching a word | [reference/context.md](reference/context.md) |
+| `admin` | Operate | When the hook is in your way: unlock, relock, and the record of why | [reference/admin.md](reference/admin.md) |
+| `pin` | Operate | Make one command its own slash command | [reference/pin.md](reference/pin.md) |
 
 Commands without a reference file yet are not built. Say so rather than improvising one.
 

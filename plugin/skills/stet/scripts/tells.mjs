@@ -24,7 +24,19 @@ const TELLS = [
   { id: "not-x-but-y", re: /\b(?:is|are|was|were|it'?s)\s+not\s+[^.,;:]{3,40},?\s+it'?s\s+/gi, say: '"not X, it is Y". Just say Y.' },
   { id: "not-x-but-y", re: /(?:^|(?<=[.!?]\s))Not\s+(?:a|an|the)\s+[^.,;:]{3,45},\s+(?:a|an|the)\s/g, say: '"Not a X, a Y". Just say Y.' },
   { id: "delve", re: /\b(delve|dive in|deep dive|unpack this|let'?s explore)\b/gi, say: "the exploration preamble. Start with the answer." },
-  { id: "corporate", re: /\b(leverage|utilize|robust|seamless|streamline|elevate|unlock|empower|holistic|synergy)\b/gi, say: "corporate filler. Use the plain word." },
+  /*
+   * Corporate filler, split into two rules because three of these words are also ordinary English.
+   *
+   * "Unlock your potential" is filler. Unlocking a file is a verb doing a job. Same for elevating a
+   * register and leveraging a rope. What makes them filler is the abstract object after them, so
+   * that is what the second rule looks for rather than the word alone.
+   */
+  { id: "corporate", re: /\b(utilize|robust|seamless|streamline|empower|holistic|synergy)\b/gi, say: "corporate filler. Use the plain word." },
+  {
+    id: "corporate-abstract",
+    re: /\b(unlock|leverage|elevate|drive|harness)\s+(?:your\s+|our\s+|their\s+|the\s+|new\s+)?(potential|value|growth|insight|insights|innovation|impact|synergy|efficiencies|outcomes|possibilities|opportunit\w+|excellence|success)\b/gi,
+    say: "corporate filler: an abstract noun doing no work.",
+  },
   { id: "landscape", re: /\b(landscape|realm|tapestry|testament to|in today'?s world|ever.evolving)\b/gi, say: "essay filler." },
   { id: "important-to-note", re: /\b(it'?s|it is) (important|worth) (to note|noting|mentioning)\b/gi, say: "if it were not worth noting you would not write it." },
   { id: "hedge-stack", re: /\b(quite|rather|somewhat|fairly|relatively)\s+\w+\s+(and|but)\s+(quite|rather|somewhat|fairly|relatively)\b/gi, say: "stacked hedges." },

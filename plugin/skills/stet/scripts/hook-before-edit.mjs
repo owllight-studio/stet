@@ -80,6 +80,24 @@ if (!matchesAny(file, globs)) allow();
 // 3. New content is a draft.
 if (!existsSync(abs)) allow();
 
+/*
+ * A deliberate release, recorded elsewhere.
+ *
+ * The escape hatch has to be honoured here or it is not an escape hatch, and it is checked before
+ * state rather than after, because an unlock is somebody overriding the state on purpose. Nothing
+ * about ownership changes: the record says what the file was, and relocking puts it back.
+ */
+const adminPath = join(root, ".stet", "admin.json");
+if (existsSync(adminPath)) {
+  try {
+    const admin = JSON.parse(readFileSync(adminPath, "utf8"));
+    if (admin?.hook?.off) allow();
+    if (admin?.unlocked?.[file]) allow();
+  } catch {
+    // A corrupt admin file must not open the gate. Fall through and enforce.
+  }
+}
+
 const { read, mayEdit, ownedSpans } = await import("./lib/meta.mjs");
 const meta = read(root, file);
 
