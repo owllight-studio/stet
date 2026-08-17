@@ -322,7 +322,7 @@ Arithmetic a document does on itself, in any kind of writing.
 - Consumes: nothing from Task 1.
 - Produces:
   - `sentences(text) -> {text, line}[]`
-  - `relations(text) -> Relation[]` where a `Relation` is `{kind: "fraction" | "range", line, ...}`
+  - `relations(text, markup) -> Relation[]` where a `Relation` is `{kind: "fraction" | "range", line, ...}`
   - `checkFraction(rel) -> Verdict`
   - `checkRange(rel) -> Verdict`
   - `precisionOf(s) -> number`, the decimal places in a written figure
@@ -344,6 +344,31 @@ test("a fraction and a percentage in the same sentence become one relation", () 
   assert.equal(r.whole, 241091);
   assert.equal(r.stated, 76.35);
   assert.equal(r.line, 1);
+});
+
+test("a figure inside a fenced code block is not prose and is not checked", () => {
+  const fence = "`".repeat(3);
+  const text = `${fence}\nWe read 1 of 2 at 99 percent.\n${fence}\n`;
+  assert.deepEqual(relations(text), []);
+});
+
+test("a sentence carrying two percentages is ambiguous, so nothing is paired", () => {
+  /* This is the failure that produced the rule. Pairing the first fraction with the first
+     percentage reported that 8,273 of 16,695 was 12.9 percent, having taken the two figures from
+     different clauses of one sentence. Ambiguity is not a finding. */
+  const text = "It was 49.6 percent, 8,273 of 16,695, and 12.9 percent carried a gross one.";
+  assert.deepEqual(relations(text), []);
+});
+
+test("a percentage far from the fraction in a long sentence is not paired with it", () => {
+  const text = "Rot ran above 70 percent across the journals sampled, and separately we read 184,065 of 241,091 references.";
+  assert.deepEqual(relations(text), []);
+});
+
+test("a decrease written from one figure to another is not a range", () => {
+  /* reference/tighten.md says a tighten took the variance from 0.61 to 0.34. That is a decrease
+     described in ordinary English, and an earlier draft of this reported it as a broken range. */
+  assert.deepEqual(relations("It took the variance from 0.61 to 0.34."), []);
 });
 
 test("a fraction with no percentage beside it is not a relation", () => {
@@ -432,6 +457,8 @@ Create `plugin/skills/stet/scripts/lib/sums.mjs`:
  * Nothing here reads a file. Text in, verdicts out, so every rule below can be exercised directly.
  */
 
+import { withoutCode } from "./citations.mjs";
+
 const num = (s) => Number(String(s).replace(/,/g, ""));
 
 /** The decimal places the author actually wrote. Comparing to more than this invents findings. */
@@ -465,28 +492,65 @@ export function sentences(text) {
   return out;
 }
 
-const FRACTION = /(\d[\d,]*(?:\.\d+)?)\s+(?:of|out of)\s+(\d[\d,]*(?:\.\d+)?)/;
-const PERCENT = /(\d[\d,]*(?:\.\d+)?)\s*(?:%|percent|per cent)/;
-const RANGE = /(?:between|from)\s+(\d[\d,]*(?:\.\d+)?)\s+(?:and|to)\s+(\d[\d,]*(?:\.\d+)?)/;
+const FRACTION = /(\d[\d,]*(?:\.\d+)?)\s+(?:of|out of)\s+(\d[\d,]*(?:\.\d+)?)/g;
+const PERCENT = /(\d[\d,]*(?:\.\d+)?)\s*(?:%|percent|per cent)/g;
 
-export function relations(text) {
+/*
+ * Only `between X and Y`, never `from X to Y`.
+ *
+ * The second was in the first draft of this and it is wrong. "Took the variance from 0.61 to 0.34"
+ * is ordinary English for a decrease, not a malformed range, and this repository says exactly that
+ * in reference/tighten.md. A rule that fires on correct prose is worse than no rule.
+ */
+const RANGE = /between\s+(\d[\d,]*(?:\.\d+)?)\s+and\s+(\d[\d,]*(?:\.\d+)?)/g;
+
+/** How far apart a fraction and a percentage may sit and still be about each other. */
+const GAP = 40;
+
+export function relations(text, markup = "md") {
+  /*
+   * Code is blanked first, by the same function `standing` uses, so a figure inside a fenced block
+   * cannot be married to a figure in the prose around it. Without this the extractor reads straight
+   * through code and pairs numbers that have nothing to do with each other: on this repository it
+   * produced four findings and every one of them was wrong.
+   */
+  const clean = withoutCode(text, markup);
   const out = [];
-  for (const s of sentences(text)) {
-    const f = s.text.match(FRACTION);
-    const p = s.text.match(PERCENT);
-    if (f && p) {
-      out.push({
-        kind: "fraction",
-        line: s.line,
-        part: num(f[1]),
-        whole: num(f[2]),
-        stated: num(p[1]),
-        precision: precisionOf(p[1]),
-        saw: s.text.trim().slice(0, 90),
-      });
+  for (const s of sentences(clean)) {
+    const fracs = [...s.text.matchAll(FRACTION)];
+    const pcts = [...s.text.matchAll(PERCENT)];
+
+    /*
+     * Exactly one of each, and close together.
+     *
+     * A sentence carrying two fractions or two percentages cannot be paired safely, and pairing
+     * the first of each is how this reported that 8,273 of 16,695 was 12.9 percent, having taken
+     * the fraction from one clause and the percentage from another. Ambiguity is not a finding.
+     * It is the same rule the sources half already follows: a claim we cannot locate is a claim we
+     * must not touch.
+     */
+    if (fracs.length === 1 && pcts.length === 1) {
+      const f = fracs[0];
+      const p = pcts[0];
+      const gap = f.index < p.index
+        ? p.index - (f.index + f[0].length)
+        : f.index - (p.index + p[0].length);
+      if (gap <= GAP) {
+        out.push({
+          kind: "fraction",
+          line: s.line,
+          part: num(f[1]),
+          whole: num(f[2]),
+          stated: num(p[1]),
+          precision: precisionOf(p[1]),
+          saw: s.text.trim().slice(0, 90),
+        });
+      }
     }
-    const r = s.text.match(RANGE);
-    if (r) out.push({ kind: "range", line: s.line, from: num(r[1]), to: num(r[2]), saw: s.text.trim().slice(0, 90) });
+
+    for (const r of s.text.matchAll(RANGE)) {
+      out.push({ kind: "range", line: s.line, from: num(r[1]), to: num(r[2]), saw: s.text.trim().slice(0, 90) });
+    }
   }
   return out;
 }
