@@ -32,7 +32,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { findContent } from "./lib/find.mjs";
-import { ask } from "./lib/citations.mjs";
+import { ask, references, withoutCode, markupOf } from "./lib/citations.mjs";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -48,25 +48,33 @@ const quiet = args.includes("--quiet");
  * and much worse problem: a reference with a typo in the year is indistinguishable from a
  * fabrication until somebody reads it, and guessing wrong in either direction is worse than saying
  * nothing. If a citation has no DOI this reports it as unchecked rather than pretending.
+ *
+ * The extraction itself is `lib/citations.mjs`, which is also what `standing` uses. It used to be a
+ * second copy of the pattern run over the raw text, and the divergence the library exists to
+ * prevent duly arrived: a code block in this repository's own plan carries the invented DOIs
+ * `10.1000/notice` and `10.1000/vor` as test fixtures, and `cite` reported them as fabricated
+ * citations while `standing`, which blanks code first, correctly saw nothing there.
  */
-const DOI = /\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]*[A-Z0-9])\b/gi;
 
 /** A line that looks like a reference but carries no DOI. Reported, never guessed at. */
 const LOOKS_LIKE_REF =
   /^\s*(?:\[\d+\]|\d+\.)\s+.*\(\s*(?:19|20)\d\d\s*\)|^\s*[A-Z][a-z]+(?:,| and | et al\.).*\b(?:19|20)\d\d\b.*[.,]\s*[A-Z]/;
 
-function citations(text) {
-  const found = new Map();
-  for (const m of text.matchAll(DOI)) {
-    const doi = m[1].replace(/[.,;)\]]+$/, "").toLowerCase();
-    if (!found.has(doi)) found.set(doi, { doi, line: text.slice(0, m.index).split("\n").length });
-  }
+/** Not global, so a `.test` in a loop cannot carry `lastIndex` from one line into the next. */
+const HAS_DOI = /\b10\.\d{4,9}\/[-._;()/:A-Z0-9]*[A-Z0-9]\b/i;
+
+function citations(text, markup) {
+  const { dois } = references(text, markup);
+  /* The bare-reference sweep reads the same blanked text, for the same reason: a fixture
+     bibliography inside a fenced block is somebody's example, not their citation. */
   const bare = [];
-  text.split("\n").forEach((line, i) => {
-    if (DOI.test(line)) return;
-    if (LOOKS_LIKE_REF.test(line)) bare.push({ line: i + 1, text: line.trim().slice(0, 90) });
-  });
-  return { dois: [...found.values()], bare };
+  withoutCode(text, markup)
+    .split("\n")
+    .forEach((line, i) => {
+      if (HAS_DOI.test(line)) return;
+      if (LOOKS_LIKE_REF.test(line)) bare.push({ line: i + 1, text: line.trim().slice(0, 90) });
+    });
+  return { dois, bare };
 }
 
 /* --- run ------------------------------------------------------------------ */
@@ -75,7 +83,7 @@ const targets = files.length ? files : findContent(root).files;
 const work = [];
 for (const file of targets) {
   const text = readFileSync(join(root, file), "utf8");
-  const { dois, bare } = citations(text);
+  const { dois, bare } = citations(text, markupOf(file));
   if (dois.length || bare.length) work.push({ file, dois, bare });
 }
 
