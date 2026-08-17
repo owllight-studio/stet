@@ -46,7 +46,12 @@ export function withoutCode(text, markup) {
          which is why backticked URLs are blanked below. A DOI carries no such second reading: it is
          already nothing but an identifier, and this repository's own design doc backtick-styles its
          DOIs as plain typography, `10.1371/journal.pone.0167475`, over real citations that would
-         otherwise vanish from the one document explaining why they must not. */
+         otherwise vanish from the one document explaining why they must not.
+
+         Drawn narrow on purpose: this only asks whether the span starts with a DOI's shape, not
+         whether the whole span is one. A backtick span that opens with something DOI-shaped and
+         then runs on into prose, or into another identifier that happens to start the same way,
+         is read as a citation regardless of what follows. */
       return line.replace(/`([^`]*)`/g, (m, inner) => (/^10\.\d{4,9}\//.test(inner) ? m : " ".repeat(m.length)));
     })
     .join("\n");
@@ -87,13 +92,17 @@ export function references(text, markup) {
   }
 
   /* Paragraphs, so an anchor attaches to the link it is arguing alongside rather than to every link
-     in the file. Offsets are kept so the line number stays true. */
+     in the file. Offsets are read off the separators themselves rather than assumed to be two
+     characters wide: `\s` inside the separator also matches a stray space or tab left on a blank
+     line, which plenty of editors and corpora do leave, and a guessed width is short from that
+     paragraph onwards for every line number after it. */
   const paragraphs = [];
   let at = 0;
-  for (const block of clean.split(/\n\s*\n/)) {
-    paragraphs.push({ text: block, at });
-    at += block.length + 2;
+  for (const m of clean.matchAll(/\n\s*\n/g)) {
+    paragraphs.push({ text: clean.slice(at, m.index), at });
+    at = m.index + m[0].length;
   }
+  paragraphs.push({ text: clean.slice(at), at });
 
   const urls = new Map();
   for (const para of paragraphs) {

@@ -90,3 +90,9 @@ test("a quoted HTML attribute value is not an anchor", () => {
   const { urls } = references(text, "html");
   assert.deepEqual(urls[0].anchors, []);
 });
+
+test("a blank line carrying a stray space does not throw off the line number after it", () => {
+  const text = "Para one text end.\n \nhttps://example.com/b starts here.\n";
+  const { urls } = references(text, "md");
+  assert.equal(urls[0].line, 3);
+});
