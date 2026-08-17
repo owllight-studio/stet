@@ -177,42 +177,52 @@ export function checkRange({ from, to }) {
 }
 
 /*
- * The reported statistic, with its degrees of freedom and its p.
+ * A p belongs to the statistic it follows, and nothing else.
  *
- * A statistic with no p beside it is not checkable, because there is nothing to disagree with, and
- * a p with no statistic is somebody quoting a result rather than reporting one. Both are skipped
- * rather than guessed at.
+ * The first draft searched the sentence for one statistic and one p separately and paired whatever
+ * it found. On a results sentence reporting two tests, which is the normal case in a paper, that
+ * did two wrong things at once: it dropped the second statistic silently, and it could marry a p
+ * from one clause to a statistic from another, reporting a pairing that appears nowhere in the
+ * text. Both were reproduced against real sentence shapes before this was rewritten.
+ *
+ * So each statistic is matched, and then the text immediately after it must begin with its own p,
+ * with nothing but separators in between. A statistic with no p after it is not checkable and is
+ * skipped, which is the same rule the general family follows: what cannot be located is not
+ * touched.
  */
-const P_PART = /,?\s*p\s*(=|<|>)\s*(\d*\.\d+|\d+)/;
+const FOLLOWING_P = /^[\s,;:)\]]*p\s*(=|<|>)\s*(\d*\.\d+|\d+)/i;
+
 const TESTS = [
-  { test: "t", re: /\bt\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "F", re: /\bF\s*\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "r", re: /\br\s*\(\s*(\d+)\s*\)\s*=\s*(-?\d*\.?\d+)/ },
-  { test: "chi", re: /(?:chi2|chi-squared|χ²|χ\s*2)\s*\(\s*(\d+)\s*(?:,[^)]*)?\)\s*=\s*(-?\d*\.?\d+)/i },
-  { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/ },
+  { test: "t", re: /\bt\s*\(\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "F", re: /\bF\s*\(\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "r", re: /\br\s*\(\s*(\d+)\s*\)\s*=\s*(-?\d*\.?\d+)/g },
+  { test: "chi", re: /(?:chi2|chi-squared|χ²|χ\s*2)\s*\(\s*(\d+)\s*(?:,[^)]*)?\)\s*=\s*(-?\d*\.?\d+)/gi },
+  { test: "z", re: /\bz\s*=\s*(-?\d*\.?\d+)/g },
 ];
 
 export function statistics(text) {
   const out = [];
   for (const s of sentences(text)) {
-    const p = s.text.match(P_PART);
-    if (!p) continue;
     for (const { test, re } of TESTS) {
-      const m = s.text.match(re);
-      if (!m) continue;
-      const g = m.slice(1).map(Number);
-      out.push({
-        test,
-        df1: test === "z" ? null : g[0],
-        df2: test === "F" ? g[1] : null,
-        value: test === "F" ? g[2] : test === "z" ? g[0] : g[1],
-        comparator: p[1],
-        reported: Number(p[2]),
-        precision: precisionOf(p[2]),
-        line: s.line,
-        saw: s.text.trim().slice(0, 90),
-      });
-      break;
+      /* A global regex carries lastIndex between uses, and reusing one across sentences starts the
+         next search partway in and quietly misses real matches. */
+      re.lastIndex = 0;
+      for (const m of s.text.matchAll(re)) {
+        const p = s.text.slice(m.index + m[0].length).match(FOLLOWING_P);
+        if (!p) continue;
+        const g = m.slice(1).map(Number);
+        out.push({
+          test,
+          df1: test === "z" ? null : g[0],
+          df2: test === "F" ? g[1] : null,
+          value: test === "F" ? g[2] : test === "z" ? g[0] : g[1],
+          comparator: p[1],
+          reported: Number(p[2]),
+          precision: precisionOf(p[2]),
+          line: s.line,
+          saw: s.text.trim().slice(0, 90),
+        });
+      }
     }
   }
   return out;

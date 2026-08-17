@@ -133,6 +133,32 @@ test("a correlation and a z are extracted", () => {
   assert.equal(statistics("z = 1.96, p = .05")[0].test, "z");
 });
 
+test("two tests reported in one sentence are both checked, each against its own p", () => {
+  /* The normal shape of a results sentence in a paper. The first draft returned one statistic here
+     and married it to the other clause's p, which is a pairing that appears nowhere in the text. */
+  const found = statistics("The correlation held, r(15) = .36, p = .05, and the difference held, t(28) = 5.0, p = .0001.");
+  assert.equal(found.length, 2);
+  const t28 = found.find((s) => s.test === "t");
+  assert.equal(t28.value, 5);
+  assert.equal(t28.reported, 0.0001);
+  const r15 = found.find((s) => s.test === "r");
+  assert.equal(r15.reported, 0.05);
+});
+
+test("a second statistic in the same sentence is not silently dropped", () => {
+  /* The one that matters: the second F here is the one whose p is wrong, so dropping it means
+     missing exactly the error this check exists to find. */
+  const found = statistics("An effect of condition, F(2, 44) = 5.67, p = .006, and of time, F(1, 22) = 3.98, p = .99.");
+  assert.equal(found.length, 2);
+  assert.equal(found[1].df2, 22);
+  assert.equal(found[1].reported, 0.99);
+});
+
+test("a statistic is skipped when the p in its sentence belongs to something else", () => {
+  const found = statistics("The statistic was t(28) = 2.048 in that condition, and the model as a whole gave p = .04.");
+  assert.deepEqual(found, []);
+});
+
 test("a statistic with no p reported is not a relation to check", () => {
   assert.deepEqual(statistics("The statistic was t(28) = 2.048 in that condition."), []);
 });
