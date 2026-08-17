@@ -1,0 +1,46 @@
+{
+  "name": "stet",
+  "version": "0.1.0",
+  "description": "Editorial checks that need no model: style sheet drift, stale figures, dead and retracted citations, and the constructions that read as machine-written.",
+  "keywords": [
+    "style-guide",
+    "styleguide",
+    "copyediting",
+    "proofreading",
+    "linter",
+    "prose",
+    "documentation",
+    "editorial",
+    "consistency",
+    "citations"
+  ],
+  "homepage": "https://stet.style",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/owllight-studio/stet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/owllight-studio/stet/issues"
+  },
+  "license": "MIT",
+  "author": "Owllight Studio",
+  "type": "module",
+  "bin": {
+    "stet": "bin/stet.mjs"
+  },
+  "files": [
+    "bin",
+    "plugin/skills/stet/scripts",
+    "plugin/skills/stet/reference",
+    "plugin/skills/stet/voices",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --check bin/stet.mjs && node bin/stet.mjs doctor && node bin/stet.mjs tells",
+    "check": "node bin/stet.mjs check"
+  }
+}

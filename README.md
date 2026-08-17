@@ -79,6 +79,26 @@ Hugo, a docs folder, or a pile of Markdown.
 
 Your project tells Stet where content lives and how to fetch a fact. Stet does the rest.
 
+## Two halves, and only one of them needs a model
+
+Most of what Stet does is arithmetic. Whether a figure still matches the command that produced it,
+whether the corpus spells a word two ways, whether a cited paper has been retracted, whether a file
+carrying ownership metadata is actually covered by a glob: none of that is a reading.
+
+So the checks also ship as a command with no dependencies and no model:
+
+    npm install -g stet
+    stet                     the commands
+    stet check               where the content disagrees with the style sheet
+    stet audit               the sweep, ranked by what it costs
+    stet help style          the reference document for a command
+
+That half runs in CI. It will tell you a figure is stale and it will never tell you whether the
+sentence around it still argues what you meant, because **that is a reading and a reading needs a
+reader**. `init`, `voice`, `ia`, `ingest`, `write`, `tighten` and `clarify` are readings, so they
+stay in the plugin where there is a model to do them. `stet` with no arguments prints both lists,
+including what it deliberately cannot do.
+
 ## Commands
 
 Establish a project, then work in it.

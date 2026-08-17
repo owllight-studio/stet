@@ -7,3 +7,6 @@ node_modules/
 
 # Per-project working state: the proof sheet spec and the choice it wrote back.
 .stet/
+
+# npm pack output.
+*.tgz
