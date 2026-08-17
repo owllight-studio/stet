@@ -147,7 +147,46 @@ agree with "be concise" and impossible to argue with two versions of the same se
 Ask them what is wrong with it. Expect two or three corrections and one thing they did not know they
 did.
 
-### 5. Put it on a proof sheet, and let them tune it
+### 5. Show them the file before asking them to decide anything about it
+
+```
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/voice-read.mjs
+```
+
+`proof` is a decision tool: thirty blocks with Save and Retry under each. It is the wrong first
+surface for a derived voice, because the author cannot see whether the rules contradict each other,
+cannot tell which of them rest on anything, and is being asked to ratify sentence by sentence a
+document they have not read whole.
+
+So this comes first. It renders the voice as a page, and it does two things a renderer would not.
+
+**Every rule shows where it came from.** Tag each one on the line under its heading, and each Never
+item at the start of the item:
+
+- `measured` it came out of the corpus. Cite the figure.
+- `stated` the author wrote it somewhere. Name where.
+- `inferred` you worked it out.
+
+The page tallies the three, and a rule carrying no tag is shown as carrying none, because a rule
+that does not say what it rests on is the thing this page exists to make visible. **The tally is the
+point.** It turns "review thirty blocks" into "check the three I guessed at", which is a job somebody
+will actually do.
+
+**Notes are per section, and the file is written again with them.** Nobody reads a derived voice and
+thinks "the third sentence of the fourth rule". They think "the feeling section is not it" or "there
+is nothing in here about tables". So the note goes on the section, it saves as its own act rather
+than living in the browser, and the whole file is rewritten with every note applied.
+
+The rewrite is bounded by one rule that does not bend: **the measured figures came from the corpus
+and the model may not invent one.** It is handed the real statistics and told they are the only
+numbers that exist. If a note asks for a rule the measurements cannot support, it writes the rule and
+tags it `inferred` rather than dressing a guess as a count, and it may not promote an existing
+`inferred` rule to `measured` to make it look better founded. The front matter is put back rather
+than regenerated, so a rewrite can never move the file's state or its ownership.
+
+Iterate until it says what they mean. Nothing on that page changes who owns anything.
+
+### 6. Put it on a proof sheet, and let them tune it
 
 **Required for any persona.** A one-line persona has several honest readings, and the author knows
 which one they meant the moment they see it and not one second before. Asking them to describe it
@@ -250,3 +289,6 @@ corrected at least one thing, and the measured section has numbers in it.
 
 For a persona, add two: the rules came out of counted texts rather than an impression, and the
 author picked from a sheet rather than approving a description.
+
+And for any derived voice: every rule says what it rests on, and the author read it as a document
+before anybody asked them to approve a line of it.
