@@ -110,9 +110,31 @@ const GAP = 80;
 const blank = (m) => " ".repeat(m.length);
 
 /* Colon-suffixed marker, that line only. Bare marker, tested separately below, the whole file. */
-const blankMarked = (text) => text
+const MARKED_LINE = /<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/;
+
+/**
+ * Which lines the raw text itself marks, read off text nothing has touched yet.
+ *
+ * Reading the raw text, rather than something `withoutCode` has already been over, is what makes an
+ * HTML marker visible at all: `withoutCode` blanks every comment, this one included, so a marker
+ * looked for downstream of it would never be found. A fence's backticks or a `<script>` tag are
+ * read here too, on the same unmodified text, which is what keeps this line-finding step from ever
+ * being able to blank one away.
+ */
+const markedLines = (text) => {
+  const marked = new Set();
+  text.split("\n").forEach((line, i) => {
+    if (MARKED_LINE.test(line)) marked.add(i);
+  });
+  return marked;
+};
+
+/* Blanks whole lines by index, on whatever text it is given. Applied to `withoutCode`'s own output
+   below, never fed back into it, so a line this blanks can never be a delimiter `withoutCode` still
+   needed to see. */
+const blankLines = (text, marked) => text
   .split("\n")
-  .map((line) => (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line) ? "" : line))
+  .map((line, i) => (marked.has(i) ? "" : line))
   .join("\n");
 
 const blankQuoted = (text) => text.replace(/"[^"\n]{0,200}"/g, blank).replace(/“[^”\n]{0,200}”/g, blank);
@@ -125,14 +147,20 @@ const blankQuoted = (text) => text.replace(/"[^"\n]{0,200}"/g, blank).replace(/�
  * change to `readable` becomes a silently wrong disclosure, which is a worse failure than either
  * copy having a bug, because the disclosure exists to be trusted without being checked.
  *
- * Marking runs on the raw text, before code. In HTML a marker is a comment and `withoutCode` blanks
- * every comment, so blanking code first meant `blankMarked` never saw a marker at all: the finding
- * went out anyway and the disclosure reported nothing hidden, which is the worst of both. This
- * repository declares `site/index.html` as content, so that path was live.
+ * Which lines are marked is decided on the raw text, before `withoutCode` runs, which is what makes
+ * a marker written as an HTML comment visible at all: `withoutCode` blanks every comment, this one
+ * included, so deciding it from `withoutCode`'s own output would find nothing to mark. But the
+ * blanking itself runs the other way round, against `withoutCode`'s output rather than the raw text,
+ * so a marker sharing a line with a fence's backticks or a `<script>` tag blanks only what
+ * `withoutCode` had already reduced that line to, and can never delete the delimiter itself. A
+ * marker used to run its blanking on the raw text and feed the result back into `withoutCode`, so a
+ * marked fence line lost its backticks before `withoutCode` ever saw them, the fence never closed,
+ * and the block inside it read as prose: found by the marks stage where the code stage correctly
+ * found nothing, which is a difference `hidden` cannot even state without going negative.
  */
 const stages = (text, markup) => {
   const code = withoutCode(text, markup);
-  const marks = withoutCode(blankMarked(text), markup);
+  const marks = blankLines(code, markedLines(text));
   return { code, marks, quotes: blankQuoted(marks) };
 };
 

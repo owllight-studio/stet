@@ -58,6 +58,29 @@ test("hidden counts arithmetic quoting or marking concealed, not text removed", 
   assert.deepEqual(hidden(whole), { quoted: 0, marked: 0, wholeFile: true });
 });
 
+test("a marker on a fence line does not un-fence the block it sits on", () => {
+  /* blankMarked used to run on the raw text before withoutCode and delete the whole line the marker
+     sat on, backticks included, so the fence never toggled and the block inside it read as prose at
+     the marks stage while the code stage still recognised it correctly. That let the marks stage
+     find a relation the code stage did not, so marked went negative, an arithmetic impossibility. */
+  const fence = '```js <!-- stet-allow: illustration -->\nA wrong percentage looks like "8,273 of 16,695, or 12.9 percent" here.\n```\n';
+  assert.deepEqual(hidden(fence), { quoted: 0, marked: 0, wholeFile: false });
+});
+
+test("a marker on a script line's opening tag does not un-fence the block it sits on", () => {
+  const script = '<script> <!-- stet-allow: illustration -->\nA wrong percentage looks like "8,273 of 16,695, or 12.9 percent" here.\n</script>\n';
+  assert.deepEqual(hidden(script, "html"), { quoted: 0, marked: 0, wholeFile: false });
+});
+
+test("a marker on a fence line does not leak the block's arithmetic as a live finding", () => {
+  /* The disclosure count going negative was the visible symptom, but the real fault sits one layer
+     down: with the fence un-fenced, an unquoted relation inside the block was read as prose and
+     handed to readable() and relations() exactly as this project's own claims are, which is a false
+     finding waiting to happen rather than a miscount in a total. */
+  const fence = "```js <!-- stet-allow: illustration -->\nAn early version read 8,273 of 16,695 as 12.9 percent.\n```\n";
+  assert.deepEqual(relations(fence), []);
+});
+
 test("a quotation with no arithmetic in it hides nothing, and is not counted", () => {
   const text = 'Somebody once called this feature "the cheapest check in the set" in a meeting.';
   assert.deepEqual(hidden(text), { quoted: 0, marked: 0, wholeFile: false });
