@@ -92,9 +92,14 @@ one-tailed"** is a true statement, useful to the author, and not an accusation. 
 as `null` in the authority register and could-not-ask in `standing`: the tool says what it knows and
 marks the edge of it.
 
-Only one assumption is offered per finding, and only from a closed list: one-tailed, a stated
-alternative alpha, or a different rounding precision. An open-ended search for an assumption that
-would rescue a number is a machine talking itself out of a finding.
+Only one assumption is offered per finding, and only from a closed list: the test was one-tailed,
+the figure was truncated rather than rounded, or the figure was rounded half to even. An open-ended
+search for an assumption that would rescue a number is a machine talking itself out of a finding.
+
+That list was wrong when this design was first written. It said "a stated alternative alpha, or a
+different rounding precision", and neither is an assumption the tool makes: an alpha is read from
+the text rather than assumed, and assuming a precision the author did not write is forbidden two
+sections below. The reference document inherited the error from here before a reviewer caught it.
 
 ## Two tiers
 
