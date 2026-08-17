@@ -24,7 +24,7 @@
  * The retraction check is the one nobody runs and the cheapest of the three. Retraction data has
  * been free and keyless since Crossref acquired the Retraction Watch database in 2023, and across
  * 13,252 post-retraction citation contexts only 5.4 percent acknowledged the retraction
- * (Hsiao and Schneider, Quantitative Science Studies, 2022).
+ * (Hsiao and Schneider, Quantitative Science Studies 2(4), 2021).
  *
  * Run: node cite.mjs [file ...]
  */
@@ -32,14 +32,12 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { findContent } from "./lib/find.mjs";
+import { ask, references, withoutCode, markupOf } from "./lib/citations.mjs";
 
 const root = process.cwd();
 const args = process.argv.slice(2);
 const files = args.filter((a) => !a.startsWith("--"));
 const quiet = args.includes("--quiet");
-
-const MAILTO = process.env.STET_CROSSREF_MAILTO ?? "";
-const UA = `stet/0.1 (https://github.com/owllight-studio/stet${MAILTO ? `; mailto:${MAILTO}` : ""})`;
 
 /* --- finding citations ---------------------------------------------------- */
 
@@ -50,62 +48,33 @@ const UA = `stet/0.1 (https://github.com/owllight-studio/stet${MAILTO ? `; mailt
  * and much worse problem: a reference with a typo in the year is indistinguishable from a
  * fabrication until somebody reads it, and guessing wrong in either direction is worse than saying
  * nothing. If a citation has no DOI this reports it as unchecked rather than pretending.
+ *
+ * The extraction itself is `lib/citations.mjs`, which is also what `standing` uses. It used to be a
+ * second copy of the pattern run over the raw text, and the divergence the library exists to
+ * prevent duly arrived: a code block in this repository's own plan carries the invented DOIs
+ * `10.1000/notice` and `10.1000/vor` as test fixtures, and `cite` reported them as fabricated
+ * citations while `standing`, which blanks code first, correctly saw nothing there.
  */
-const DOI = /\b(10\.\d{4,9}\/[-._;()/:A-Z0-9]*[A-Z0-9])\b/gi;
 
 /** A line that looks like a reference but carries no DOI. Reported, never guessed at. */
 const LOOKS_LIKE_REF =
   /^\s*(?:\[\d+\]|\d+\.)\s+.*\(\s*(?:19|20)\d\d\s*\)|^\s*[A-Z][a-z]+(?:,| and | et al\.).*\b(?:19|20)\d\d\b.*[.,]\s*[A-Z]/;
 
-function citations(text) {
-  const found = new Map();
-  for (const m of text.matchAll(DOI)) {
-    const doi = m[1].replace(/[.,;)\]]+$/, "").toLowerCase();
-    if (!found.has(doi)) found.set(doi, { doi, line: text.slice(0, m.index).split("\n").length });
-  }
+/** Not global, so a `.test` in a loop cannot carry `lastIndex` from one line into the next. */
+const HAS_DOI = /\b10\.\d{4,9}\/[-._;()/:A-Z0-9]*[A-Z0-9]\b/i;
+
+function citations(text, markup) {
+  const { dois } = references(text, markup);
+  /* The bare-reference sweep reads the same blanked text, for the same reason: a fixture
+     bibliography inside a fenced block is somebody's example, not their citation. */
   const bare = [];
-  text.split("\n").forEach((line, i) => {
-    if (DOI.test(line)) return;
-    if (LOOKS_LIKE_REF.test(line)) bare.push({ line: i + 1, text: line.trim().slice(0, 90) });
-  });
-  return { dois: [...found.values()], bare };
-}
-
-/* --- asking, once per citation -------------------------------------------- */
-
-async function ask(doi) {
-  const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}${MAILTO ? `?mailto=${MAILTO}` : ""}`;
-  try {
-    const res = await fetch(url, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(20000) });
-    if (res.status === 404) return { doi, state: "not found" };
-    if (!res.ok) return { doi, state: "unreachable", detail: `Crossref returned ${res.status}` };
-    const { message } = await res.json();
-
-    /* Retraction Watch has been inline in Crossref since 2023, so this costs nothing extra. */
-    const updates = message["update-to"] ?? [];
-    const updatedBy = message["updated-by"] ?? [];
-    const retraction = updatedBy.find((u) => /retract/i.test(u.type ?? ""));
-    const concern = updatedBy.find((u) => /concern|withdraw/i.test(u.type ?? ""));
-
-    /* A preprint with a version of record. ICMJE requires citing the published one. */
-    const published = (message.relation?.["is-preprint-of"] ?? [])[0];
-
-    return {
-      doi,
-      state: retraction ? "retracted" : concern ? "flagged" : published ? "superseded" : "current",
-      // Crossref titles carry markup and hard-wrapped whitespace from the publisher's own record.
-      title: ((message.title ?? [])[0] ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim(),
-      year: message.issued?.["date-parts"]?.[0]?.[0],
-      container: (message["container-title"] ?? [])[0],
-      type: message.type,
-      retraction: retraction?.DOI,
-      concern: concern?.type,
-      published: published?.id,
-      updates: updates.length,
-    };
-  } catch (err) {
-    return { doi, state: "unreachable", detail: String(err.message ?? err).slice(0, 80) };
-  }
+  withoutCode(text, markup)
+    .split("\n")
+    .forEach((line, i) => {
+      if (HAS_DOI.test(line)) return;
+      if (LOOKS_LIKE_REF.test(line)) bare.push({ line: i + 1, text: line.trim().slice(0, 90) });
+    });
+  return { dois, bare };
 }
 
 /* --- run ------------------------------------------------------------------ */
@@ -114,7 +83,7 @@ const targets = files.length ? files : findContent(root).files;
 const work = [];
 for (const file of targets) {
   const text = readFileSync(join(root, file), "utf8");
-  const { dois, bare } = citations(text);
+  const { dois, bare } = citations(text, markupOf(file));
   if (dois.length || bare.length) work.push({ file, dois, bare });
 }
 
@@ -129,7 +98,8 @@ if (!work.length) {
 
 const total = work.reduce((n, w) => n + w.dois.length, 0);
 console.log(`Checking ${total} ${total === 1 ? "DOI" : "DOIs"} across ${work.length} ${work.length === 1 ? "file" : "files"}.`);
-if (!MAILTO) console.log("Set STET_CROSSREF_MAILTO to use Crossref's polite pool and get better service.\n");
+if (!process.env.STET_CROSSREF_MAILTO)
+  console.log("Set STET_CROSSREF_MAILTO to use Crossref's polite pool and get better service.\n");
 else console.log("");
 
 const results = [];

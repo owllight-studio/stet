@@ -54,6 +54,7 @@ const COMMANDS = {
   audit: { group: "Check", script: "audit.mjs", blurb: "the sweep, ranked by what it costs" },
   verify: { group: "Check", script: "verify.mjs", blurb: "every figure against the command that produced it" },
   cite: { group: "Check", script: "cite.mjs", blurb: "does the source exist, is it retracted, is it the right version" },
+  standing: { group: "Check", script: "standing.mjs", blurb: "what every cited source was last time, and what moved" },
   tells: { group: "Check", script: "tells.mjs", blurb: "the constructions that read as machine-written" },
   measure: { group: "Check", script: "measure.mjs", blurb: "does this match the voice it claims to be in" },
   critique: { group: "Check", script: "critique.mjs", blurb: "a scored review where every score is computed" },

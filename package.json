@@ -40,7 +40,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --check bin/stet.mjs && node bin/stet.mjs doctor && node bin/stet.mjs tells",
+    "test": "for f in bin/*.mjs scripts/*.mjs site/*.mjs plugin/skills/stet/scripts/*.mjs plugin/skills/stet/scripts/lib/*.mjs; do node --check \"$f\" || exit 1; done && node --test test/*.test.mjs && node bin/stet.mjs doctor && node bin/stet.mjs tells",
     "check": "node bin/stet.mjs check"
   }
 }

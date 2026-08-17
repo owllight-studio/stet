@@ -52,6 +52,12 @@ somebody reads it, and guessing wrong in either direction is worse than saying n
 
 So a reference with no DOI is reported as unchecked rather than judged.
 
+A DOI inside a fenced or indented code block is a fixture rather than a citation, and is skipped.
+`cite` and `standing` read the same extractor for that decision, because two of them would drift and
+the first symptom would be a DOI one command sees and the other does not. That is not a hypothetical:
+they did drift, and `cite` reported this repository's own invented test fixtures as fabricated
+citations.
+
 ## What it cannot do
 
 Whether the source supports the sentence citing it. That is `stet-citation-checker`, and it is the

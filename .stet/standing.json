@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "refs": {
+    "doi:10.1162/qss_a_00155": {
+      "state": "current",
+      "title": "Continued use of retracted papers: Temporal trends in citations and (lack of) awareness of retractions shown in citation contexts in biomedicine",
+      "anchors": [],
+      "file": "docs/source-integrity.md",
+      "line": 55,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "since": "2026-08-17"
+    },
+    "doi:10.1371/journal.pone.0167475": {
+      "state": "current",
+      "title": "Scholarly Context Adrift: Three out of Four URI References Lead to Changed Content",
+      "anchors": [],
+      "file": "plugin/skills/stet/reference/standing.md",
+      "line": 38,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio/stet": {
+      "state": "live",
+      "title": "GitHub - owllight-studio/stet: Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words, helps with IA, and so much more. · GitHub",
+      "digest": "c3fefcacbc4bd001",
+      "host": "github.com",
+      "anchors": [],
+      "file": "site/index.html",
+      "line": 24,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio": {
+      "state": "live",
+      "title": "owllight studio · GitHub",
+      "digest": "0ed8224a3030cacd",
+      "host": "github.com",
+      "anchors": [],
+      "file": "site/index.html",
+      "line": 244,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "since": "2026-08-17"
+    }
+  }
+}
