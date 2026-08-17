@@ -108,11 +108,11 @@ Establish a project, then work in it.
     voice     derive the house voice from what you have already written
     ia        what exists, how it relates, where the next page goes
 
-    write · outline · expand          compose
-    claim · release · policy          authorship
-    audit · critique · verify · standing   evaluate
-    tighten · clarify · restructure   refine
-    refresh · doctor                  maintain
+    write · outline · expand                      compose
+    claim · release · policy                      authorship
+    audit · critique · verify · standing · sums   evaluate
+    tighten · clarify · restructure               refine
+    refresh · doctor                              maintain
 
 The order for a project that already has content is `ingest`, `init`, `voice`, `ia`. Read it before
 you describe it, and derive the voice rather than asking for it: nobody can describe their own

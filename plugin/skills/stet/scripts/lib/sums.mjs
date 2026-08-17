@@ -204,8 +204,11 @@ export function statistics(text) {
   const out = [];
   for (const s of sentences(text)) {
     for (const { test, re } of TESTS) {
-      /* A global regex carries lastIndex between uses, and reusing one across sentences starts the
-         next search partway in and quietly misses real matches. */
+      /* matchAll clones the regex it is given and never touches the caller's lastIndex, so this
+         reset changes nothing here. It stays as a guard against these regexes later being driven
+         through exec or test in a loop instead, which does carry lastIndex between calls: that
+         exact bug shipped in style.mjs, where a /g/ regex reused across .test() calls on
+         successive lines quietly skipped matches until it was given a fresh regex per line. */
       re.lastIndex = 0;
       for (const m of s.text.matchAll(re)) {
         const p = s.text.slice(m.index + m[0].length).match(FOLLOWING_P);
