@@ -118,8 +118,7 @@ the work, and an agent that hands its prose to another agent has lost the thread
 **Voices are registers, not moods.** Each file in `plugin/skills/stet/voices/` carries measured
 targets in frontmatter, the sources they were counted off, rules with a yes and a no for each, a
 never list and a section on how imitating the register fails. A preset with no `sources` line was
-written from instinct and the library says so. Four are currently in that state: the-manual,
-field-notes, the-catalogue and the-pitch.
+written from instinct and the library says so. All 17 now carry one.
 
 **A style sheet is not a voice.** `VOICE.md` says how it should sound; `STYLE.md` records what was
 decided when a word could have gone either way. `style.mjs decide` refuses to overwrite a decision

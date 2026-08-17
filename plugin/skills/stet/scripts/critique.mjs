@@ -84,7 +84,7 @@ if (got) {
   const v = got.sentenceSdOverMean;
   score("variance", v >= 0.5 ? "ok" : v >= 0.35 ? "warn" : "fail",
     `sd over mean ${v}`,
-    v < 0.5 ? "every measured register runs 0.5 to 0.8. Below 0.35 reads as machine-written" : null);
+    v < 0.5 ? "most measured registers run 0.5 to 0.8, though field notes reach 1.14 and catalogue entries 1.19. Below 0.35 reads as machine-written" : null);
 }
 
 /* --- density -------------------------------------------------------------- */

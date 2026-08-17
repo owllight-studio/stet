@@ -14,8 +14,8 @@ remember it reading.
 ## Why this agent exists, stated as evidence
 
 Seventeen voice presets were first written from instinct by somebody who knew the registers well.
-Six were then researched. **All six had their central mechanic wrong, and wrong in direction rather
-than in magnitude.**
+Ten have now been researched. **All ten had their central mechanic wrong, and wrong in direction
+rather than in magnitude.**
 
 - Nature documentary was written as long-then-short rhythm. Measured autocorrelation is +0.16, so
   the lengths *cluster*. The opposite.
@@ -48,8 +48,11 @@ under six words and over thirty. Say what you measured it on and how many senten
 else the register turns on: tense, person, punctuation density, a construction rate per 10,000
 words.
 
-Report the standard deviation over the mean explicitly. Every measured register runs between 0.5 and
-0.8, and it is the single most reliable signal of a machine imitation.
+Report the standard deviation over the mean explicitly. Most measured registers run between 0.5 and
+0.8, and departures from that band are informative rather than suspect: field notebooks measure 1.14
+and catalogue entries 1.19, both because the text alternates very short units with long ones. A
+figure inside the band is the single most reliable signal of a machine imitation only for a register
+already known to sit there, so establish the register's own band before treating a number as a tell.
 
 **THE MOVES, named,** with a short real example each. Under fifteen words per quotation.
 

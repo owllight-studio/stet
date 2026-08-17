@@ -69,7 +69,8 @@ Every preset needs at least one rule that costs something. A register that only 
 a mood.
 
 **A preset with no `sources` line was written from instinct**, which means its figures are estimates.
-That is a real state and the library says so rather than hiding it. Four are currently in it.
+That is a real state and the library says so rather than hiding it. None are currently in it, and the
+last four were rebuilt on 17 August 2026.
 
 ## Feeling is the target. The rules are how it lands.
 
@@ -106,7 +107,7 @@ which is precisely why it is worth planning.
 
 ## Two rules the research imposed on this library
 
-**Count, do not characterise.** Six presets were rebuilt after being measured, and every one of them
+**Count, do not characterise.** Ten presets were rebuilt after being measured, and every one of them
 had its central mechanic wrong. Nature Documentary was written as long-then-short rhythm; the
 autocorrelation is +0.16, so the lengths cluster. Noir was written around the simile, which is the
 register's rarest move at one per 545 words in Chandler. The Teacher was written short, and the

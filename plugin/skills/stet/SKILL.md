@@ -110,7 +110,7 @@ to judge honestly.
 | Agent | Called by | Why not do it here |
 |---|---|---|
 | `stet-voice-builder` | `voice`, when there is nothing to go on | Most people cannot name the voice they want, and asking them to describe it returns adjectives |
-| `stet-voice-researcher` | `voice`, with a persona | Six presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
+| `stet-voice-researcher` | `voice`, with a persona | Ten presets written from instinct all had their central mechanic backwards. An impression of a voice is reliably an inversion of it |
 | `stet-sample-reader` | `voice`, with samples | Reading somebody's whole back catalogue does not belong in the conversation that then writes their voice file |
 | `stet-corpus-reader` | `ingest`, `ia` | Forty thousand words of somebody else's site, read once, reported in a page |
 | `stet-style-sheet` | `style` | The error hides in the string a reader skips. A machine comparing repeated strings does not skip it |
