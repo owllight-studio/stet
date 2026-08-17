@@ -381,6 +381,14 @@ test("a percentage out by one in the last place is quiet, not loud", () => {
   assert.equal(v.tier, "quiet");
 });
 
+test("a figure on an exact rounding boundary is quiet, and names the convention", () => {
+  /* 1 of 8 is 12.5 percent exactly. Half away from zero gives 13 and half to even gives 12, and
+     neither is wrong, so a document written under the second convention must not be accused. */
+  const v = checkFraction({ part: 1, whole: 8, stated: 12, precision: 0 });
+  assert.equal(v.tier, "quiet");
+  assert.match(v.assumption, /half to even/);
+});
+
 test("a range with its endpoints the wrong way round is loud", () => {
   const v = checkRange({ from: 90, to: 10 });
   assert.equal(v.state, "inconsistent");
@@ -491,18 +499,40 @@ export function checkFraction({ part, whole, stated, precision }) {
   if (!whole) return { state: "only-if", tier: "quiet", detail: "the total is zero, so no percentage follows from it", assumption: "the total was meant to be something else" };
 
   const computed = (part / whole) * 100;
-  const rounded = Number(computed.toFixed(precision));
-  if (rounded === stated) return consistent();
+  if (Number(computed.toFixed(precision)) === stated) return consistent();
 
-  /* One unit in the last place the author wrote. Truncating rather than rounding, or rounding half
-     away from zero rather than half to even, lands here, and both are conventions rather than
-     errors. Calling them loud is how a checker gets switched off after one run. */
-  const ulp = 10 ** -precision;
-  if (Math.abs(computed - stated) <= ulp) {
+  /*
+   * The other renderings a careful person might legitimately have written.
+   *
+   * Not a tolerance band. A band of one unit in the last place sounds reasonable and is far too
+   * wide: at zero decimal places it is a whole percentage point, so it would accept 77 as a
+   * rendering of 76.3467, which is not a convention but an error. So the alternatives are named
+   * exactly rather than approximated: truncating instead of rounding, and rounding half to even
+   * instead of half away from zero. Both are real conventions, neither is wrong, and a checker
+   * that calls them errors is one somebody switches off after a single run.
+   */
+  const f = 10 ** precision;
+  const truncated = Math.trunc(computed * f) / f;
+  const scaled = computed * f;
+  const floor = Math.floor(scaled);
+  const onBoundary = Math.abs(scaled - floor - 0.5) < 1e-9;
+  const halfEven = onBoundary ? (floor % 2 === 0 ? floor : floor + 1) / f : null;
+
+  /* The boundary case is checked first because it is the more specific explanation. On an exact
+     half, truncating and rounding half to even give the same answer, and the second says more. */
+  if (halfEven !== null && stated === halfEven) {
     return {
       state: "only-if",
       tier: "quiet",
-      detail: `${stated} against ${computed.toFixed(Math.max(precision, 2))}, which is one place out`,
+      detail: `${stated} against ${computed.toFixed(Math.max(precision, 2))}, which falls exactly on a rounding boundary`,
+      assumption: "the figure was rounded half to even",
+    };
+  }
+  if (stated === truncated) {
+    return {
+      state: "only-if",
+      tier: "quiet",
+      detail: `${stated} against ${computed.toFixed(Math.max(precision, 2))}`,
       assumption: "the figure was truncated rather than rounded",
     };
   }
