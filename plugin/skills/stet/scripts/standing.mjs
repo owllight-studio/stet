@@ -119,9 +119,18 @@ if (unknown.length) {
   console.log("");
 }
 
+/* A first sighting is not unchanged, moved, drifted or unchecked, and a summary that counts none
+   of those four buckets for it is a summary that goes quiet on exactly what it examined. That
+   breaks "report what you did not do": silence there reads as nothing new, which on a real
+   bibliography is false for most of a freshly added page. Every reference found has to land in one
+   of these five, on a first run and on every run after it. */
+const newlyRecorded = results.filter((r) => r.verdict === "first sight").length;
+const unchanged = results.filter((r) => r.verdict === "unchanged").length;
+
 console.log(
   [
-    `${results.filter((r) => r.verdict === "unchanged").length} unchanged`,
+    `${newlyRecorded} newly recorded`,
+    `${unchanged} unchanged`,
     `${loud.length} moved`,
     `${quiet.length} drifted`,
     `${unknown.length} unchecked`,
