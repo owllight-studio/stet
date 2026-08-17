@@ -28,6 +28,7 @@ import { findContent } from "./lib/find.mjs";
 import { read, write } from "./lib/meta.mjs";
 import { split, replace } from "./lib/blocks.mjs";
 import { changed } from "./lib/spans.mjs";
+import { withTokens } from "./lib/sheet.mjs";
 
 const root = process.cwd();
 const here = dirname(fileURLToPath(import.meta.url));
@@ -62,7 +63,7 @@ if (!drafts.length) {
   process.exit(0);
 }
 
-const page = readFileSync(join(here, "proof-page.html"), "utf8");
+const page = withTokens(readFileSync(join(here, "proof-page.html"), "utf8"));
 const decisions = new Map();
 let done = false;
 let publishing = false;

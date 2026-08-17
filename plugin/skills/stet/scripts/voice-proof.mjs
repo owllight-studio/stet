@@ -26,6 +26,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { findContent, words, config } from "./lib/find.mjs";
+import { withTokens } from "./lib/sheet.mjs";
 
 const root = process.cwd();
 const here = dirname(fileURLToPath(import.meta.url));
@@ -50,7 +51,7 @@ if (!sample.text) {
   process.exit(1);
 }
 
-const page = readFileSync(join(here, "voice-proof-page.html"), "utf8");
+const page = withTokens(readFileSync(join(here, "voice-proof-page.html"), "utf8"));
 
 /**
  * Where the chosen voice may be applied.

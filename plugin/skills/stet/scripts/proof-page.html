@@ -7,18 +7,8 @@
 <style>
 /* The same world as the site: paper, the copy editor's non-photo blue, red for deletion. A proof
    sheet should look like a proof sheet, and the marks should mean what they mean on paper. */
-:root {
-  --paper: #fbfbf9; --edge: #f1f1ec; --ink: #16161a; --soft: #55555f; --faint: #8b8b95;
-  --rule: #e2e2db; --pencil: #2c6d9e; --wash: #eaf2f8; --strike: #c0392b; --mine: #1e7a52;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #14141a; --edge: #1b1b22; --ink: #eeeef0; --soft: #a9a9b4; --faint: #74747f;
-    --rule: #2b2b34; --pencil: #7db8e0; --wash: #1b2733; --strike: #e07a6e; --mine: #5fbf90;
-  }
-}
+/* The palette comes from lib/sheet.mjs and is injected when this page is served.
+   Do not add one here: a second copy of a palette is a bug that has not happened yet. */
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--paper); color: var(--ink);

@@ -31,6 +31,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { config } from "./lib/find.mjs";
+import { TOKENS } from "./lib/sheet.mjs";
 
 const root = process.cwd();
 const voicePath = join(root, config(root)?.voice ?? "VOICE.md");
@@ -196,16 +197,7 @@ const inline = (md) =>
 const tag = (kind) =>
   kind ? `<span class="k k-${kind}">${kind}</span>` : `<span class="k k-none">no source</span>`;
 
-const CSS = `
-:root {
-  --paper:#fbfbf9; --edge:#f1f1ec; --ink:#16161a; --soft:#55555f; --faint:#8b8b95;
-  --rule:#e2e2db; --pencil:#2c6d9e; --wash:#eaf2f8; --strike:#c0392b; --mine:#1e7a52;
-  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme:dark){:root{
-  --paper:#14141a;--edge:#1b1b22;--ink:#eeeef0;--soft:#a9a9b4;--faint:#74747f;
-  --rule:#2b2b34;--pencil:#7db8e0;--wash:#1b2733;--strike:#e07a6e;--mine:#5fbf90;}}
+const CSS = TOKENS + `
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65}
 .wrap{max-width:52rem;margin:0 auto;padding:0 1.5rem 9rem}

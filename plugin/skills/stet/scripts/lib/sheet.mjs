@@ -43,7 +43,7 @@ import { join, dirname } from "node:path";
  * Defined once. A sheet that wants its own look is a sheet that will not read as part of the same
  * product.
  */
-export const CSS = `
+export const TOKENS = `
 :root {
   --paper:#fbfbf9; --edge:#f1f1ec; --ink:#16161a; --soft:#55555f; --faint:#8b8b95;
   --rule:#e2e2db; --pencil:#2c6d9e; --wash:#eaf2f8; --strike:#c0392b; --mine:#1e7a52;
@@ -53,6 +53,10 @@ export const CSS = `
 @media (prefers-color-scheme:dark){:root{
   --paper:#14141a;--edge:#1b1b22;--ink:#eeeef0;--soft:#a9a9b4;--faint:#74747f;
   --rule:#2b2b34;--pencil:#7db8e0;--wash:#1b2733;--strike:#e07a6e;--mine:#5fbf90;}}
+`;
+
+/** Everything a sheet built on this library gets for free. */
+export const COMPONENTS = `
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65}
 .wrap{max-width:54rem;margin:0 auto;padding:0 1.5rem 9rem}
@@ -116,6 +120,22 @@ label{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transfo
 .finished{text-align:center;padding:5rem 1.5rem}
 .finished p{color:var(--soft);max-width:34rem;margin:0 auto 1rem}
 `;
+
+export const CSS = TOKENS + COMPONENTS;
+
+/**
+ * Put the shared palette into a page that carries its own component CSS.
+ *
+ * The three sheets written before this library each held their own copy of the colour tokens, and
+ * one of the three had already drifted. Duplicated CSS has cost this project a real bug before,
+ * where an older copy later in a file won the cascade and every edit looked applied and did
+ * nothing, so a second copy of a palette is a bug that has not happened yet.
+ */
+export const withTokens = (html) => {
+  const existing = /:root\s*\{[^}]*--paper[^}]*\}\s*(@media\s*\(prefers-color-scheme:\s*dark\)\s*\{[\s\S]*?\}\s*\})?/;
+  if (existing.test(html)) return html.replace(existing, TOKENS.trim());
+  return html.replace("<style>", `<style>${TOKENS}`);
+};
 
 export const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
