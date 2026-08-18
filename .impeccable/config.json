@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "site/stet.css"
+        ],
+        "createdAt": "2026-08-18T13:12:37.053Z",
+        "reason": "The 6px route rule is this site's documented transit-signage device: DESIGN.md line 146 defines it as marking something held or quoted, and lines 131 and 136 name .doc/.held and .note-block by selector. Colour only ever means a command group here, and a route is always also named and lettered (DESIGN.md line 84)."
+      }
+    ]
+  }
+}

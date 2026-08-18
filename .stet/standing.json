@@ -24,7 +24,7 @@
     "url:https://github.com/owllight-studio/stet": {
       "state": "live",
       "title": "GitHub - owllight-studio/stet: Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words, helps with IA, and so much more. · GitHub",
-      "digest": "b33d0228ad007ba0",
+      "digest": "8911166e45cd4f84",
       "host": "github.com",
       "anchors": [],
       "file": "site/checks.html",
@@ -61,8 +61,11 @@
       "line": 9,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-18",
-      "state": "dead",
-      "since": "2026-08-17"
+      "state": "live",
+      "since": "2026-08-18",
+      "title": "Checks · Stet",
+      "digest": "fba2ae2f3925da73",
+      "host": "stet.style"
     },
     "url:https://github.com/owllight-studio/stet/blob/main/README.md": {
       "anchors": [],
@@ -72,7 +75,7 @@
       "lastChecked": "2026-08-18",
       "state": "live",
       "title": "stet/README.md at main · owllight-studio/stet · GitHub",
-      "digest": "c74b7f8121fd8951",
+      "digest": "16bca3d1d2f22b83",
       "host": "github.com",
       "since": "2026-08-17"
     },
@@ -95,8 +98,8 @@
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-18",
       "state": "live",
-      "title": "Stet, words that know whose they are",
-      "digest": "f569c566e537e8b9",
+      "title": "Stet · nobody wrote this",
+      "digest": "0b4fa795e20c8477",
       "host": "stet.style",
       "since": "2026-08-17"
     },
@@ -106,8 +109,11 @@
       "line": 9,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-18",
-      "state": "dead",
-      "since": "2026-08-17"
+      "state": "live",
+      "since": "2026-08-18",
+      "title": "The map · Stet",
+      "digest": "45aa222e35ac40e9",
+      "host": "stet.style"
     },
     "url:https://stet.style/ownership.html": {
       "anchors": [],
@@ -115,8 +121,11 @@
       "line": 9,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-18",
-      "state": "dead",
-      "since": "2026-08-17"
+      "state": "live",
+      "since": "2026-08-18",
+      "title": "Ownership · Stet",
+      "digest": "6a8e9c0a5b4abd49",
+      "host": "stet.style"
     },
     "url:https://harvardlawreview.org/forum/vol-127/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations/": {
       "anchors": [],

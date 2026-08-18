@@ -14,8 +14,11 @@ node_modules/
 .superpowers/
 
 # Design tool state: mock renders, hook cache, review notes. Local working material, and 31MB of
-# PNGs that a public repo would carry forever.
-.impeccable/
+# PNGs that a public repo would carry forever. The config is the exception: it carries the design
+# detector's ignore list, which is a decision with a stated reason and belongs with the code it
+# exempts. config.local.json is the per-developer override and stays out.
+.impeccable/*
+!.impeccable/config.json
 
 # npm pack output.
 *.tgz
