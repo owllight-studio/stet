@@ -75,9 +75,9 @@ them true.* Change the figure, leave the sentence.
 
 ### Why a hook and not a rule
 
-Put the rule in a prompt and it lasts about eleven turns. This project exists because its author
-watched an agent break its own written rules inside a single session, while telling him it was
-following them.
+Put the rule in a prompt and it holds until it does not, and nothing tells you which turn that
+was. This project exists because its author watched an agent break its own written rules inside a
+single session, while telling him it was following them.
 
 So a `PreToolUse` hook reads the record before the edit lands and answers before the file moves. It
 does not advise. It refuses:

@@ -27,6 +27,15 @@ export function prose(text, markup) {
     t = t
       .replace(/<(script|style|pre|code|textarea)[\s\S]*?<\/\1>/gi, " ")
       .replace(/<!--[\s\S]*?-->/g, " ")
+      // A table is a table in both formats. The Markdown branch below already drops `|...|` rows,
+      // and leaving them in here made the two halves of one function disagree about the same page,
+      // which is the exact bug this file was extracted to prevent.
+      .replace(/<table[\s\S]*?<\/table>/gi, " ")
+      // A block element ends a sentence. Every tag used to become a space, so ten table cells with
+      // no full stop between them concatenated into one 122-word "sentence" and `measure` reported
+      // a voice violation nobody had written. Worse, the run-ons masked the real distribution: the
+      // same page measured 0.23 short sentences against a floor of 0.30 and was actually at 0.11.
+      .replace(/<\/(p|li|h[1-6]|dt|dd|div|section|article|blockquote|figcaption|td|th|tr|caption)\s*>/gi, ".\n\n")
       .replace(/<[^>]+>/g, " ")
       .replace(/&nbsp;|&#160;/gi, " ")
       .replace(/&[a-z]+;|&#\d+;/gi, "");

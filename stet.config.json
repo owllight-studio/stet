@@ -30,6 +30,16 @@
     "library.presets": {
       "run": "node scripts/count-presets.mjs",
       "as": "number"
+    },
+    "corpus.words": {
+      "run": "node scripts/count-words.mjs",
+      "as": "number",
+      "note": "The word count in the context panel on map.html. It moves on every commit, so it is the one figure on this site guaranteed to rot if a person owns it."
+    },
+    "suite.tests": {
+      "run": "node scripts/count-tests.mjs",
+      "as": "number",
+      "note": "The test count in the counters block on index.html. Counted rather than run, because a source that costs a full suite run is a source nobody will check."
     }
   }
 }

@@ -12,8 +12,10 @@ A library of 17 registers, not moods.
 The job these serve is one sentence: **writing that does not read as written by a machine.** That is
 not a taste preference. Readers told a headline was AI-generated rated it less accurate and were
 less willing to share it, whether or not it was true and whether or not a machine wrote it (Altay
-and Gilardi, *PNAS Nexus*, 2024, preregistered, n=4,976). The penalty attaches to how prose reads,
-so prose that merely sounds generated pays it with no label attached and no way to appeal.
+and Gilardi, *PNAS Nexus*, 2024, preregistered, n=4,976). That study manipulated the label rather
+than the prose. The penalty therefore attaches to perceived authorship, and writing that merely
+reads as generated plausibly pays it with no label attached and no way to appeal: an inference from
+the finding, not the finding itself.
 
 Each file here is a way of writing with its own rules, its own examples and its own refusals. None
 of them is "professional" or "friendly": those are adjectives, and an adjective cannot be followed

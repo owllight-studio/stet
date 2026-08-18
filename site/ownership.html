@@ -163,9 +163,9 @@
       <h2>It refuses. It does not advise.</h2>
       <div class="pair">
         <div>
-          <p>Put the rule in a prompt and it lasts about eleven turns. This project exists because
-            its author watched an agent break its own written rules inside a single session, while
-            telling him it was following them.</p>
+          <p>Put the rule in a prompt and it holds until it does not, and nothing tells you which
+            turn that was. This project exists because its author watched an agent break its own
+            written rules inside a single session, while telling him it was following them.</p>
           <p>So the rule is a <code>PreToolUse</code> hook instead. It reads the record before the
             edit lands and answers before the file moves. It does not advise.</p>
           <p>A file nobody has claimed gets a no. That is the safe answer and the honest one. The
@@ -207,8 +207,10 @@
           <p><code>admin unlock</code> opens one file, and it will not do it without a reason.
             <code>admin relock</code> shuts it again. While a file is open, <code>admin status</code>
             says which one, since when, and why.</p>
-          <p>There is no global off switch worth the name. Turning this off means giving up on
-            knowing who wrote what, so the smallest thing you can open is one file.</p>
+          <p>There is a global off switch. <code>admin off</code> will not fire without a reason,
+            and once it has, <code>admin status</code> opens with THE HOOK IS OFF and the reason you
+            gave, every time you run it, until you turn it back on. Opening one file is almost
+            always what you actually wanted.</p>
           <p>“Improve this page” is not permission to rewrite a locked line inside it. The agent
             improves what it may, then tells you what it left alone. If every line on the page is
             yours, it says so and stops.</p>

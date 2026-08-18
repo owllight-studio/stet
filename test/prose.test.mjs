@@ -100,3 +100,30 @@ test("no config and no map both fall back to the root voice", () => {
   assert.equal(voiceFor(root, "README.md"), "VOICE.md");
   assert.equal(voiceFor(root, "stdin"), "VOICE.md");
 });
+
+/* The scripts that read `voice` straight out of the config, rather than through targets(). Making
+   `voice` accept a map broke context.mjs, which is the command every session is told to run first,
+   and no unit test could see it because the failure was a crash in a script. So this runs them. */
+
+import { execFileSync } from "node:child_process";
+import { cpSync } from "node:fs";
+
+test("a voice map does not crash the scripts that read the config directly", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-ctx-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({
+    kind: "site",
+    content: ["VOICE.md", "site/**"],
+    voice: { "site/**": "site/VOICE.md", "*": "VOICE.md" },
+  }));
+  writeFileSync(join(root, "VOICE.md"), "# Root\n\n## The one rule\n\nSay it once.\n");
+  writeFileSync(join(root, "site", "VOICE.md"), "# Site\n\n## The one rule\n\nSell it once.\n");
+  writeFileSync(join(root, "site", "page.md"), "A short page. It has two sentences.\n");
+
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "context.mjs");
+  const out = execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+
+  assert.match(out, /WHAT IT SOUNDS LIKE/);
+  assert.match(out, /site\/VOICE\.md/, "the scoped voice is reported");
+  assert.match(out, /VOICE\.md/, "the fallback voice is reported");
+});
