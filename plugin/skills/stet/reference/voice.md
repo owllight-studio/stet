@@ -45,8 +45,10 @@ description of a voice nobody wants.
 ### On presets
 
 Offer the library rather than describing it. Show the list, grouped, and let them pick. A preset is
-a starting point and never a finished voice: it goes into `VOICE.md` composed with everything else,
-and nothing reads the preset file again afterwards.
+finished work: somebody who names one and starts writing is done, and asking them for more is
+inventing a step. It is also a place to start from when they would rather adjust something measured
+than begin at nothing. Either way it goes into `VOICE.md`, composed with everything else they
+brought, and nothing reads the preset file again afterwards.
 
 ### On personas
 

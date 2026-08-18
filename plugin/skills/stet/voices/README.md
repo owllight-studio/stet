@@ -19,9 +19,11 @@ Each file here is a way of writing with its own rules, its own examples and its 
 of them is "professional" or "friendly": those are adjectives, and an adjective cannot be followed
 or violated, so it cannot be a rule.
 
-A preset is a starting point and never a finished voice. `voice` composes it with whatever else the
-author brings, and the result is written to their own `VOICE.md`, which is the only file any command
-reads. Nothing in here is loaded at write time.
+**A preset is finished work and stands on its own.** Somebody who names one and starts writing has
+a complete voice and is asked for nothing further. It is also a place to start from when an author
+would rather adjust something measured than begin at nothing: `voice` composes it with whatever else
+they bring. Either way the result is written to their own `VOICE.md`, which is the only file any
+command reads. Nothing in here is loaded at write time.
 
 ## Groups
 
