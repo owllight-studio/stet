@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { nameKind } from "../plugin/skills/stet/scripts/lib/find.mjs";
+import { nameKind, config, findContent } from "../plugin/skills/stet/scripts/lib/find.mjs";
 
 /*
  * The case this exists for.
@@ -70,4 +70,22 @@ test("a directory where a file was expected returns no record rather than throwi
   const root = mkT(j(tmp(), "stet-dir-"));
   mkD(j(root, "site"));
   assert.equal(readRecord(root, "site"), null);
+});
+
+test("a content glob written as a string reaches every consumer as a list", () => {
+  const root = mkT(j(tmp(), "stet-cfg-"));
+  wF(j(root, "stet.config.json"), JSON.stringify({ content: "*.md", prose: "*.md" }));
+  wF(j(root, "a.md"), "# a\n\nSome words here.\n");
+  const cfg = config(root);
+  assert.deepEqual(cfg.content, ["*.md"]);
+  assert.deepEqual(cfg.prose, ["*.md"]);
+  assert.deepEqual(findContent(root).files, ["a.md"]);
+});
+
+test("a content glob that is neither a string nor a list becomes no globs, and nothing throws", () => {
+  const root = mkT(j(tmp(), "stet-cfg2-"));
+  wF(j(root, "stet.config.json"), JSON.stringify({ content: 7 }));
+  wF(j(root, "a.md"), "# a\n");
+  assert.deepEqual(config(root).content, []);
+  assert.deepEqual(findContent(root).files, []);
 });
