@@ -44,7 +44,7 @@ measurements across the library, and every one of the seventeen names the work i
 
 So drift shows up as a number rather than an opinion, and `measure` reports it.
 
-Each voice file also names how a fake of it gives itself away. All 102 of those together are a list
+Each voice file also names how a fake of it gives itself away. All 104 of those together are a list
 of what generated writing does, and `tells` is the checker for the worst of them.
 
 Ten voices written from instinct early on all had their central mechanic backwards. That is why the

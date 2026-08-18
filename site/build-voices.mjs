@@ -156,6 +156,9 @@ function lead(body) {
 }
 
 const LABELS = {
+  // A bare count needs its denominator, or the card states a rate it does not mean. `thouTokens: 80`
+  // is eighty in the whole of The Lord of the Rings, which is the preset's point about the word.
+  thouTokens: "thou-forms in all of LOTR",
   sentenceMedian: "median sentence",
   sentenceMean: "mean sentence",
   sentenceMax: "longest",
@@ -172,7 +175,9 @@ const LABELS = {
   similesPerThousandWords: "similes / 1k words",
   subordinateOpeners: "subordinate openers",
   numbersPerHundredWords: "numbers / 100 words",
-  adjectivesBeforeNoun: "adjectives / noun",
+  // A ceiling from the Reuters rule, not an average. "adjectives / noun: 2" read as though the
+  // register runs two adjectives per noun, which is the opposite of what the handbook says.
+  adjectivesBeforeNoun: "adjectives before a noun, at most",
   ledeMaxWords: "lede ceiling",
   exclamations: "exclamations",
   jokeRatio: "jokes",
@@ -189,7 +194,11 @@ const RATIO = new Set([
    Split the camel case instead: the label is always readable, and a new key needs no edit here. */
 function label(key) {
   if (LABELS[key]) return LABELS[key];
-  return key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    // Split before a digit too, or `crossRefsPer10kWords` renders as "cross refs per10k words".
+    .replace(/([a-zA-Z])(\d)/g, "$1 $2")
+    .toLowerCase();
 }
 
 function figure(key, value) {
@@ -284,7 +293,10 @@ const voices = readdirSync(VOICES)
       oneRule: lead(section(text, "The one rule")),
       rules: ruleNames(rulesBody),
       never: bullets(section(text, "Never")),
-      tells: tells(pastiche).slice(0, 8),
+      /* No cap. It used to take the first eight, which dropped two of Field Notes' ten and made
+         the page say 102 where the library names 104, under a heading calling itself the
+         catalogue. A silent truncation reads as complete coverage when it is not. */
+      tells: tells(pastiche),
       detection: detection(pastiche),
     };
   })

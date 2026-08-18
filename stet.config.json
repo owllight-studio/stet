@@ -56,6 +56,11 @@
       "run": "node scripts/count-relations.mjs",
       "as": "number",
       "note": "The relation count in the sums panel on checks.html. The panel shows a real run and the figure in it went stale as the corpus grew."
+    },
+    "library.tells": {
+      "run": "node scripts/count-tells.mjs",
+      "as": "number",
+      "note": "Named failure modes across the 17 presets. Declared after the page shipped 102, which was a per-card display cap rather than what the library holds."
     }
   }
 }

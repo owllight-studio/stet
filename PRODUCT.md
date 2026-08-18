@@ -66,7 +66,7 @@ development all had their central mechanic backwards, which is the evidence for 
 half is not decoration.
 
 **The tells are named, catalogued and checked.** Each voice file ends by naming how imitation of it
-fails. Read together, the 102 of them are a catalogue of what generated prose does, and `tells` is
+fails. Read together, the 104 of them are a catalogue of what generated prose does, and `tells` is
 the checker that refuses to let those constructions ship.
 
 **Locking is per sentence and survives a rebuild.** Ownership is stored content-addressed as the

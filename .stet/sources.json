@@ -28,5 +28,10 @@
     "value": "8",
     "as": "number",
     "seen": "2026-08-18"
+  },
+  "library.tells": {
+    "value": "104",
+    "as": "number",
+    "seen": "2026-08-18"
   }
 }
