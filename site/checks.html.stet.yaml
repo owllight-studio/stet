@@ -1,0 +1,4 @@
+stet:
+  state: draft
+  author: agent
+  sources: [sums.relations, corpus.files]

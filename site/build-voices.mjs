@@ -17,12 +17,59 @@ const here = dirname(fileURLToPath(import.meta.url));
 const VOICES = join(here, "..", "plugin", "skills", "stet", "voices");
 const REPO = "https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices";
 
+/* `route` is which of the site's seven line colours a group is drawn in. The site is a transit
+   diagram and colour on it only ever means a route, so a group without one would be decoration. */
+/* Grouped by the job a reader arrives holding, not by where the register was found. The blurbs
+   used to describe the voices ("Fiction registers", "For when the constraint is the point"), which
+   tells somebody browsing nothing about which one is theirs. */
 const GROUPS = [
-  { key: "core", title: "Core", blurb: "The registers most writing actually needs. Start here." },
-  { key: "marketing", title: "Marketing", blurb: "Written to move someone, and measured on whether they trust it." },
-  { key: "genre", title: "Genre", blurb: "Fiction registers, for people whose product has a world in it." },
-  { key: "fun", title: "Fun", blurb: "For when the constraint is the point." },
+  { key: "core", route: "r-establish", title: "Core", blurb: "Documentation, a README, release notes, a post, an explanation somebody has to follow. Start here." },
+  { key: "marketing", route: "r-compose", title: "Marketing", blurb: "A landing page, an email, anything asking a reader to do something." },
+  { key: "genre", route: "r-refine", title: "Genre", blurb: "A novel, a script, a game. Anything with a world in it." },
+  { key: "fun", route: "r-maintain", title: "Fun", blurb: "A live commentary, a wildlife film. Registers a reader recognises on sight, for when that is the point." },
 ];
+
+/* The masthead and the footer are the same on every page of this site. They live here as strings
+   because voices.html is generated and index.html is not, and the two must not drift apart. */
+const MARK = `<svg viewBox="0 0 133 98" role="img" aria-hidden="true" focusable="false"><g fill="currentColor"><text x="0" y="70" textLength="133" lengthAdjust="spacing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">stet</text><rect x="0" y="84" width="133" height="7" rx="3.5"/><circle cx="10" cy="87.5" r="10"/><circle cx="47.67" cy="87.5" r="10"/><circle cx="85.33" cy="87.5" r="10"/><circle cx="123" cy="87.5" r="10"/></g></svg>`;
+
+const MASTHEAD = `<header class="masthead">
+  <div class="inner">
+    <a class="wordmark" href="/" aria-label="Stet, home">${MARK}</a>
+    <nav class="routes" aria-label="Sections">
+      <a class="r-authorship" href="/ownership.html">Ownership</a>
+      <a class="r-operate" href="/map.html">The map</a>
+      <a class="r-evaluate" href="/checks.html">Checks</a>
+      <a class="r-establish" href="/voices.html" aria-current="page">Voices</a>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+    </nav>
+    <div class="modes" role="group" aria-label="Colour scheme">
+      <button type="button" data-mode="light" aria-pressed="false">Light</button>
+      <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
+</header>`;
+
+const FOOTER = `<footer>
+  <div class="inner">
+    <div class="col">
+      <h4>Lines</h4>
+      <a href="/ownership.html">Ownership</a>
+      <a href="/map.html">The map</a>
+      <a href="/checks.html">Checks</a>
+      <a href="/voices.html">Voices</a>
+    </div>
+    <div class="col">
+      <h4>Source</h4>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/README.md">README</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/LICENSE">MIT licence</a>
+    </div>
+    <p class="last"><i>stet</i>, the proofreader's mark meaning let it stand. Ignore the
+      correction; the original is right.</p>
+  </div>
+</footer>`;
 
 /* --- reading the files --------------------------------------------------- */
 
@@ -35,13 +82,16 @@ function frontmatter(text) {
   for (const raw of m[1].split("\n")) {
     const line = raw.replace(/\s+$/, "");
     if (!line) continue;
-    const top = line.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
+    const top = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
     if (top) {
       nest = top[2] === "" ? (out[top[1]] = {}) : null;
       if (top[2] !== "") out[top[1]] = top[2].replace(/^["']|["']$/g, "");
       continue;
     }
-    const pair = line.match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+    // A key may carry a digit: sentenceP95, modalsPer10kWords, fieldsPer100Words. Excluding them
+    // silently dropped 18 real measurements, and the page then reported 114 as the library's count
+    // when it holds 132. Nobody noticed, because a hand check written the same way agreed with it.
+    const pair = line.match(/^\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
     if (pair && nest) nest[pair[1]] = pair[2].replace(/^["']|["']$/g, "");
   }
   return out;
@@ -106,6 +156,9 @@ function lead(body) {
 }
 
 const LABELS = {
+  // A bare count needs its denominator, or the card states a rate it does not mean. `thouTokens: 80`
+  // is eighty in the whole of The Lord of the Rings, which is the preset's point about the word.
+  thouTokens: "thou-forms in all of LOTR",
   sentenceMedian: "median sentence",
   sentenceMean: "mean sentence",
   sentenceMax: "longest",
@@ -122,7 +175,9 @@ const LABELS = {
   similesPerThousandWords: "similes / 1k words",
   subordinateOpeners: "subordinate openers",
   numbersPerHundredWords: "numbers / 100 words",
-  adjectivesBeforeNoun: "adjectives / noun",
+  // A ceiling from the Reuters rule, not an average. "adjectives / noun: 2" read as though the
+  // register runs two adjectives per noun, which is the opposite of what the handbook says.
+  adjectivesBeforeNoun: "adjectives before a noun, at most",
   ledeMaxWords: "lede ceiling",
   exclamations: "exclamations",
   jokeRatio: "jokes",
@@ -132,6 +187,19 @@ const RATIO = new Set([
   "shortSentences", "hedgesPerSentence", "secondPerson", "firstPersonPlural",
   "subordinateOpeners", "jokeRatio",
 ]);
+
+/* Voice files carry more measured keys than LABELS names, and new ones arrive whenever a
+   researcher counts something nobody had counted before. An unlabelled key used to render as
+   its own identifier set in caps, so `unterminatedShare` reached the page as UNTERMINATEDSHARE.
+   Split the camel case instead: the label is always readable, and a new key needs no edit here. */
+function label(key) {
+  if (LABELS[key]) return LABELS[key];
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    // Split before a digit too, or `crossRefsPer10kWords` renders as "cross refs per10k words".
+    .replace(/([a-zA-Z])(\d)/g, "$1 $2")
+    .toLowerCase();
+}
 
 function figure(key, value) {
   if (RATIO.has(key)) {
@@ -143,14 +211,16 @@ function figure(key, value) {
 
 function card(v) {
   const measured = Object.entries(v.measured ?? {});
+  /* The figures go in the right-hand column of the card, so the reading and the counts it
+     came from sit side by side and neither column ends in empty page. */
   const strip = measured.length
-    ? `<dl class="measured">${measured
+    ? `<div class="figures"><dl class="measured">${measured
         .map(
           ([k, val]) =>
-            `<div><dt>${esc(LABELS[k] ?? k)}</dt><dd>${figure(k, val)}</dd></div>`
+            `<div><dt>${esc(label(k))}</dt><dd>${figure(k, val)}</dd></div>`
         )
-        .join("")}</dl>`
-    : "";
+        .join("")}</dl></div>`
+    : `<div class="figures"></div>`;
 
   const rules = v.rules.length
     ? `<div class="fold"><h4>Rules</h4><ul class="rules">${v.rules
@@ -183,14 +253,14 @@ function card(v) {
       ${v.oneRule ? `<p class="onerule">${v.oneRule}</p>` : ""}
       ${
         !v.sources
-          ? `<p class="unresearched">Written from instinct. Nobody has counted this one against real
-             texts, so its figures are estimates and it names no failure modes. Treat it as a
-             sketch.</p>`
+          ? `<p class="unresearched">Written from instinct. Nobody counted this one against real
+             texts, so the figures are estimates and it names no failure modes. A sketch.</p>`
           : v.tells.length
             ? ""
-            : `<p class="unresearched partial">Measured, but nobody has catalogued how imitation of
-               it fails yet. The rules are sourced; the tells are missing.</p>`
+            : `<p class="unresearched partial">Counted, but nobody has catalogued how imitation of
+               it fails. The rules are sourced. The tells are missing.</p>`
       }
+      <p class="useit"><code>/stet voice ${esc(v.slug)}</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -223,7 +293,10 @@ const voices = readdirSync(VOICES)
       oneRule: lead(section(text, "The one rule")),
       rules: ruleNames(rulesBody),
       never: bullets(section(text, "Never")),
-      tells: tells(pastiche).slice(0, 8),
+      /* No cap. It used to take the first eight, which dropped two of Field Notes' ten and made
+         the page say 102 where the library names 104, under a heading calling itself the
+         catalogue. A silent truncation reads as complete coverage when it is not. */
+      tells: tells(pastiche),
       detection: detection(pastiche),
     };
   })
@@ -245,78 +318,71 @@ const allTells = voices
   .flatMap((v) => v.tells.map((t) => ({ voice: v.name, slug: v.slug, tell: t })))
   .sort((a, b) => a.tell.toLowerCase().localeCompare(b.tell.toLowerCase()));
 
-const nav = byGroup.map((g) => `<a href="#${g.key}">${g.title}</a>`).join("\n      ");
-
 const library = byGroup
   .map(
     (g) => `
-  <section id="${g.key}">
-    <p class="eyebrow">${esc(g.title)} &middot; ${g.list.length} ${g.list.length === 1 ? "voice" : "voices"}</p>
-    <h2 class="measure">${esc(g.blurb)}</h2>
+  <section class="voice-group ${g.route}" id="${esc(g.key)}">
+    <span class="sign">${esc(g.title)} &middot; ${g.list.length} ${g.list.length === 1 ? "voice" : "voices"}</span>
+    <h2>${esc(g.blurb)}</h2>
     <div class="voices">${g.list.map(card).join("")}</div>
   </section>`
   )
   .join("\n");
 
 const html = `<!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stet voices</title>
+<title>Voices &middot; Stet</title>
 <meta name="description" content="${voices.length} measured writing registers, each counted off real texts, each carrying the specific ways imitation of it gives itself away.">
-<meta property="og:title" content="Stet voices">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://stet.style/voices.html">
+<meta property="og:title" content="Voices &middot; Stet">
 <meta property="og:description" content="${voices.length} writing registers, measured off real texts rather than described from memory.">
+<meta property="og:url" content="https://stet.style/voices.html">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='25' x='2' font-size='22' font-family='monospace' fill='%232c6d9e'>s</text></svg>">
-<link rel="stylesheet" href="stet.css">
+<link rel="stylesheet" href="/stet.css">
+<script>(function(){try{var t=localStorage.getItem("stet-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
-    <span class="mark"><a href="./"><b>stet</b></a></span>
-    <nav>
-      ${nav}
-      <a href="#tells">The tells</a>
-      <a href="./">Back</a>
-    </nav>
-  </header>
+<a class="skip" href="#main">Skip to content</a>
 
-  <div class="hero hero-voices">
-    <h1 class="measure">Writing that does not read as written by a machine.</h1>
-    <p class="lede measure">
-      That is the whole job. ${voices.length} registers, each one counted off the actual texts rather
-      than described from memory, and each carrying the specific ways an imitation of it gives itself
-      away.
-    </p>
+${MASTHEAD}
 
-    <div class="finding">
-      <p>
-        Readers told a headline was AI-generated rated it less accurate and were less willing to
-        share it. That held whether or not the headline was true, and whether or not a machine
-        actually wrote it.
-      </p>
-      <p class="cite">Altay and Gilardi, <i>PNAS Nexus</i>, 2024. Preregistered, n=4,976.</p>
+<main id="main">
+
+  <section class="hero r-establish">
+    <span class="sign" style="display:block;margin-bottom:14px">Line E &middot; Establish</span>
+    <h1>Writing that does not sound like a machine.</h1>
+    <div class="pair">
+      <div>
+        <p class="lede">That is the whole job. ${voices.length} voices, each built by reading the
+          real thing rather than describing it from memory. Name one and start writing:
+          <code>/stet voice noir</code> is the whole of it.</p>
+        <p class="lede">Each one also names how a fake of it gives itself away.</p>
+      </div>
+      <div>
+        <div class="finding r-establish">
+          <p>Readers told a headline was AI-generated rated it less accurate and were less willing
+            to share it. That held whether or not the headline was true, and whether or not a
+            machine wrote it.</p>
+          <p class="cite">Altay and Gilardi, <i>PNAS Nexus</i>, 2024. Preregistered, n=4,976.</p>
+        </div>
+        <p style="margin-top:14px">That study labelled the headlines. It did not test prose that
+          merely reads as generated, so whether that pays the same penalty with no label on it is an
+          inference rather than a finding. It is the inference this library is built on, and it is
+          the one worth knowing you are trusting.</p>
+      </div>
     </div>
-    <p class="proof-note">
-      The penalty attaches to how the writing reads, not to who wrote it. Which means prose that
-      merely sounds generated pays it, with no label attached and no way to appeal.
-    </p>
-  </div>
-</div>
-
-<div class="wrap">
+  </section>
 ${library}
 
-  <section id="tells">
-    <p class="eyebrow">Cross-cutting &middot; ${allTells.length} named failures</p>
-    <h2 class="measure">Read together, the failure modes are one catalogue.</h2>
-    <p class="measure">
-      Every voice file ends by naming how imitation of it fails. Collected out of their contexts,
-      they stop being notes on ${voices.length} registers and start being a list of the things
-      generated prose does. Each links back to the voice that measured it.
-    </p>
+  <section class="voice-group r-authorship" id="tells">
+    <span class="sign">Cross-cutting &middot; ${allTells.length} named failures</span>
+    <h2>Put them together and you have the catalogue.</h2>
+    <p>Each one links back to the voice it was counted off.</p>
     <ul class="telldex">
       ${allTells
         .map(
@@ -327,36 +393,56 @@ ${library}
     </ul>
   </section>
 
-  <section id="define">
-    <p class="eyebrow">Your own</p>
-    <h2 class="measure">Four ways to have a voice, and a preset is only the first.</h2>
-    <div class="cmds">
+  <section class="voice-group r-operate" id="define">
+    <span class="sign">Four ways in</span>
+    <h2>Take one as it is, or build your own.</h2>
+    <div class="pair">
+      <div>
+        <p>These are finished. Name one and start writing. Nothing else is asked of you.</p>
+        <p>They are also a good place to start if you would rather change something real than begin
+          at nothing. Either way the voice ends up in your own <code>VOICE.md</code>. A voice built
+          to your brief is yours, and it never goes in the library.</p>
+      </div>
+      <div>
+        <div class="strip">
+          <span class="cap">Use one</span>
+          <code>/stet voice the-manual</code>
+        </div>
+        <div class="strip" style="margin-top:12px">
+          <span class="cap">Build one</span>
+          <code>/stet voice "a mathematician who stopped trying to impress anyone"</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmds" style="margin-top:26px">
       <div class="cmd">
-        <h3>pick one</h3>
-        <p>Any file above, by name. It arrives whole: rules, counts, and the tells.</p>
+        <h3>Take one</h3>
+        <p>Any voice above, by name. It arrives whole: the rules, the numbers and the tells.</p>
       </div>
       <div class="cmd">
-        <h3>describe one</h3>
-        <p>In your words, fresh or derived from a preset. "A PhD mathematician who has stopped trying to impress anyone." Stet turns the description into countable rules and tells you which it could not measure.</p>
+        <h3>Describe one</h3>
+        <p>In your own words. The agents go and read the real thing, then say which rules they
+          could measure and which they could not.</p>
       </div>
       <div class="cmd">
-        <h3>point at writing</h3>
-        <p>Documents, a Drive folder, a site, anything you already wrote. It gets measured the same way these were, and the numbers come back with it.</p>
+        <h3>Point at your writing</h3>
+        <p>A folder, a site, anything you already wrote. It gets read the way these were, and the
+          numbers come back with it.</p>
       </div>
       <div class="cmd">
-        <h3>let it read the project</h3>
-        <p>Run it where you work and it derives the house voice from what is already there, because nobody can describe their own.</p>
+        <h3>Let it read the project</h3>
+        <p>It works the house voice out from what is already there. Nobody can describe their
+          own.</p>
       </div>
     </div>
   </section>
 
-  <footer class="foot">
-    <span>Stet</span>
-    <span>An <a href="https://github.com/owllight-studio">Owllight Studio</a> project</span>
-    <span class="right"><a href="https://github.com/owllight-studio/stet">Source</a></span>
-  </footer>
-</div>
+</main>
 
+${FOOTER}
+
+<script src="/mode.js" defer></script>
 </body>
 </html>
 `;

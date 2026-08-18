@@ -1,9 +1,10 @@
 /**
  * The voice library: what is on the shelf, and what any one of them says.
  *
- * A preset is a starting point, never a finished voice. `voice` composes it with whatever else the
- * author brings, and writes the result to their own VOICE.md, which is the only file any other
- * command reads. Nothing here is loaded at write time.
+ * A preset is finished work and stands on its own: name one and write. It is also a place to start
+ * from, and `voice` composes it with whatever else the author brings. Either way the result is
+ * written to their own VOICE.md, which is the only file any other command reads. Nothing here is
+ * loaded at write time.
  *
  * Usage: node voices.mjs            list them
  *        node voices.mjs <slug>     print one
@@ -58,6 +59,6 @@ if (process.argv[1] && process.argv[1].endsWith("voices.mjs")) {
       }
       console.log(`  ${v.slug.padEnd(22)} ${v.name.padEnd(20)} ${v.description ?? ""}`);
     }
-    console.log("\nA preset is a starting point. voice composes it with whatever else you bring.");
+    console.log("\nAny of these is usable as it stands. voice will also compose one with whatever else you bring.");
   }
 }

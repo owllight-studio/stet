@@ -110,17 +110,19 @@ if (Object.keys(specs).length) {
  * and cannot see the drift. Together they say the useful thing: this page is off-voice and nobody
  * may fix it without asking first.
  */
-const { targets: want } = targets(root);
-if (Object.keys(want).length) {
-  for (const f of files.filter(isProse)) {
-    const d = drift(text.get(f), f, want);
-    if (!d || !d.off.length) continue;
-    const said = d.off.map((r) => `${r.metric} ${r.value} (${r.want})`).join(", ");
-    if (!mayEdit(meta.get(f))) {
-      add(2, "closed and off-voice", f, said, "it cannot be fixed without the author releasing it");
-    } else if (d.off.length >= 3) {
-      add(3, "off-voice", f, said, "tighten, clarify, or accept that this page is a different register");
-    }
+for (const f of files.filter(isProse)) {
+  // Resolved per file, because a project may declare more than one voice and say where each
+  // applies. Hoisting this out of the loop measured every page against whichever voice the root
+  // happened to name, which for a project with a separate site voice is the wrong one everywhere.
+  const { targets: want } = targets(root, f);
+  if (!Object.keys(want).length) continue;
+  const d = drift(text.get(f), f, want);
+  if (!d || !d.off.length) continue;
+  const said = d.off.map((r) => `${r.metric} ${r.value} (${r.want})`).join(", ");
+  if (!mayEdit(meta.get(f))) {
+    add(2, "closed and off-voice", f, said, "it cannot be fixed without the author releasing it");
+  } else if (d.off.length >= 3) {
+    add(3, "off-voice", f, said, "tighten, clarify, or accept that this page is a different register");
   }
 }
 
@@ -154,8 +156,20 @@ for (const [f, body] of text) {
   for (const m of body.matchAll(/\[[^\]]*\]\(([^)#?\s]+)[^)]*\)|href="([^"#?]+)/g)) {
     const href = m[1] ?? m[2];
     if (!href || /^(https?:|mailto:|#)/.test(href)) continue;
-    const target = relative(root, resolve(root, here, href));
-    if (files.includes(target)) linked.add(target);
+    /*
+     * A root-absolute href is relative to the web root, and the web root is not the repository
+     * root when the site lives in a subdirectory. Every internal link on this project's own site
+     * is written "/map.html", and resolve() treats a leading slash as the filesystem root, so not
+     * one of them ever matched and every page but the entry point was reported as an orphan.
+     * Try it against the linking file's directory as well, and take whichever names real content.
+     */
+    const targets = href.startsWith("/")
+      ? [resolve(root, here, `.${href}`), resolve(root, href.slice(1))]
+      : [resolve(root, here, href)];
+    for (const t of targets) {
+      const target = relative(root, t);
+      if (files.includes(target)) linked.add(target);
+    }
   }
 }
 /* Orphans mean nothing outside a linked structure. In a manuscript nothing links to chapter nine,

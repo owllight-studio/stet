@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="stet">
+  <title>stet</title>
+  <!--
+    The tab icon is the mark on its own: the row of dots a proofreader lays under
+    a line to say let it stand, which is also a transit line with four stations.
+    An SVG favicon carries no page context, so the scheme is declared in here.
+  -->
+  <style>
+    .m { fill: #0e0f10; }
+    @media (prefers-color-scheme: dark) { .m { fill: #f2f2ef; } }
+  </style>
+  <g class="m">
+    <rect x="4" y="29" width="56" height="6" rx="3"/>
+    <circle cx="11" cy="32" r="9"/>
+    <circle cx="25" cy="32" r="9"/>
+    <circle cx="39" cy="32" r="9"/>
+    <circle cx="53" cy="32" r="9"/>
+  </g>
+</svg>

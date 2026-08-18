@@ -1,3 +1,4 @@
 stet:
   state: draft
   author: agent
+  sources: [suite.tests, library.presets, library.measurements, library.tells]

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checks · Stet</title>
+<meta name="description" content="The half of Stet that needs no model. Twenty-five commands that run in CI: style sheet drift, stale figures, dead and retracted citations, arithmetic a document does on itself.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://stet.style/checks.html">
+<link rel="stylesheet" href="/stet.css">
+<script>(function(){try{var t=localStorage.getItem("stet-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="inner">
+    <a class="wordmark" href="/" aria-label="Stet, home">
+      <svg viewBox="0 0 133 98" role="img" aria-hidden="true" focusable="false"><g fill="currentColor"><text x="0" y="70" textLength="133" lengthAdjust="spacing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">stet</text><rect x="0" y="84" width="133" height="7" rx="3.5"/><circle cx="10" cy="87.5" r="10"/><circle cx="47.67" cy="87.5" r="10"/><circle cx="85.33" cy="87.5" r="10"/><circle cx="123" cy="87.5" r="10"/></g></svg>
+    </a>
+    <nav class="routes" aria-label="Sections">
+      <a class="r-authorship" href="/ownership.html">Ownership</a>
+      <a class="r-operate" href="/map.html">The map</a>
+      <a class="r-evaluate" href="/checks.html" aria-current="page">Checks</a>
+      <a class="r-establish" href="/voices.html">Voices</a>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+    </nav>
+    <div class="modes" role="group" aria-label="Colour scheme">
+      <button type="button" data-mode="light" aria-pressed="false">Light</button>
+      <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero r-evaluate">
+    <span class="sign" style="display:block;margin-bottom:14px">Line V · Evaluate</span>
+    <h1>The half that needs no model</h1>
+    <div class="pair">
+      <div>
+        <p class="lede">Stet is a plugin for Claude Code, and half of it never needs the model at
+          all. Is this word spelled two ways across your project. Does this figure still match the
+          command that produced it. Was this paper retracted.</p>
+        <p class="lede">Nobody has to read anything to answer those. Twenty-five commands ship as
+          a CLI with no dependencies. They run in your build. A build that fails does not ship.</p>
+      </div>
+      <div class="panel">
+        <span class="sign">stet sums, run on this repository</span>
+        <pre class="out">8 relations across 69 files.
+
+8 consistent, 0 wrong, 0 worth a look
+<i>NOT CHECKED</i>  2 relations inside quotation
+             marks, 1 on a marked line</pre>
+        <p style="margin-top:14px; color:var(--soft); font-size:14px">Every command tells you what
+          it skipped. Say nothing and a person reads it as nothing to do, which is a different thing
+          and not true.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="line">
+
+    <section class="stop r-evaluate">
+      <span class="sign">One</span>
+      <h2>What each one catches</h2>
+      <div class="pair wide-right">
+        <div>
+          <p>Ten of them are the checks. The other fifteen are what the checks stand on: what
+            content exists, who owns it, what the style sheet decided, what to set on a file. One of
+            the fifteen is <code>refresh</code>. It changes a stale figure and leaves every other
+            word alone.</p>
+          <p>Every one was run over this repository and tuned until it stopped crying wolf. A
+            check that fires on work you got right is a check you switch off. Then it protects
+            nothing.</p>
+          <p><code>stet help &lt;command&gt;</code> prints the full reference for any of them.</p>
+        </div>
+        <div class="scroll">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Command</th><th scope="col">The thing it catches</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>check</td><td>Your product name spelled two ways across forty files</td></tr>
+              <tr><td>audit</td><td>The sweep, ranked by what it costs you</td></tr>
+              <tr><td>verify</td><td>A number you typed by hand where a source was declared</td></tr>
+              <tr><td>sums</td><td>Parts that do not make their total, and statistics that disagree with their own p-values</td></tr>
+              <tr><td>cite</td><td>A citation to a withdrawn paper, or to a preprint since published</td></tr>
+              <tr><td>standing</td><td>A URL that still resolves and no longer says what you cited it for</td></tr>
+              <tr><td>tells</td><td>Em dashes, the “not X, it is Y” turn, preambles, summaries of the paragraph above</td></tr>
+              <tr><td>measure</td><td>Drift against the figures in your own voice file</td></tr>
+              <tr><td>critique</td><td>A scored review where every score is computed, and the four it cannot compute are named</td></tr>
+              <tr><td>doctor</td><td>A file you marked as content that no glob actually covers</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-evaluate">
+      <span class="sign">Two</span>
+      <h2>Why this is worth a build step</h2>
+      <div class="pair wide-right">
+        <div>
+          <p>Somebody counted all four of these, and none of them is about your website. They are
+            about journals, because journals are where anyone bothered to count. Your pages rot the
+            same way.</p>
+          <p>Does any of that reach a pricing page? The link row does. A URL that still returns
+            200 has not necessarily kept the sentence you cited it for. The page looks fine. Nothing
+            on it says the paragraph you quoted came out two years ago. That is the same failure as
+            a product name spelled two ways across forty files, and the same reason nobody
+            notices.</p>
+          <p>So <code>standing</code> writes down what a source said the first time you cited it,
+            and tells you what has changed since.</p>
+        </div>
+        <div class="scroll">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Figure</th><th scope="col">Of what</th><th scope="col">Source</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>76.35%</td>
+                <td>References whose content had drifted, 184,065 of 241,091</td>
+                <td>Jones and others, <i>PLOS ONE</i>, 2016. <a href="https://doi.org/10.1371/journal.pone.0167475">10.1371/journal.pone.0167475</a></td>
+              </tr>
+              <tr>
+                <td>70%+</td>
+                <td>URLs across three Harvard law journals no longer reaching the material, and 50 percent in Supreme Court opinions</td>
+                <td>Zittrain, Albert and Lessig, <i>Harvard Law Review Forum</i>, 2014. <a href="https://harvardlawreview.org/forum/vol-127/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations/">Perma</a></td>
+              </tr>
+              <tr>
+                <td>49.6%</td>
+                <td>Psychology papers reporting a null-hypothesis test that carry a p-value inconsistent with its own test statistic, 8,273 of 16,695</td>
+                <td>Nuijten and others, <i>Behavior Research Methods</i>, 2015. <a href="https://doi.org/10.3758/s13428-015-0664-2">10.3758/s13428-015-0664-2</a></td>
+              </tr>
+              <tr>
+                <td>5.4%</td>
+                <td>Post-retraction citation contexts that acknowledge the retraction, 722 of 13,252</td>
+                <td>Hsiao and Schneider, <i>Quantitative Science Studies</i>, 2021. <a href="https://doi.org/10.1162/qss_a_00155">10.1162/qss_a_00155</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-operate">
+      <span class="sign">Three</span>
+      <h2>Running it</h2>
+      <div class="pair">
+        <div>
+          <p>What does it cost to set up? One file. <code>stet.config.json</code> says which
+            files are your words. It can also say where a figure comes from, which is a shell
+            command.</p>
+          <p>Stet touches your words and nothing else. No components, no routing, no CSS. Put it on
+            Next, Astro, Hugo or a folder of Markdown and it behaves the same, and the checks that
+            need no network never open one.</p>
+        </div>
+        <div class="panel">
+          <span class="sign">In a build</span>
+<pre class="out"><i># the sweep, ranked by what it costs you</i>
+stet audit
+
+<i># or pick the ones you care about</i>
+stet check &amp;&amp; stet sums &amp;&amp; stet standing
+
+<i># one file, against your own voice</i>
+stet measure docs/pricing.md</pre>
+          <p style="margin-top:16px; color:var(--soft); font-size:14.5px">The CLI ships inside the
+            plugin, and <code>node bin/stet.mjs</code> from a clone works the same.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <div class="col">
+      <h4>Lines</h4>
+      <a href="/ownership.html">Ownership</a>
+      <a href="/map.html">The map</a>
+      <a href="/checks.html">Checks</a>
+      <a href="/voices.html">Voices</a>
+    </div>
+    <div class="col">
+      <h4>Source</h4>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/README.md">README</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/LICENSE">MIT licence</a>
+    </div>
+    <p class="last"><i>stet</i>, the proofreader's mark meaning let it stand. Ignore the
+      correction; the original is right.</p>
+  </div>
+</footer>
+
+<script src="/mode.js" defer></script>
+</body>
+</html>

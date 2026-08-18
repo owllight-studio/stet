@@ -94,25 +94,49 @@ function render(meta) {
   return lines.join("\n");
 }
 
+/* A record may write `sources: corpus.runs` rather than `sources: [corpus.runs]`, and the parser
+   hands that back as a string. Callers then call .join on it and die mid-verdict, after they have
+   already printed half an answer. One name is a list of one. */
+export const asList = (v) => (v == null ? [] : Array.isArray(v) ? v : [v]);
+
+/* Normalised on the way out, so no caller has to. `sources` and `owned` are lists, and a record
+   writing one of them as a scalar used to reach a `.join` eleven call sites away and die there,
+   after half a verdict had already been printed. A directory handed in where a file was expected
+   used to throw EISDIR out of readFileSync for the same reason: no caller checked. */
+function normalised(m) {
+  if (!m) return m;
+  if ("sources" in m) m.sources = asList(m.sources);
+  if ("owned" in m) m.owned = asList(m.owned);
+  return m;
+}
+
 export function read(root, file) {
   const sidecar = join(root, `${file}.stet.yaml`);
-  if (existsSync(sidecar)) return parseBlock(readFileSync(sidecar, "utf8"));
+  if (existsSync(sidecar)) return normalised(parseBlock(readFileSync(sidecar, "utf8")));
 
   const full = join(root, file);
   if (!existsSync(full)) return null;
-  const text = readFileSync(full, "utf8");
+
+  let text;
+  try {
+    text = readFileSync(full, "utf8");
+  } catch {
+    /* A directory, a socket, a file the process may not read. None of them carries a record, and
+       none of them is worth a stack trace where a verdict was asked for. */
+    return null;
+  }
 
   if (extname(file) === ".json") {
     try {
       const doc = JSON.parse(text);
-      return doc?.stet ?? null;
+      return normalised(doc?.stet ?? null);
     } catch {
       return null;
     }
   }
 
   const fm = text.match(FRONTMATTER);
-  return fm ? parseBlock(fm[1]) : null;
+  return fm ? normalised(parseBlock(fm[1])) : null;
 }
 
 /**

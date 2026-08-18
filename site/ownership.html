@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ownership · Stet</title>
+<meta name="description" content="Three states, one policy field, and ownership stored one sentence at a time as the author's exact words.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://stet.style/ownership.html">
+<link rel="stylesheet" href="/stet.css">
+<script>(function(){try{var t=localStorage.getItem("stet-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="inner">
+    <a class="wordmark" href="/" aria-label="Stet, home">
+      <svg viewBox="0 0 133 98" role="img" aria-hidden="true" focusable="false"><g fill="currentColor"><text x="0" y="70" textLength="133" lengthAdjust="spacing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">stet</text><rect x="0" y="84" width="133" height="7" rx="3.5"/><circle cx="10" cy="87.5" r="10"/><circle cx="47.67" cy="87.5" r="10"/><circle cx="85.33" cy="87.5" r="10"/><circle cx="123" cy="87.5" r="10"/></g></svg>
+    </a>
+    <nav class="routes" aria-label="Sections">
+      <a class="r-authorship" href="/ownership.html" aria-current="page">Ownership</a>
+      <a class="r-operate" href="/map.html">The map</a>
+      <a class="r-evaluate" href="/checks.html">Checks</a>
+      <a class="r-establish" href="/voices.html">Voices</a>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+    </nav>
+    <div class="modes" role="group" aria-label="Colour scheme">
+      <button type="button" data-mode="light" aria-pressed="false">Light</button>
+      <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero r-authorship">
+    <span class="sign" style="display:block;margin-bottom:14px">Line A · Authorship</span>
+    <h1>Whose words these are</h1>
+    <div class="pair">
+      <div>
+        <p class="lede">Stet is a plugin for Claude Code. You mark the lines you wrote, and the
+          agent stops being able to touch them. Not by being asked. By being refused.</p>
+      </div>
+      <div>
+        <p class="lede">Every file carries three answers. Who wrote it. What may still be done to
+          it. Which sentences are yours rather than the machine's.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="line">
+
+    <section class="stop r-authorship">
+      <span class="sign">One</span>
+      <h2>Three states, three behaviours</h2>
+      <div class="pair wide-right">
+        <div>
+          <p><strong>So what makes a page yours?</strong> Reading it and accepting it. Not time.
+            Not the writing being good. Not you having typed every word of it. Until you accept it,
+            it belongs to the agent that wrote it.</p>
+          <p>Approved and authored are both closed. The difference is who did the typing, and it
+            shows up when you ask for a rebuild. An approved page can be rebuilt. An authored one is
+            yours to replace and nobody else's.</p>
+        </div>
+        <div class="scroll">
+          <table class="plain">
+            <thead>
+              <tr>
+                <th scope="col">State</th>
+                <th scope="col">Wrote it</th>
+                <th scope="col">Edit the words?</th>
+                <th scope="col">Regenerate it?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>draft</td><td>An agent</td><td>Yes</td><td>Yes</td></tr>
+              <tr><td>approved</td><td>An agent, accepted by a person</td><td>No</td><td>Only if asked, each time</td></tr>
+              <tr><td>authored</td><td>A person</td><td>No</td><td>Never</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-authorship">
+      <span class="sign">Two</span>
+      <h2>One sentence at a time</h2>
+      <div class="pair">
+        <div>
+          <p>A file's state covers the whole file. Under it sits a list of the sentences a person
+            wrote. Not line numbers. The words themselves.</p>
+          <p>That is the whole trick. Keep a line number and the lock breaks the moment a paragraph
+            lands above it. Keep the words and the lock holds while the section moves, the voice
+            changes and the page is rebuilt.</p>
+          <p>Rewrite the sentence yourself and the lock comes off. That is right. They are
+            different words now.</p>
+          <p>Most pages end up mixed. The agent wrote nearly all of it. Three lines are yours. The
+            agent works around those three.</p>
+        </div>
+        <div>
+          <div class="doc">
+            <div class="row regen">
+              <span class="sign">Agent</span>
+              <p>The studio was founded in 2019 and works with clients in publishing and
+                retail.</p>
+            </div>
+            <div class="row">
+              <span class="sign">Yours · held</span>
+              <div class="held">
+                <p>We started this because a client asked us to change one word and got back a
+                  page nobody recognised.</p>
+              </div>
+            </div>
+            <div class="row regen">
+              <span class="sign">Agent</span>
+              <p>The team is based in Glasgow and takes on four projects a year.</p>
+            </div>
+          </div>
+          <p style="margin-top:14px; color:var(--soft); font-size:14.5px">Edit around them. Nothing
+            in the record moves when the agent rewrites the two grey lines.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-authorship">
+      <span class="sign">Three</span>
+      <h2>Policy is a separate question</h2>
+      <div class="pair wide-right">
+        <div>
+          <p>State says whose the words are. Policy says what may still happen to them once they
+            are closed.</p>
+          <div class="note-block r-maintain" style="margin:18px 0">
+            <span class="sign">The one worth knowing</span>
+            <p><strong>Authored plus refresh.</strong> These are my words. Keep the numbers in them
+              true. Change the figure, leave the sentence.</p>
+          </div>
+          <p>Ask <code>policy</code> about any file and it tells you in plain English. It works
+            the answer out by calling the same code the hook calls, so what it tells you and what
+            the hook will do cannot drift apart.</p>
+        </div>
+        <div class="scroll">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">State</th><th scope="col">Policy</th><th scope="col">What an agent may do</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>draft</td><td>any</td><td>Rewrite freely. Nobody has accepted it</td></tr>
+              <tr><td>approved or authored</td><td>no policy, or frozen</td><td>Nothing, including figures that moved</td></tr>
+              <tr><td>approved or authored</td><td>refresh</td><td>Update the named figures. Change no other word</td></tr>
+              <tr><td>approved or authored</td><td>open</td><td>Rewrite the words. Ownership does not move</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-authorship">
+      <span class="sign">Four</span>
+      <h2>It refuses. It does not advise.</h2>
+      <div class="pair">
+        <div>
+          <p>Put the rule in a prompt and it holds until it does not, and nothing tells you which
+            turn that was. This exists because we watched an agent break its own written rules
+            inside one session, while telling us it was following them.</p>
+          <p>So the rule is a <code>PreToolUse</code> hook instead. It reads the record before the
+            edit lands and answers before the file moves. It does not advise.</p>
+          <p>A file nobody has claimed gets a no. So does that mean it starts refusing edits all
+            over your project? No, and here is exactly where it stops. A project with no
+            <code>stet.config.json</code> is not using Stet, and the hook does nothing at all.
+            Installing it changes nothing until you say so. Only the paths you list as content are
+            considered. Your code passes straight through. A file that does not exist yet is new
+            writing, so it is always allowed.</p>
+          <p>Inside those lines the no is the safe answer. The first thing <code>ingest</code> does
+            in a new project is read what is already there and mark it as yours, because a person
+            wrote it and that person was not the agent.</p>
+        </div>
+        <div>
+          <div class="verdict">
+            <div class="flag" aria-hidden="true"></div>
+            <div class="body">
+              <span class="sign">A file with an owned sentence in it</span>
+              <p>“<i>site/index.html</i> contains a sentence the author wrote. Those words are
+                theirs, character for character. Everything else in this file is still open to you:
+                edit around them.”</p>
+              <code>permissionDecision: deny</code>
+            </div>
+          </div>
+          <div class="verdict" style="margin-top:14px">
+            <div class="flag" aria-hidden="true"></div>
+            <div class="body">
+              <span class="sign">A file nobody has claimed</span>
+              <p>“<i>docs/history.md</i> is content and it is unclaimed. Content with no record
+                belongs to whoever wrote it, and that was not you.”</p>
+              <code>permissionDecision: deny</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-operate">
+      <span class="sign">Five</span>
+      <h2>Getting the hook out of your way</h2>
+      <div class="pair">
+        <div>
+          <p>Sooner or later you will want an agent to edit a closed file. Does that mean turning
+            the whole thing off? No. You open one file.</p>
+          <p><code>admin unlock</code> opens one file, and it will not do it without a reason.
+            <code>admin relock</code> shuts it again. While a file is open, <code>admin status</code>
+            says which one, since when, and why.</p>
+          <p>There is a global off switch. <code>admin off</code> will not fire without a reason,
+            and once it has, <code>admin status</code> opens with THE HOOK IS OFF and the reason you
+            gave, every time you run it, until you turn it back on. Opening one file is almost
+            always what you actually wanted.</p>
+          <p>“Improve this page” is not permission to rewrite a locked line inside it. The agent
+            improves what it may, then tells you what it left alone. If every line on the page is
+            yours, it says so and stops.</p>
+        </div>
+        <div class="panel">
+          <span class="sign">The escape hatch, with its record</span>
+<pre class="out">stet admin unlock README.md \
+     --for "the price changed"
+
+<i># edit, then:</i>
+stet admin relock README.md</pre>
+          <p style="margin-top:16px; color:var(--soft); font-size:14.5px">Both land in
+            <code>.stet/admin.json</code>, which the hook reads before it reads state.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <div class="col">
+      <h4>Lines</h4>
+      <a href="/ownership.html">Ownership</a>
+      <a href="/map.html">The map</a>
+      <a href="/checks.html">Checks</a>
+      <a href="/voices.html">Voices</a>
+    </div>
+    <div class="col">
+      <h4>Source</h4>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/README.md">README</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/LICENSE">MIT licence</a>
+    </div>
+    <p class="last"><i>stet</i>, the proofreader's mark meaning let it stand. Ignore the
+      correction; the original is right.</p>
+  </div>
+</footer>
+
+<script src="/mode.js" defer></script>
+</body>
+</html>

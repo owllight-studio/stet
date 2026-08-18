@@ -5,32 +5,32 @@
       "state": "current",
       "title": "Continued use of retracted papers: Temporal trends in citations and (lack of) awareness of retractions shown in citation contexts in biomedicine",
       "anchors": [],
-      "file": "docs/source-integrity.md",
-      "line": 55,
+      "file": "docs/plans/source-integrity.md",
+      "line": 846,
       "firstSeen": "2026-08-17",
-      "lastChecked": "2026-08-17",
+      "lastChecked": "2026-08-18",
       "since": "2026-08-17"
     },
     "doi:10.1371/journal.pone.0167475": {
       "state": "current",
       "title": "Scholarly Context Adrift: Three out of Four URI References Lead to Changed Content",
       "anchors": [],
-      "file": "plugin/skills/stet/reference/standing.md",
-      "line": 38,
+      "file": "docs/plans/source-integrity.md",
+      "line": 1065,
       "firstSeen": "2026-08-17",
-      "lastChecked": "2026-08-17",
+      "lastChecked": "2026-08-18",
       "since": "2026-08-17"
     },
     "url:https://github.com/owllight-studio/stet": {
       "state": "live",
       "title": "GitHub - owllight-studio/stet: Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words, helps with IA, and so much more. · GitHub",
-      "digest": "c3fefcacbc4bd001",
+      "digest": "b33d0228ad007ba0",
       "host": "github.com",
       "anchors": [],
-      "file": "site/index.html",
-      "line": 24,
+      "file": "site/checks.html",
+      "line": 27,
       "firstSeen": "2026-08-17",
-      "lastChecked": "2026-08-17",
+      "lastChecked": "2026-08-18",
       "since": "2026-08-17"
     },
     "url:https://github.com/owllight-studio": {
@@ -44,6 +44,91 @@
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-17",
       "since": "2026-08-17"
+    },
+    "doi:10.3758/s13428-015-0664-2": {
+      "anchors": [],
+      "file": "docs/plans/sums.md",
+      "line": 24,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "current",
+      "title": "The prevalence of statistical reporting errors in psychology (1985–2013)",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/checks.html": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "dead",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio/stet/blob/main/README.md": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 193,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "live",
+      "title": "stet/README.md at main · owllight-studio/stet · GitHub",
+      "digest": "c74b7f8121fd8951",
+      "host": "github.com",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio/stet/blob/main/LICENSE": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 194,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "live",
+      "title": "stet/LICENSE at main · owllight-studio/stet · GitHub",
+      "digest": "45afe3a033233157",
+      "host": "github.com",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/": {
+      "anchors": [],
+      "file": "site/index.html",
+      "line": 37,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "live",
+      "title": "Stet, words that know whose they are",
+      "digest": "f569c566e537e8b9",
+      "host": "stet.style",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/map.html": {
+      "anchors": [],
+      "file": "site/map.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "dead",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/ownership.html": {
+      "anchors": [],
+      "file": "site/ownership.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-18",
+      "state": "dead",
+      "since": "2026-08-17"
+    },
+    "url:https://harvardlawreview.org/forum/vol-127/perma-scoping-and-addressing-the-problem-of-link-and-reference-rot-in-legal-citations/": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 132,
+      "firstSeen": "2026-08-18",
+      "lastChecked": "2026-08-18",
+      "state": "live",
+      "title": "Perma: Scoping and Addressing the Problem of Link and Reference Rot in Legal Citations Harvard Law Review",
+      "digest": "5064a04de8db964c",
+      "host": "harvardlawreview.org",
+      "since": "2026-08-18"
     }
   }
 }

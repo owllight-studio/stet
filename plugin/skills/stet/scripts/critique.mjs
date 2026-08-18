@@ -64,7 +64,7 @@ const score = (name, state, said, note) => dims.push({ name, state, said, note }
 
 /* --- voice ---------------------------------------------------------------- */
 
-const { targets: want } = targets(root);
+const { targets: want } = targets(root, file);
 const got = measure(raw, markupOf(file));
 if (got && Object.keys(want).length) {
   const off = Object.entries(got)

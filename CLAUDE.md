@@ -120,6 +120,21 @@ targets in frontmatter, the sources they were counted off, rules with a yes and 
 never list and a section on how imitating the register fails. A preset with no `sources` line was
 written from instinct and the library says so. All 17 now carry one.
 
+**The site is a transit diagram, and one of its five pages is generated.** `site/` is static HTML
+with one stylesheet and one 40-line script for the light/dark/auto switch. `voices.html` is built by
+`build-voices.mjs` out of the voice files, so the page cannot describe the library from memory, and
+the masthead and footer live in that script as strings beside the four hand-written pages: change
+them together. Colour on the site only ever means one of the seven command groups. `DESIGN.md`
+carries the system; `site/VOICE.md` carries the copy voice and is never a library preset.
+
+**A project may write in more than one register, and says where each applies.** `voice` in the
+config is either one path or a map of glob to path, resolved per file by `voiceFor` in
+`lib/prose.mjs`, first matching glob winning and `*` as the fallback. `measure`, `critique`, `audit`
+and `expand` all pass the file through. Hoisting the lookup out of a loop is the bug to watch for:
+it measures every page against whichever voice the root happens to name. `site/**` goes to
+`site/VOICE.md` here, because a landing page and a column of sentence-length figures cannot be held
+to the same register.
+
 **A style sheet is not a voice.** `VOICE.md` says how it should sound; `STYLE.md` records what was
 decided when a word could have gone either way. `style.mjs decide` refuses to overwrite a decision
 silently, refuses reversals and refuses chains. Naming an authority is what keeps the sheet short:

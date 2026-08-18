@@ -7,8 +7,9 @@
  */
 
 import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, isAbsolute, sep } from "node:path";
 import { config } from "./find.mjs";
+import { matches } from "./glob.mjs";
 
 /* --- the prose, with the not-prose taken out ------------------------------ */
 
@@ -26,6 +27,20 @@ export function prose(text, markup) {
     t = t
       .replace(/<(script|style|pre|code|textarea)[\s\S]*?<\/\1>/gi, " ")
       .replace(/<!--[\s\S]*?-->/g, " ")
+      // A table is a table in both formats. The Markdown branch below already drops `|...|` rows,
+      // and leaving them in here made the two halves of one function disagree about the same page,
+      // which is the exact bug this file was extracted to prevent.
+      .replace(/<table[\s\S]*?<\/table>/gi, " ")
+      // A block element ends a sentence. Every tag used to become a space, so ten table cells with
+      // no full stop between them concatenated into one 122-word "sentence" and `measure` reported
+      // a voice violation nobody had written. Worse, the run-ons masked the real distribution: the
+      // same page measured 0.23 short sentences against a floor of 0.30 and was actually at 0.11.
+      .replace(/<\/(p|li|h[1-6]|dt|dd|div|section|article|blockquote|figcaption|td|th|tr|caption)\s*>/gi, ".\n\n")
+      // A quotation is not the author's prose. This project's own rule is that quotations keep
+      // their own spelling whatever the style sheet says, and cadence is the same argument: the
+      // homepage carries a 43-word specimen of machine writing on purpose, and measure was holding
+      // the site's voice ceiling against it. `tells` has exempted quoted text since it was written.
+      .replace(/\u201c[^\u201d]{0,600}\u201d/g, " ")
       .replace(/<[^>]+>/g, " ")
       .replace(/&nbsp;|&#160;/gi, " ")
       .replace(/&[a-z]+;|&#\d+;/gi, "");
@@ -129,6 +144,7 @@ const LABELS = [
   [/longest/i, "sentenceMax"],
   [/varies|variance|sd ?\/ ?mean|standard deviation/i, "sentenceSdOverMean"],
   [/very short|under (six|6)|short sentences/i, "shortSentences"],
+  [/long sentences|long tail/i, "longSentences"],
   [/two long|adjacent long|long sentences in a row/i, "adjacentLong"],
   [/paragraph length,? median|paragraph/i, "paragraphMedian"],
   [/second person/i, "secondPerson"],
@@ -154,8 +170,36 @@ export function target(raw) {
   return { about: nums[0] };
 }
 
-export function targets(root) {
-  const path = join(root, config(root)?.voice ?? "VOICE.md");
+/**
+ * Which voice governs this file.
+ *
+ * `voice` in the config is either one path, meaning the whole project writes in one register, or a
+ * map of glob to path for a project that does not. A site is the case that forced it: `site/` is
+ * written to sell and the reference material is written to be checked against, and holding a
+ * landing page to the register of a measurement table would wreck it. Before this, `site/VOICE.md`
+ * was protected content that no command could read, so the one part of this project written to a
+ * declared voice was the one part nothing could hold to it.
+ *
+ * First matching glob wins, so the config author sets precedence by ordering, and a `*` entry at
+ * the end is the fallback. No map, or nothing matching, means VOICE.md at the root.
+ */
+export function voiceFor(root, file) {
+  const declared = config(root)?.voice;
+  if (!declared) return "VOICE.md";
+  if (typeof declared === "string") return declared;
+
+  if (file && file !== "stdin") {
+    const abs = isAbsolute(file) ? file : join(root, file);
+    const rel = relative(root, abs).split(sep).join("/");
+    for (const [glob, path] of Object.entries(declared)) {
+      if (glob !== "*" && matches(rel, glob)) return path;
+    }
+  }
+  return declared["*"] ?? "VOICE.md";
+}
+
+export function targets(root, file) {
+  const path = join(root, voiceFor(root, file));
   if (!existsSync(path)) return { path, targets: {} };
   const text = readFileSync(path, "utf8");
 
@@ -196,8 +240,30 @@ const RATIOS = new Set([
  * writing a voice file will use whichever reads better in their table. Comparing 0.25 against 30
  * produces a verdict that is not wrong so much as meaningless, which is worse.
  */
+/**
+ * Metrics that are a ceiling by their nature. A voice file writes "longest: around 40, spent
+ * rarely" and means do not run past forty. Stored as `about`, that was judged as needing to land
+ * within a quarter either side, so a page whose longest sentence was 29 words failed for not being
+ * long enough, and the only way to pass was to staple a clause onto a sentence that was finished.
+ * This site was padded for a whole session by a check that was ordering it.
+ *
+ * A maximum cannot be too small. `about` on one of these means "up to about", never "close to".
+ */
+const CEILINGS = new Set(["sentenceMax", "sentenceP95", "sentenceP90"]);
+
 export function normalise(metric, t) {
-  if (!t || !RATIOS.has(metric)) return t;
+  if (!t) return t;
+  if (CEILINGS.has(metric)) {
+    if (t.about !== undefined && t.max === undefined) {
+      t = { ...t, max: Math.round(t.about * 1.25), about: undefined };
+    }
+    /* A maximum cannot carry a minimum. The project voice writes "Longest 5%: 35 words and up",
+       meaning its tail reaches 35, and the label table sent that to `sentenceMax` as a floor, so a
+       page whose longest sentence ran to 33 failed for not being long enough. A voice that wants a
+       long tail should say so with `longSentences`, which is a share and can be a floor. */
+    if (t.min !== undefined && t.max === undefined) t = { ...t, min: undefined };
+  }
+  if (!RATIOS.has(metric)) return t;
   const scale = (n) => (n === undefined ? undefined : n > 1 ? n / 100 : n);
   return { min: scale(t.min), max: scale(t.max), about: scale(t.about) };
 }

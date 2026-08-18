@@ -1,6 +1,6 @@
 ---
 name: Noir
-group: fun
+group: genre
 description: Past tense, first person, flat declaratives. The famous simile is the rarest move in it.
 feeling: Dread, and a grief the narrator will not admit to.
 measured:

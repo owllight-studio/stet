@@ -73,13 +73,16 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 |---|---|---|---|
 | `init` | Establish | What this project is, who reads it, what it must do | [reference/init.md](reference/init.md) |
 | `style` | Establish | The decisions, as opposed to the voice. Built while editing, handed on | [reference/style.md](reference/style.md) |
+| `style-sheet` | Establish | Decide the variants `style` found, on one page | [reference/style-sheet.md](reference/style-sheet.md) |
 | `voice` | Establish | Derive or define the house voice | [reference/voice.md](reference/voice.md) |
+| `voice-stats` | Establish | What a body of writing measurably does, in figures | [reference/voice-stats.md](reference/voice-stats.md) |
 | `ia` | Establish | What exists, how it relates, what each page is for | [reference/ia.md](reference/ia.md) |
 | `ingest` | Establish | Read existing content, claim it, report what is there | [reference/ingest.md](reference/ingest.md) |
 | `outline` | Compose | Plan a piece before writing it | [reference/outline.md](reference/outline.md) |
 | `write` | Compose | Author in the voice, to the IA | [reference/write.md](reference/write.md) |
 | `expand` | Compose | A stub into a finished piece | [reference/expand.md](reference/expand.md) |
 | `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
+| `mark` | Authorship | Set state, author and policy directly | [reference/mark.md](reference/mark.md) |
 | `proof` | Authorship | Read what an agent wrote, block by block, and decide | [reference/proof.md](reference/proof.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
@@ -88,6 +91,9 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `standing` | Evaluate | What every cited source was last time, and what has moved since | [reference/standing.md](reference/standing.md) |
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `sums` | Evaluate | The arithmetic a document does on itself, recomputed | [reference/sums.md](reference/sums.md) |
+| `check` | Evaluate | Where the writing disagrees with the style sheet | [reference/check.md](reference/check.md) |
+| `tells` | Evaluate | The constructions that read as machine-written | [reference/tells.md](reference/tells.md) |
+| `measure` | Evaluate | Whether this matches the voice it claims to be in | [reference/measure.md](reference/measure.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
@@ -97,6 +103,8 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `kinds` | Operate | What kind of written thing this is, and which checks that switches off | [reference/kinds.md](reference/kinds.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |
 | `context` | Operate | What an agent needs to know before touching a word | [reference/context.md](reference/context.md) |
+| `scan` | Operate | What content exists, and how much of it | [reference/scan.md](reference/scan.md) |
+| `owner` | Operate | Who a file belongs to, and what may be done to it | [reference/owner.md](reference/owner.md) |
 | `admin` | Operate | When the hook is in your way: unlock, relock, and the record of why | [reference/admin.md](reference/admin.md) |
 | `pin` | Operate | Make one command its own slash command | [reference/pin.md](reference/pin.md) |
 
@@ -135,6 +143,42 @@ transcript is the wrong place to make fifty of those.
 
 Do not delegate the writing. `write`, `tighten`, `clarify` and `restructure` are the work, and an
 agent that hands its prose to another agent has added a layer and lost the thread.
+
+**Plain English is the floor, and only a voice may raise it.** With no voice file, this is how you
+write. With one, this is what you write underneath it, and the voice overrides any line of it that
+it actually addresses.
+
+- Simple words. No jargon. Where a technical term is genuinely needed, explain it briefly right
+  where it appears.
+- Prefer shorter sentences.
+- When something happens, say what happened.
+- Do not lean on a word or a phrase. Repetition of a shape is as loud as repetition of a word.
+- Nothing abstract where something concrete will do.
+- Clear and practical, always.
+
+**A measured target is never a reason to break this.** If hitting `sentenceMax` or `secondPerson`
+means adding a clause, the target is being gamed and the plain sentence wins. Say the drift out loud
+instead. A page that satisfies every figure and has to be decoded has failed at the only thing that
+mattered.
+
+**And check the target before you obey it.** `sentenceMax` is a ceiling. A voice file writing
+"longest: around 40" means do not run past forty, and for a while `measure` read that as "should be
+about forty" and failed a page whose longest sentence was 29 words. Every long sentence written to
+satisfy it was a finished sentence with a clause stapled on. `tells` now enforces the floor above on
+everything in the config's `prose` list, so this is checked rather than remembered.
+
+**Delegate the criticism, always.** Every command that produces prose finishes the same way: `tells`,
+then `measure`, then `critique`, revising and re-running after each, and then `stet-critic` on the
+four questions `critique` prints and cannot compute. That applies to `write`, `tighten`, `clarify`,
+`restructure` and `expand` alike, and it is the difference between an author approving a draft and
+an author repairing one. **Approval confers ownership. Repair does not.** If the first thing the
+author changes on the proof sheet is something a check would have caught, the draft reached them too
+early and the loop was cut short.
+
+A piece that passes `tells` and `measure` has none of the countable faults, which is a lower bar than
+good and a different one. Writing to the middle of every range at once hits every target and has no
+rhythm, because the targets describe a distribution and the middle of a distribution is not a sample
+from it.
 
 ## Routing
 

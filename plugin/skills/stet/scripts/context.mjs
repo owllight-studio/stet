@@ -94,23 +94,36 @@ console.log("");
 
 /* --- what does it sound like ---------------------------------------------- */
 
-const voicePath = join(root, cfg.voice ?? "VOICE.md");
+/* `voice` is one path, or a map of glob to path for a project that writes in more than one
+   register. Both shapes are reported, because a session that is told about one voice and then edits
+   a file governed by another has been told the wrong thing. */
+const voiceEntries = cfg.voice && typeof cfg.voice === "object"
+  ? Object.entries(cfg.voice)
+  : [["*", cfg.voice ?? "VOICE.md"]];
+
 console.log("WHAT IT SOUNDS LIKE");
-if (!existsSync(voicePath)) {
-  console.log(`  No ${cfg.voice ?? "VOICE.md"}. Nothing is enforcing a register, so run voice before writing much.`);
-} else {
+for (const [glob, rel] of voiceEntries) {
+  const scope = glob === "*" ? "" : `  ${glob}`;
+  const voicePath = join(root, rel);
+
+  if (!existsSync(voicePath)) {
+    console.log(`  No ${rel}${scope && ` for ${glob}`}. Nothing is enforcing a register there, so run voice before writing much.`);
+    continue;
+  }
+
   const text = readFileSync(voicePath, "utf8");
   const one = text.match(/^##\s+The one rule\s*$([\s\S]*?)(?=^##\s)/m)?.[1];
   const rule = one?.split(/\n\s*\n/).find((p) => p.trim())?.replace(/\s*\n\s*/g, " ").replace(/\*\*/g, "").trim();
   const never = (text.match(/^##\s+Never\s*$([\s\S]*?)(?=^##\s|$(?![\s\S]))/m)?.[1].match(/^-\s/gm) ?? []).length;
-  const state = readMeta(root, cfg.voice ?? "VOICE.md")?.state;
+  const state = readMeta(root, rel)?.state;
 
-  console.log(`  ${voicePath.replace(root + "/", "")}${state ? `, ${state}` : ""}`);
+  console.log(`  ${rel}${state ? `, ${state}` : ""}${glob === "*" ? "" : `, for ${glob}`}`);
   if (rule) console.log(`  ${rule}`);
   if (never) console.log(`  ${never} things it never does. Read the file before writing, not after.`);
   if (state === "draft") {
     console.log("  It is a draft, which means an agent wrote it and nobody has accepted it yet.");
   }
+  if (voiceEntries.length > 1) console.log("");
 }
 console.log("");
 
@@ -121,7 +134,8 @@ const drafts = files.filter((f) => meta.get(f)?.state === "draft").length;
 
 console.log("WHAT TO DO NEXT");
 const next = [];
-if (!existsSync(voicePath)) next.push("run voice, because everything written before it exists will have to be redone");
+const missingVoices = voiceEntries.filter(([, rel]) => !existsSync(join(root, rel)));
+if (missingVoices.length) next.push("run voice, because everything written before it exists will have to be redone");
 if (drafts === files.length && files.length) next.push("run proof: every file is still a draft, so nobody has accepted anything");
 if (specs) next.push("run verify before quoting a figure, because a stale one is worse than none");
 else next.push("no sources are declared, so nothing is watching the figures in this content");

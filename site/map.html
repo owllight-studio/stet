@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The map · Stet</title>
+<meta name="description" content="Thirty-six commands in seven groups, and ten agents. The whole system, station by station.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://stet.style/map.html">
+<link rel="stylesheet" href="/stet.css">
+<script>(function(){try{var t=localStorage.getItem("stet-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="inner">
+    <a class="wordmark" href="/" aria-label="Stet, home">
+      <svg viewBox="0 0 133 98" role="img" aria-hidden="true" focusable="false"><g fill="currentColor"><text x="0" y="70" textLength="133" lengthAdjust="spacing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">stet</text><rect x="0" y="84" width="133" height="7" rx="3.5"/><circle cx="10" cy="87.5" r="10"/><circle cx="47.67" cy="87.5" r="10"/><circle cx="85.33" cy="87.5" r="10"/><circle cx="123" cy="87.5" r="10"/></g></svg>
+    </a>
+    <nav class="routes" aria-label="Sections">
+      <a class="r-authorship" href="/ownership.html">Ownership</a>
+      <a class="r-operate" href="/map.html" aria-current="page">The map</a>
+      <a class="r-evaluate" href="/checks.html">Checks</a>
+      <a class="r-establish" href="/voices.html">Voices</a>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+    </nav>
+    <div class="modes" role="group" aria-label="Colour scheme">
+      <button type="button" data-mode="light" aria-pressed="false">Light</button>
+      <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero r-operate">
+    <span class="sign" style="display:block;margin-bottom:14px">Line O · Operate</span>
+    <h1>Thirty-six commands. Seven lines.</h1>
+    <div class="pair">
+      <div>
+        <p class="lede">Stet is a plugin for Claude Code. It keeps agents off the sentences you
+          wrote and keeps every figure true to the command that produced it.</p>
+        <p class="lede">Work out what the project is. Write to it. Say whose the words are. Hold
+          it against its sources. Cut it down. Keep it current.</p>
+        <p class="lede">Those six sentences are the six coloured lines below, in that order. The
+          seventh is the one you start every session on. Which one do you need? Whichever of those
+          six describes your afternoon.</p>
+      </div>
+      <div class="panel">
+        <span class="sign">stet context, run on this repository</span>
+        <pre class="out">STET  a site, 69 files, 101,071 words
+
+WHAT YOU MAY EDIT
+  67 open, 2 closed.
+<i>  Ask before editing anything closed.
+  Do not release it yourself.</i></pre>
+        <p style="margin-top:14px; color:var(--soft); font-size:14px">Why first? Because the hook
+          will refuse an edit you had no way to see coming. One call tells you which files are
+          closed, what the project sounds like, and what to do next.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:6px">
+
+    <div class="route-line r-establish">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">E</span>
+        <h3>Establish</h3>
+        <p>You have just arrived, and nothing here knows what this project is or how it should sound</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>init</b><em>What this project is, who reads it, what it must do</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>style</b><em>The decisions, as opposed to the voice</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>style-sheet</b><em>Decide the variants it found, on one page</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>voice</b><em>Derive or define the house voice</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>voice-stats</b><em>What a body of writing measurably does, in figures</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>ia</b><em>What exists, how it relates, what each page is for</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>ingest</b><em>Read what is there, claim it, report it</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-compose">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">C</span>
+        <h3>Compose</h3>
+        <p>There is a blank page, and a house voice you would rather not break on the first draft</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>outline</b><em>Plan a piece before writing it</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>write</b><em>Author in the voice, to the IA</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>expand</b><em>A stub into a finished piece</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-authorship">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">A</span>
+        <h3>Authorship</h3>
+        <p>Somebody wrote a line that has to survive everything you do to the page around it</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>claim</b><em>These words are mine</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>release</b><em>And these are not, any more</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>approve</b><em>Accept the agent's draft, which makes it yours</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>proof</b><em>Read it block by block and decide</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>policy</b><em>What may still be done, and what it depends on</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>mark</b><em>Set the state, the author and the policy on a file</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-evaluate">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">V</span>
+        <h3>Evaluate</h3>
+        <p>The page reads fine, and you have no idea whether any of it is still true</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>audit</b><em>The sweep, ranked by what it costs</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>critique</b><em>A scored review where every score is computed</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>cite</b><em>Does it exist, is it retracted, is it the right version</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>standing</b><em>What each source was last time, and what moved</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>verify</b><em>Every claim against its real source</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>sums</b><em>The arithmetic a document does on itself</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>check</b><em>Where the writing disagrees with the style sheet</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>tells</b><em>The constructions that read as machine-written</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>measure</b><em>Whether this matches the voice it claims to be in</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>claims</b><em>Every claim that failed, and what to do</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-refine">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">R</span>
+        <h3>Refine</h3>
+        <p>It says the thing, eventually, and reads as though nobody was in the room</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>tighten</b><em>Cut</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>clarify</b><em>Make it land for somebody who is not the author</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>restructure</b><em>Reorder a page, and prove the words survived</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-maintain">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">M</span>
+        <h3>Maintain</h3>
+        <p>Months have gone by and something underneath the page has moved</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>refresh</b><em>Bring the named figures current, and change no other word</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>doctor</b><em>Drift between the config, the content and the plugin</em></li>
+      </ol>
+    </div>
+
+    <div class="route-line r-operate">
+      <div class="route-head">
+        <span class="bullet lg" aria-hidden="true">O</span>
+        <h3>Operate</h3>
+        <p>Not a stage. The line every other line passes through, and where you start each session</p>
+      </div>
+      <ol class="stations">
+        <li><span class="dot" aria-hidden="true"></span><b>context</b><em>The whole project in one call. Run it first</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>scan</b><em>What content exists, and how much of it</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>owner</b><em>Who a file belongs to, and what may be done to it</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>admin</b><em>Unlock, relock, and the record of why</em></li>
+        <li><span class="dot" aria-hidden="true"></span><b>pin</b><em>Make one command its own slash command</em></li>
+      </ol>
+    </div>
+
+  </section>
+
+  <div class="line" style="margin-top:8px">
+    <section class="stop r-operate">
+      <span class="sign">Interchange</span>
+      <h2>Ten agents</h2>
+      <div class="pair wide-right">
+        <div>
+          <p>So why not just ask the agent you already have? Because two jobs do not fit in a
+            conversation. Reading your whole back catalogue is too big for one. Deciding whether
+            your page works is too close to it, since the thing being judged is the thing that
+            wrote it.</p>
+        </div>
+        <div class="scroll">
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Agent</th><th scope="col">Why not do it here</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>voice-builder</td><td>Most people cannot name the voice they want. Ask them to describe it and you get adjectives</td></tr>
+              <tr><td>voice-researcher</td><td>Ten presets written from instinct had their central mechanic backwards. An impression of a voice is reliably an inversion of it</td></tr>
+              <tr><td>sample-reader</td><td>A whole back catalogue, read once, reported in a page</td></tr>
+              <tr><td>corpus-reader</td><td>Forty thousand words of somebody else's site, read once</td></tr>
+              <tr><td>style-sheet</td><td>The error hides in the string a reader skips. A machine does not skip it</td></tr>
+              <tr><td>citation-checker</td><td>Whether a source exists is arithmetic. Whether it supports the sentence is not</td></tr>
+              <tr><td>source-integrity</td><td>Whether a source survives is arithmetic. Whether the claim survives it changing is not</td></tr>
+              <tr><td>continuity</td><td>No single reading holds four hundred pages, and the contradiction is never in one place</td></tr>
+              <tr><td>fact-checker</td><td>Adversarial by design. A checker that wrote the claim finds it convincing</td></tr>
+              <tr><td>critic</td><td>Fresh eyes, outside the attention gravity of having written it</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop r-compose">
+      <span class="sign">Terminus</span>
+      <h2>Not only for marketing pages</h2>
+      <div class="pair">
+        <div>
+          <p>A novel. A research paper. A screenplay, a documentation tree, an album's worth of
+            lyrics. None of that is a marketing page, and if you write one of them your first
+            question is whether any of this was built with you in mind.</p>
+          <p>Some checks only make sense for a website, so you tell Stet what you are writing with
+            <code>kinds</code> and those switch themselves off. What is left works the same on all of
+            them.</p>
+          <p>A line of your lyric and a line of your marketing copy are both somebody's words, and
+            whether an agent may rewrite them has one answer.</p>
+          <p>The voice measurements are the part worth arguing about, and the honest answer is that
+            they were counted off the register you pick. Choose Noir and you are held to Chandler
+            and Hammett. Choose The Pitch and you are held to sixteen software home pages. Neither
+            number means anything on the other one, which is why there are seventeen.</p>
+        </div>
+        <div class="panel">
+          <span class="sign">Adding it</span>
+<pre class="out">/plugin marketplace add \
+        owllight-studio/stet
+
+<i># then, in any project</i>
+/stet</pre>
+          <p style="margin-top:16px; color:var(--soft); font-size:14.5px">Node 20 or newer. MIT.
+            Zero dependencies.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <div class="col">
+      <h4>Lines</h4>
+      <a href="/ownership.html">Ownership</a>
+      <a href="/map.html">The map</a>
+      <a href="/checks.html">Checks</a>
+      <a href="/voices.html">Voices</a>
+    </div>
+    <div class="col">
+      <h4>Source</h4>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/README.md">README</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/LICENSE">MIT licence</a>
+    </div>
+    <p class="last"><i>stet</i>, the proofreader's mark meaning let it stand. Ignore the
+      correction; the original is right.</p>
+  </div>
+</footer>
+
+<script src="/mode.js" defer></script>
+</body>
+</html>

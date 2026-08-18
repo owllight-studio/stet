@@ -13,5 +13,9 @@ node_modules/
 # Scratch directory for the development process itself, not part of the shipped project.
 .superpowers/
 
+# Design tool state: mock renders, hook cache, review notes. Local working material, and 31MB of
+# PNGs that a public repo would carry forever.
+.impeccable/
+
 # npm pack output.
 *.tgz

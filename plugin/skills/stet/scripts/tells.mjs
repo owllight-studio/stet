@@ -15,7 +15,8 @@
 
 import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { findContent } from "./lib/find.mjs";
+import { findContent, config } from "./lib/find.mjs";
+import { matchesAny } from "./lib/glob.mjs";
 
 const TELLS = [
   { id: "em-dash", re: /—|(?<=\w)\s–\s(?=\w)/g, say: "em dash. Use a colon, a full stop or brackets." },
@@ -43,11 +44,37 @@ const TELLS = [
   { id: "in-conclusion", re: /^\s*(in conclusion|to summarize|to sum up|in summary|overall,)/gim, say: "a summary of something the reader just read." },
   { id: "not-only", re: /\bnot only\b[^.]{0,60}\bbut also\b/gi, say: '"not only, but also". Two sentences.' },
   { id: "exclamation", re: /(?<!<)!(?!=)/g, say: "exclamation mark." },
+
+  /* The plain-English floor, from SKILL.md, and it runs on `prose` only.
+     
+     Written down and trusted to memory, it got ignored: "a voice that has never once been surprised
+     by anything" shipped on this project's own homepage. So it is enforced now. But the first
+     version banned words and fired 28 times on correct writing, because `orthogonal`, `primitive`
+     and `canonical` are exactly right in a reference file and "there is no test framework" is the
+     plain word. The config already draws that line: `content` is everything, `prose` is what a
+     person reads to decide whether to use this. These rules run on `prose` and nowhere else. */
+
+  { id: "abstract-noun", prose: true,
+    re: /\b(capabilit(y|ies)|functionalit(y|ies)|offerings?|methodolog(y|ies)|paradigms?|ecosystems?|touchpoints?|learnings|verticals?|granularity|synerg(y|ies))\b/gi,
+    say: "an abstract noun where a concrete one belongs. Name the actual thing." },
+
+  { id: "grand-abstraction", prose: true,
+    re: /\b(the (?:very )?(?:essence|nature|heart|core|fabric|soul) of|at its core|fundamentally about|a testament to)\b/gi,
+    say: "a grand abstraction. Say what it does." },
+
+  { id: "unglossed-jargon", prose: true,
+    re: /\b(idempotent|orthogonal|canonical|deterministic|composable|primitives?|surface area)\b/gi,
+    say: "jargon on a page somebody reads to decide. Use the plain word, or gloss it here." },
 ];
 
 const root = process.cwd();
 const args = process.argv.slice(2);
 const files = args.length ? args.map((a) => relative(root, a) || a) : findContent(root).files;
+
+/* `prose` is the subset written to be read by a person deciding whether to use this. The floor
+   rules apply there and nowhere else, because a measurement table is allowed to say "orthogonal". */
+const proseGlobs = config(root)?.prose ?? [];
+const isProse = (file) => matchesAny(file, proseGlobs);
 
 let total = 0;
 const counts = new Map();
@@ -71,19 +98,52 @@ for (const file of files) {
   const stripBanSections = (t) =>
     t.replace(/^#{1,6}\s*(never|do not|don't|avoid|banned)\b[\s\S]*?(?=^#{1,6}\s|$(?![\s\S]))/gim, "");
 
+  // The fourth instance, and the first one in HTML. voices.html is generated out of the voice
+  // files, so it carries their never lists onto a page, and both exemptions above missed it: the
+  // markdown headings are gone by then, and &quot; hid a quoted bad example from the quoted-text
+  // rule. Decode the entities, then drop any list item that opens by forbidding something.
+  const decodeEntities = (t) =>
+    t
+      .replace(/&quot;|&#34;/g, '"')
+      .replace(/&ldquo;|&#8220;/g, "“")
+      .replace(/&rdquo;|&#8221;/g, "”")
+      .replace(/&apos;|&#39;/g, "'")
+      .replace(/&amp;/g, "&");
+
+  const stripBanItems = (t) =>
+    t.replace(/<li\b[^>]*>[\s\S]*?<\/li>/gi, (item) =>
+      /^(never|do not|don't|avoid|banned)\b/i.test(item.replace(/<[^>]*>/g, "").trim()) ? "" : item,
+    );
+
   const prose = stripBanSections(
-    text
+    stripBanItems(decodeEntities(text))
+      // Program output and code, in HTML. Markdown fences and inline backticks were stripped from
+      // the start and their HTML equivalents never were, so pasting a real `tells` run onto a page
+      // made this command report its own output as machine-written prose. `prose.mjs` has stripped
+      // these since it was written; this is the same list.
+      .replace(/<(pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/gi, " ")
       .replace(/```[\s\S]*?```/g, "")
       .replace(/`[^`]*`/g, "")
       .replace(/"[^"]{0,120}"/g, '""')
-      .replace(/\u201c[^\u201d]{0,120}\u201d/g, ""),
+      // Curly quotes are unambiguous about which end is which, so the character class already
+      // stops the match at the closing mark and no length cap is needed to keep it from running
+      // away. The old cap of 120 was inherited from the straight-quote rule above, where a lone
+      // stray quote really can pair with the wrong one. It cost the site its own exhibit: a
+      // specimen of agent prose, correctly quoted, was reported as a tell for being long.
+      .replace(/\u201c[^\u201d]{0,400}\u201d/g, "")
+      // A tag is markup, not writing. `<link rel="canonical">` was being read as jargon in the
+      // prose, which is the same class of mistake as measuring a table cell as a sentence.
+      // Replaced with a space rather than removed, so reported line numbers still line up.
+      .replace(/<[^>\n]+>/g, " "),
   );
   const lines = prose.split("\n");
+  const fileIsProse = isProse(file);
 
   const hits = [];
   lines.forEach((line, i) => {
     if (/<!--\s*stet-allow(:\s*[a-z-]+)?\s*-->/.test(line)) return;
     for (const tell of TELLS) {
+      if (tell.prose && !fileIsProse) continue;
       tell.re.lastIndex = 0;
       const found = [...line.matchAll(tell.re)];
       if (found.length) {

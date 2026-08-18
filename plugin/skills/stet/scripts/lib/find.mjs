@@ -73,11 +73,26 @@ export function nameKind(name) {
   return null;
 }
 
+/* One glob written where a list was meant.
+ *
+ * `content: "docs/**"` instead of `content: ["docs/**"]` is the mistake people make, the JSON parses
+ * fine, and every consumer then treats it as an array. It threw `globs.some is not a function` out
+ * of the matcher and `roots.join is not a function` out of scan, with a stack trace and no report.
+ * Fixing the matcher alone left the second one, so it is normalised here, once, where the config is
+ * read. One glob is a list of one. Anything that is neither is no globs at all.
+ */
+const asGlobs = (v) => (typeof v === "string" ? [v] : Array.isArray(v) ? v.filter((g) => typeof g === "string") : []);
+
 export function config(root = process.cwd()) {
   const path = join(root, "stet.config.json");
   if (!existsSync(path)) return null;
   try {
-    return JSON.parse(readFileSync(path, "utf8"));
+    const cfg = JSON.parse(readFileSync(path, "utf8"));
+    if (cfg && typeof cfg === "object") {
+      if ("content" in cfg) cfg.content = asGlobs(cfg.content);
+      if ("prose" in cfg) cfg.prose = asGlobs(cfg.prose);
+    }
+    return cfg;
   } catch (err) {
     return { error: `stet.config.json is not valid JSON: ${err.message}` };
   }

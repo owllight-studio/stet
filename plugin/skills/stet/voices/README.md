@@ -12,30 +12,35 @@ A library of 17 registers, not moods.
 The job these serve is one sentence: **writing that does not read as written by a machine.** That is
 not a taste preference. Readers told a headline was AI-generated rated it less accurate and were
 less willing to share it, whether or not it was true and whether or not a machine wrote it (Altay
-and Gilardi, *PNAS Nexus*, 2024, preregistered, n=4,976). The penalty attaches to how prose reads,
-so prose that merely sounds generated pays it with no label attached and no way to appeal.
+and Gilardi, *PNAS Nexus*, 2024, preregistered, n=4,976). That study manipulated the label rather
+than the prose. The penalty therefore attaches to perceived authorship, and writing that merely
+reads as generated plausibly pays it with no label attached and no way to appeal: an inference from
+the finding, not the finding itself.
 
 Each file here is a way of writing with its own rules, its own examples and its own refusals. None
 of them is "professional" or "friendly": those are adjectives, and an adjective cannot be followed
 or violated, so it cannot be a rule.
 
-A preset is a starting point and never a finished voice. `voice` composes it with whatever else the
-author brings, and the result is written to their own `VOICE.md`, which is the only file any command
-reads. Nothing in here is loaded at write time.
+**A preset is finished work and stands on its own.** Somebody who names one and starts writing has
+a complete voice and is asked for nothing further. It is also a place to start from when an author
+would rather adjust something measured than begin at nothing: `voice` composes it with whatever else
+they bring. Either way the result is written to their own `VOICE.md`, which is the only file any
+command reads. Nothing in here is loaded at write time.
 
 ## Groups
 
-**Core**, the general registers most projects want. Plainspoken, The Argument, The Broadsheet, The
-Teacher, The Manual, Field Notes, The Catalogue.
+**Core**, for documentation, a README, release notes, a post, anything somebody has to follow.
+Plainspoken, The Argument, The Broadsheet, The Teacher, The Manual, Field Notes, The Catalogue,
+Patch Notes.
 
 **Marketing**, the registers that ask for something. Direct Response, The Pitch. Planned: The
 Launch, The Case, The Founder Letter.
 
-**Genre**, fiction registers, for anyone whose product has a world in it. Noir, The Locked Room,
-The Bridge, Hard SF. Planned: Epic Fantasy, and the drama register.
+**Genre**, for a novel, a script, a game, anything with a world in it. Noir, The Locked Room,
+The Bridge, Hard SF, Epic Fantasy. Planned: the drama register.
 
-**Fun**, invoked on purpose, for delight or for a joke that has to hold a whole page. Patch Notes,
-Nature Documentary, The Sportscaster. Planned: The Chronicle, The Bureaucrat.
+**Fun**, registers a reader recognises on sight, for when that recognition is the point. Nature
+Documentary, The Sportscaster. Planned: The Chronicle, The Bureaucrat.
 
 The fun and genre ones are built to the same standard as the rest. A voice that falls apart after
 two sentences is a party trick, and a party trick is not worth shipping.

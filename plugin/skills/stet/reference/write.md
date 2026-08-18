@@ -30,22 +30,40 @@ have to argue with.
 Never mark your own work `approved`. Approval is what confers ownership, and an agent approving its
 own draft is the exact failure the model exists to prevent.
 
-## Write it
+## Write it, then take it apart yourself
 
-Then check it, in this order, because each check is cheaper than the one after it.
+Four checks, in this order, because each one is more expensive than the one before it. **Revise and
+re-run after each. You are not finished at the first pass of anything.**
 
 ```
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/tells.mjs <file>
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/measure.mjs <file>
+node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/critique.mjs <file>
 ```
 
 `tells` catches the constructions the voice bans outright. `measure` holds the draft to the voice's
-own figures and exits non-zero on drift.
+own figures and exits non-zero on drift. `critique` scores eight dimensions the first two cannot
+see, and then prints four more it cannot compute.
+
+**Those last four are the job, not the appendix.** Hand them to `stet-critic`, which exists for
+exactly this and reads each through its own lens. A piece that passes `tells` and `measure` has
+none of the countable faults, which is a lower bar than good and a different one.
 
 **Drift is a prompt to look, not an order to obey.** A piece can legitimately sit outside the
 targets: a reference page is denser than an essay, and a landing page is shorter than both. What is
 not legitimate is drifting without noticing. If you are outside the range, say which metric and why,
 and let the author decide.
+
+## Why this is the whole procedure
+
+An author who has to rewrite the draft has been handed unfinished work, and the model this project
+runs on does not ask them to. **Approval confers ownership. Repair does not.** The author's job at
+the sheet is to read it and say yes, or to correct the lines where their judgment genuinely differs
+from yours. If they are fixing cadence, or cutting a paragraph that existed because it was easy to
+write, or catching a claim with nothing under it, then a check that was built for that ran late or
+did not run at all.
+
+Every one of those has a tool. Use them before the sheet, not after.
 
 ## The one failure mode worth naming
 
@@ -83,4 +101,10 @@ Anything the author corrects there becomes theirs, per sentence, and nothing wil
 ## Done when
 
 The file exists, is marked draft, passes `tells`, has been measured with any drift explained rather
-than hidden, and is on a proof sheet rather than in a reply.
+than hidden, has been through `critique` with the countable dimensions clean, has had its four
+uncomputable questions answered by `stet-critic` and acted on, and is on a proof sheet rather than
+in a reply.
+
+The test for whether that happened: **the author's first correction should be a matter of taste,
+never a repair.** If the first thing they change is something a check would have caught, the draft
+reached them too early.

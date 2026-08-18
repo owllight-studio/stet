@@ -205,7 +205,7 @@ if (dropped.length) {
 
 /* --- did it flatten? ------------------------------------------------------ */
 
-const { targets: want } = targets(root);
+const { targets: want } = targets(root, target);
 const got = measure(raw, markupOf(target));
 if (got && Object.keys(want).length) {
   const off = Object.entries(got)

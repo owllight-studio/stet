@@ -57,3 +57,172 @@ test("a register qualified by modals no longer reads as unqualified", () => {
   assert.equal(m.softenersPerSentence, 0, "the old list sees nothing here");
   assert.ok(m.modalsPerSentence > 0.9, "and the register is qualified in every sentence");
 });
+
+/* --- which voice governs which file --------------------------------------- */
+
+import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { voiceFor } from "../plugin/skills/stet/scripts/lib/prose.mjs";
+
+function project(voice) {
+  const root = mkdtempSync(join(tmpdir(), "stet-voice-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ voice }));
+  return root;
+}
+
+test("one voice as a string still governs the whole project", () => {
+  const root = project("VOICE.md");
+  assert.equal(voiceFor(root, "site/index.html"), "VOICE.md");
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+});
+
+test("a glob sends its own subtree to its own voice", () => {
+  const root = project({ "site/**": "site/VOICE.md", "*": "VOICE.md" });
+  assert.equal(voiceFor(root, "site/index.html"), "site/VOICE.md");
+  assert.equal(voiceFor(root, "site/deep/nested/page.html"), "site/VOICE.md");
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+});
+
+test("an absolute path resolves the same as a relative one", () => {
+  const root = project({ "site/**": "site/VOICE.md", "*": "VOICE.md" });
+  assert.equal(voiceFor(root, join(root, "site/index.html")), "site/VOICE.md");
+});
+
+test("the star entry is the fallback and never wins over a real glob", () => {
+  const root = project({ "*": "VOICE.md", "site/**": "site/VOICE.md" });
+  assert.equal(voiceFor(root, "site/index.html"), "site/VOICE.md");
+});
+
+test("no config and no map both fall back to the root voice", () => {
+  const root = project({ "docs/**": "docs/VOICE.md" });
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+  assert.equal(voiceFor(root, "stdin"), "VOICE.md");
+});
+
+/* The scripts that read `voice` straight out of the config, rather than through targets(). Making
+   `voice` accept a map broke context.mjs, which is the command every session is told to run first,
+   and no unit test could see it because the failure was a crash in a script. So this runs them. */
+
+import { execFileSync } from "node:child_process";
+import { cpSync } from "node:fs";
+
+test("a voice map does not crash the scripts that read the config directly", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-ctx-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({
+    kind: "site",
+    content: ["VOICE.md", "site/**"],
+    voice: { "site/**": "site/VOICE.md", "*": "VOICE.md" },
+  }));
+  writeFileSync(join(root, "VOICE.md"), "# Root\n\n## The one rule\n\nSay it once.\n");
+  writeFileSync(join(root, "site", "VOICE.md"), "# Site\n\n## The one rule\n\nSell it once.\n");
+  writeFileSync(join(root, "site", "page.md"), "A short page. It has two sentences.\n");
+
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "context.mjs");
+  const out = execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+
+  assert.match(out, /WHAT IT SOUNDS LIKE/);
+  assert.match(out, /site\/VOICE\.md/, "the scoped voice is reported");
+  assert.match(out, /VOICE\.md/, "the fallback voice is reported");
+});
+
+/* A maximum cannot be too small. "longest: around 40" is a ceiling, and storing it as `about`
+   made measure fail a page whose longest sentence was 29 words for not being long enough. The
+   only way to pass was to staple a clause onto a finished sentence, so the check was ordering
+   the padding it exists to catch. */
+
+import { normalise, verdict, target } from "../plugin/skills/stet/scripts/lib/prose.mjs";
+
+test("a ceiling written as 'around 40' never fails for being under", () => {
+  const t = normalise("sentenceMax", target("around 40, spent rarely"));
+  assert.equal(verdict(29, t).state, "ok");
+  assert.equal(verdict(12, t).state, "ok");
+  assert.equal(verdict(40, t).state, "ok");
+});
+
+test("a ceiling still fails when it is genuinely exceeded", () => {
+  const t = normalise("sentenceMax", target("around 40, spent rarely"));
+  assert.equal(verdict(63, t).state, "over");
+  assert.equal(verdict(122, t).state, "over");
+});
+
+test("an explicit range on a ceiling metric is left alone", () => {
+  const t = normalise("sentenceMax", target("30 to 40"));
+  assert.equal(verdict(25, t).state, "under");
+  assert.equal(verdict(35, t).state, "ok");
+});
+
+test("about-targets on ordinary metrics still fail both ways", () => {
+  const t = normalise("sentenceMedian", target("about 9"));
+  assert.equal(verdict(2, t).state, "under");
+  assert.equal(verdict(30, t).state, "over");
+  assert.equal(verdict(9, t).state, "ok");
+});
+
+/* The plain-English floor has to fire on the sentence that caused it and stay silent on the
+   reference material that is allowed to say "orthogonal". */
+
+test("the floor is a real check, not a note in a file", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-floor-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({
+    content: ["site/**", "docs/**"], prose: ["site/**"],
+  }));
+  mkdirSync(join(root, "docs"));
+
+  writeFileSync(join(root, "site", "page.md"),
+    "Our solution delivers a comprehensive set of capabilities. It is idempotent at its core.\n");
+  writeFileSync(join(root, "docs", "ref.md"),
+    "The write is idempotent. Policy is orthogonal to state, and the primitive is release.\n");
+
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  let out = "";
+  try {
+    execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+  } catch (err) {
+    out = err.stdout ?? "";
+  }
+
+  assert.match(out, /site\/page\.md/, "the landing page is judged");
+  assert.match(out, /abstract-noun|unglossed-jargon|grand-abstraction/);
+  assert.doesNotMatch(out, /docs\/ref\.md/, "reference material keeps its own register");
+});
+
+test("a bare floor on a ceiling metric is meaningless and is dropped", () => {
+  // The project voice writes "Longest 5%: 35 words and up", which the label table sends to
+  // sentenceMax. Read as a floor it failed a page whose longest sentence ran to 33 words.
+  const t = normalise("sentenceMax", target("35 words and up"));
+  assert.equal(verdict(33, t).state, "ok");
+  assert.equal(verdict(12, t).state, "ok");
+});
+
+test("a voice can still ask for a long tail, using the metric that is a share", () => {
+  const t = normalise("longSentences", target("5 percent or more"));
+  assert.equal(verdict(0.02, t).state, "under");
+  assert.equal(verdict(0.08, t).state, "ok");
+});
+
+test("tells does not read a pasted program output block as prose", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-pre-"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ content: ["*.html"], prose: ["*.html"] }));
+  // A page showing a real `tells` run. The output contains the sentence it was run on, so a
+  // checker that reads pre blocks reports its own findings back as findings.
+  writeFileSync(join(root, "p.html"),
+    "<p>Clean prose here.</p>\n<pre>     1  important-to-note  It is important to note that this is robust.</pre>\n");
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  const out = execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+  assert.match(out, /clean: no tells/);
+});
+
+test("tells still catches the same construction outside a pre block", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-pre2-"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ content: ["*.html"], prose: ["*.html"] }));
+  writeFileSync(join(root, "p.html"), "<p>It is important to note that this is robust.</p>\n");
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  let out = "";
+  try { execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" }); }
+  catch (e) { out = e.stdout ?? ""; }
+  assert.match(out, /important-to-note/);
+});

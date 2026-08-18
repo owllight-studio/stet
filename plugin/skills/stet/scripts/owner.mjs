@@ -8,7 +8,8 @@
  * Usage: node owner.mjs <path> [...]
  */
 
-import { relative } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { relative, join } from "node:path";
 import { read, mayEdit, mayRefresh } from "./lib/meta.mjs";
 
 const root = process.cwd();
@@ -19,10 +20,41 @@ if (!files.length) {
   process.exit(2);
 }
 
+/*
+ * The unlock record, read the way the hook reads it.
+ *
+ * `owner` is the check an agent is told to run before touching content, and the ownership page
+ * promises that what it says and what the hook does cannot drift apart. They drifted: the hook has
+ * honoured `.stet/admin.json` since it was written and this command had never heard of it, so a
+ * file opened with `admin unlock` still answered NO here while the hook let the edit through. An
+ * agent that believes this command stops when it did not have to, and an agent that believes the
+ * hook edits a file this command said was closed. Either way one of them is lying.
+ */
+let adminRecord = {};
+try {
+  const p = join(root, ".stet", "admin.json");
+  if (existsSync(p)) adminRecord = JSON.parse(readFileSync(p, "utf8"));
+} catch {
+  /* A corrupt admin file must not open the gate, which is what the hook does with it too. */
+}
+
 let blocked = 0;
 
 for (const file of files) {
   const meta = read(root, file);
+
+  if (adminRecord?.hook?.off) {
+    console.log(`YES   ${file}  (the hook is off)`);
+    console.log(`        Nothing is being protected. Recorded: ${adminRecord.hook.reason ?? "no reason given"}`);
+    continue;
+  }
+  if (adminRecord?.unlocked?.[file]) {
+    const u = adminRecord.unlocked[file];
+    console.log(`YES   ${file}  (unlocked${meta?.state ? `, was ${meta.state}` : ""})`);
+    console.log(`        Opened deliberately. Recorded: ${u?.reason ?? "no reason given"}`);
+    console.log(`        Relock it when you are done: admin relock ${file}`);
+    continue;
+  }
 
   if (!meta) {
     console.log(`NO    ${file}`);
