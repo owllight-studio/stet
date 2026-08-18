@@ -40,6 +40,11 @@
       "run": "node scripts/count-tests.mjs",
       "as": "number",
       "note": "The test count in the counters block on index.html. Counted rather than run, because a source that costs a full suite run is a source nobody will check."
+    },
+    "corpus.files": {
+      "run": "node scripts/count-files.mjs",
+      "as": "number",
+      "note": "The file count in the context panel on map.html. Declared after the panel shipped with a current word count beside a stale file count."
     }
   }
 }

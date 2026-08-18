@@ -235,6 +235,45 @@ for (const s of scripts) {
   }
 }
 
+/*
+ * A shipped command with no reference document of its own.
+ *
+ * CLAUDE.md: "One command, four places. A script, a reference document, a row in SKILL.md, and an
+ * entry in the COMMANDS map." The check above could not see this, because it asked whether the
+ * script's filename appeared anywhere in any document. `measure.mjs` is named inside write.md's
+ * invocation block, so `measure` counted as documented while having no reference file and no row.
+ * Eight commands shipped that way and this command reported nothing.
+ *
+ * The contract is per command rather than per file: reference/<name>.md must exist, and SKILL.md
+ * must carry a row for it. Read off the CLI's own COMMANDS map, so it cannot drift from what ships.
+ */
+const cliPath = join(root, "bin", "stet.mjs");
+if (existsSync(cliPath)) {
+  const cli = readFileSync(cliPath, "utf8");
+  const block = cli.match(/const COMMANDS\s*=\s*\{[\s\S]*?\n\};/)?.[0] ?? "";
+  const names = [...block.matchAll(/^\s+"?([a-z][a-z-]*)"?:\s*\{/gm)].map((m) => m[1]);
+
+  /* Exact names only. Matching the name loosely inside a table cell made the `stet-style-sheet`
+     agent row answer for the `style-sheet` command. */
+  const rowNames = new Set(
+    [...skillText.matchAll(/^\|\s*`([^`]+)`/gm)]
+      .flatMap((m) => m[1].split("/").map((x) => x.trim()))
+      .filter(Boolean),
+  );
+
+  for (const name of names) {
+    const hasRef = existsSync(join(skill, "reference", `${name}.md`));
+    const hasRow = rowNames.has(name);
+    if (!hasRef && !hasRow) {
+      say(2, "command with no reference", name, "it ships and nothing documents it. Write reference/" + name + ".md and add its row");
+    } else if (!hasRef) {
+      say(3, "command with a row but no reference", name, "SKILL.md promises reference/" + name + ".md and it is not there");
+    } else if (!hasRow) {
+      say(3, "command with a reference but no row", name, "reference/" + name + ".md exists and the command table does not list it");
+    }
+  }
+}
+
 /* --- report --------------------------------------------------------------- */
 
 const BANDS = [

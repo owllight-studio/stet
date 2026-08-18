@@ -1,4 +1,4 @@
 stet:
   state: draft
   author: agent
-  sources: [corpus.words]
+  sources: [corpus.words, corpus.files]

@@ -158,7 +158,7 @@ was a gap in the model rather than a bug in the code.
 
 Early, and honest about it.
 
-Built and tested: 30 commands, 10 agents, 17 voices, the ownership model and the hook that enforces
+Built and tested: 36 commands, 10 agents, 17 voices, the ownership model and the hook that enforces
 it. 130 tests, zero runtime dependencies.
 
 The npm package is not published yet, so the CLI ships inside the plugin and `node bin/stet.mjs`

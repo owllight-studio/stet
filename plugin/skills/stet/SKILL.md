@@ -73,21 +73,28 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 |---|---|---|---|
 | `init` | Establish | What this project is, who reads it, what it must do | [reference/init.md](reference/init.md) |
 | `style` | Establish | The decisions, as opposed to the voice. Built while editing, handed on | [reference/style.md](reference/style.md) |
+| `style-sheet` | Establish | Decide the variants `style` found, on one page | [reference/style-sheet.md](reference/style-sheet.md) |
 | `voice` | Establish | Derive or define the house voice | [reference/voice.md](reference/voice.md) |
+| `voice-stats` | Establish | What a body of writing measurably does, in figures | [reference/voice-stats.md](reference/voice-stats.md) |
 | `ia` | Establish | What exists, how it relates, what each page is for | [reference/ia.md](reference/ia.md) |
 | `ingest` | Establish | Read existing content, claim it, report what is there | [reference/ingest.md](reference/ingest.md) |
 | `outline` | Compose | Plan a piece before writing it | [reference/outline.md](reference/outline.md) |
 | `write` | Compose | Author in the voice, to the IA | [reference/write.md](reference/write.md) |
 | `expand` | Compose | A stub into a finished piece | [reference/expand.md](reference/expand.md) |
 | `claim` / `release` / `approve` | Authorship | Whose words these are | [reference/claim.md](reference/claim.md) |
+| `mark` | Authorship | Set state, author and policy directly | [reference/mark.md](reference/mark.md) |
 | `proof` | Authorship | Read what an agent wrote, block by block, and decide | [reference/proof.md](reference/proof.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
+| `mark` | Authorship | Set the state, the author and the policy on a file | [reference/mark.md](reference/mark.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
 | `critique` | Evaluate | A scored review of one piece | [reference/critique.md](reference/critique.md) |
 | `cite` | Evaluate | Does the source exist, is it retracted, is it the version to cite | [reference/cite.md](reference/cite.md) |
 | `standing` | Evaluate | What every cited source was last time, and what has moved since | [reference/standing.md](reference/standing.md) |
 | `verify` | Evaluate | Every claim checked against its real source | [reference/verify.md](reference/verify.md) |
 | `sums` | Evaluate | The arithmetic a document does on itself, recomputed | [reference/sums.md](reference/sums.md) |
+| `check` | Evaluate | Where the writing disagrees with the style sheet | [reference/check.md](reference/check.md) |
+| `tells` | Evaluate | The constructions that read as machine-written | [reference/tells.md](reference/tells.md) |
+| `measure` | Evaluate | Whether this matches the voice it claims to be in | [reference/measure.md](reference/measure.md) |
 | `tighten` | Refine | Cut | [reference/tighten.md](reference/tighten.md) |
 | `clarify` | Refine | Make it comprehensible to someone who is not the author | [reference/clarify.md](reference/clarify.md) |
 | `restructure` | Refine | Reorder and regroup within a page | [reference/restructure.md](reference/restructure.md) |
@@ -97,6 +104,9 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `kinds` | Operate | What kind of written thing this is, and which checks that switches off | [reference/kinds.md](reference/kinds.md) |
 | `doctor` | Maintain | Drift between config, content and this plugin | [reference/doctor.md](reference/doctor.md) |
 | `context` | Operate | What an agent needs to know before touching a word | [reference/context.md](reference/context.md) |
+| `scan` | Operate | What content exists, and how much of it | [reference/scan.md](reference/scan.md) |
+| `owner` | Operate | Who a file belongs to, and what may be done to it | [reference/owner.md](reference/owner.md) |
+| `owner` | Operate | Who a file belongs to and what may be done to it | [reference/owner.md](reference/owner.md) |
 | `admin` | Operate | When the hook is in your way: unlock, relock, and the record of why | [reference/admin.md](reference/admin.md) |
 | `pin` | Operate | Make one command its own slash command | [reference/pin.md](reference/pin.md) |
 
