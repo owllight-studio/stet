@@ -127,3 +127,65 @@ test("a voice map does not crash the scripts that read the config directly", () 
   assert.match(out, /site\/VOICE\.md/, "the scoped voice is reported");
   assert.match(out, /VOICE\.md/, "the fallback voice is reported");
 });
+
+/* A maximum cannot be too small. "longest: around 40" is a ceiling, and storing it as `about`
+   made measure fail a page whose longest sentence was 29 words for not being long enough. The
+   only way to pass was to staple a clause onto a finished sentence, so the check was ordering
+   the padding it exists to catch. */
+
+import { normalise, verdict, target } from "../plugin/skills/stet/scripts/lib/prose.mjs";
+
+test("a ceiling written as 'around 40' never fails for being under", () => {
+  const t = normalise("sentenceMax", target("around 40, spent rarely"));
+  assert.equal(verdict(29, t).state, "ok");
+  assert.equal(verdict(12, t).state, "ok");
+  assert.equal(verdict(40, t).state, "ok");
+});
+
+test("a ceiling still fails when it is genuinely exceeded", () => {
+  const t = normalise("sentenceMax", target("around 40, spent rarely"));
+  assert.equal(verdict(63, t).state, "over");
+  assert.equal(verdict(122, t).state, "over");
+});
+
+test("an explicit range on a ceiling metric is left alone", () => {
+  const t = normalise("sentenceMax", target("30 to 40"));
+  assert.equal(verdict(25, t).state, "under");
+  assert.equal(verdict(35, t).state, "ok");
+});
+
+test("about-targets on ordinary metrics still fail both ways", () => {
+  const t = normalise("sentenceMedian", target("about 9"));
+  assert.equal(verdict(2, t).state, "under");
+  assert.equal(verdict(30, t).state, "over");
+  assert.equal(verdict(9, t).state, "ok");
+});
+
+/* The plain-English floor has to fire on the sentence that caused it and stay silent on the
+   reference material that is allowed to say "orthogonal". */
+
+test("the floor is a real check, not a note in a file", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-floor-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({
+    content: ["site/**", "docs/**"], prose: ["site/**"],
+  }));
+  mkdirSync(join(root, "docs"));
+
+  writeFileSync(join(root, "site", "page.md"),
+    "Our solution delivers a comprehensive set of capabilities. It is idempotent at its core.\n");
+  writeFileSync(join(root, "docs", "ref.md"),
+    "The write is idempotent. Policy is orthogonal to state, and the primitive is release.\n");
+
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  let out = "";
+  try {
+    execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+  } catch (err) {
+    out = err.stdout ?? "";
+  }
+
+  assert.match(out, /site\/page\.md/, "the landing page is judged");
+  assert.match(out, /abstract-noun|unglossed-jargon|grand-abstraction/);
+  assert.doesNotMatch(out, /docs\/ref\.md/, "reference material keeps its own register");
+});

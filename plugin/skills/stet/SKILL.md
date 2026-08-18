@@ -153,6 +153,12 @@ means adding a clause, the target is being gamed and the plain sentence wins. Sa
 instead. A page that satisfies every figure and has to be decoded has failed at the only thing that
 mattered.
 
+**And check the target before you obey it.** `sentenceMax` is a ceiling. A voice file writing
+"longest: around 40" means do not run past forty, and for a while `measure` read that as "should be
+about forty" and failed a page whose longest sentence was 29 words. Every long sentence written to
+satisfy it was a finished sentence with a clause stapled on. `tells` now enforces the floor above on
+everything in the config's `prose` list, so this is checked rather than remembered.
+
 **Delegate the criticism, always.** Every command that produces prose finishes the same way: `tells`,
 then `measure`, then `critique`, revising and re-running after each, and then `stet-critic` on the
 four questions `critique` prints and cannot compute. That applies to `write`, `tighten`, `clarify`,

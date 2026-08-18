@@ -1,7 +1,7 @@
 ---
 measured:
   sentenceMedian: 9
-  sentenceMax: 40
+  sentenceMax: at most 40
   sentenceSdOverMean: 0.6 and up
   shortSentences: 30 to 40 percent
   adjacentLong: never
@@ -110,8 +110,9 @@ Pitch, and the target spans both.
 ### Never run two long sentences together
 
 Not once in the source essay. A long sentence is always paid off by a short one, and that contrast
-is the thing readers actually hear as the voice. Ceiling is around forty words and it is spent
-rarely.
+is the thing readers actually hear as the voice. Forty words is a ceiling, not a goal. A page whose
+longest sentence runs to twenty-nine is fine. A sentence that reached forty by having a clause
+stapled to the end of it is not.
 
 **Yes:** "Every sentence turns up with half another sentence stapled to it, and no list ever arrives
 without a small paragraph standing in front of it to announce that a list is coming. So you cut."
@@ -178,7 +179,7 @@ because a target nobody can source is an opinion wearing a figure.
 | | target | counted off |
 |---|---|---|
 | typical sentence | 9 words | The Pitch 9, Direct Response 9, Bourdain 8 to 10. All three agree |
-| longest | around 40, spent rarely | Bourdain runs to forty; The Pitch tops out at 36 in 759 sentences |
+| longest | at most 40, spent rarely | Bourdain runs to forty; The Pitch tops out at 36 in 759 sentences |
 | very short sentences | 30 to 40 percent | The Pitch 28 percent, Direct Response 40 percent |
 | length varies | 0.6 and up | The Pitch measures 0.62. Direct Response's signature is variance, not brevity |
 | two long sentences in a row | never | Not once in the Bourdain source essay |

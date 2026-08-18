@@ -234,8 +234,23 @@ const RATIOS = new Set([
  * writing a voice file will use whichever reads better in their table. Comparing 0.25 against 30
  * produces a verdict that is not wrong so much as meaningless, which is worse.
  */
+/**
+ * Metrics that are a ceiling by their nature. A voice file writes "longest: around 40, spent
+ * rarely" and means do not run past forty. Stored as `about`, that was judged as needing to land
+ * within a quarter either side, so a page whose longest sentence was 29 words failed for not being
+ * long enough, and the only way to pass was to staple a clause onto a sentence that was finished.
+ * This site was padded for a whole session by a check that was ordering it.
+ *
+ * A maximum cannot be too small. `about` on one of these means "up to about", never "close to".
+ */
+const CEILINGS = new Set(["sentenceMax", "sentenceP95", "sentenceP90"]);
+
 export function normalise(metric, t) {
-  if (!t || !RATIOS.has(metric)) return t;
+  if (!t) return t;
+  if (CEILINGS.has(metric) && t.about !== undefined && t.max === undefined) {
+    t = { ...t, max: Math.round(t.about * 1.25), about: undefined };
+  }
+  if (!RATIOS.has(metric)) return t;
   const scale = (n) => (n === undefined ? undefined : n > 1 ? n / 100 : n);
   return { min: scale(t.min), max: scale(t.max), about: scale(t.about) };
 }

@@ -169,9 +169,9 @@
             edit lands and answers before the file moves. It does not advise.</p>
           <p>A file nobody has claimed gets a no. So does that mean it starts refusing edits all
             over your project? No, and here is exactly where it stops. A project with no
-            <code>stet.config.json</code> is not using Stet and the hook does nothing at all, so
-            installing it changes nothing until you say so. Only the paths you list as content are
-            considered, and your code passes straight through. A file that does not exist yet is new
+            <code>stet.config.json</code> is not using Stet, and the hook does nothing at all.
+            Installing it changes nothing until you say so. Only the paths you list as content are
+            considered. Your code passes straight through. A file that does not exist yet is new
             writing, so it is always allowed.</p>
           <p>Inside those lines the no is the safe answer. The first thing <code>ingest</code> does
             in a new project is read what is already there and mark it as yours, because a person
