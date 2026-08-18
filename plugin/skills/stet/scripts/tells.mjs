@@ -117,6 +117,11 @@ for (const file of files) {
 
   const prose = stripBanSections(
     stripBanItems(decodeEntities(text))
+      // Program output and code, in HTML. Markdown fences and inline backticks were stripped from
+      // the start and their HTML equivalents never were, so pasting a real `tells` run onto a page
+      // made this command report its own output as machine-written prose. `prose.mjs` has stripped
+      // these since it was written; this is the same list.
+      .replace(/<(pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/gi, " ")
       .replace(/```[\s\S]*?```/g, "")
       .replace(/`[^`]*`/g, "")
       .replace(/"[^"]{0,120}"/g, '""')

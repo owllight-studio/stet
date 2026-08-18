@@ -203,3 +203,26 @@ test("a voice can still ask for a long tail, using the metric that is a share", 
   assert.equal(verdict(0.02, t).state, "under");
   assert.equal(verdict(0.08, t).state, "ok");
 });
+
+test("tells does not read a pasted program output block as prose", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-pre-"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ content: ["*.html"], prose: ["*.html"] }));
+  // A page showing a real `tells` run. The output contains the sentence it was run on, so a
+  // checker that reads pre blocks reports its own findings back as findings.
+  writeFileSync(join(root, "p.html"),
+    "<p>Clean prose here.</p>\n<pre>     1  important-to-note  It is important to note that this is robust.</pre>\n");
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  const out = execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" });
+  assert.match(out, /clean: no tells/);
+});
+
+test("tells still catches the same construction outside a pre block", () => {
+  const root = mkdtempSync(join(tmpdir(), "stet-pre2-"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ content: ["*.html"], prose: ["*.html"] }));
+  writeFileSync(join(root, "p.html"), "<p>It is important to note that this is robust.</p>\n");
+  const script = join(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "tells.mjs");
+  let out = "";
+  try { execFileSync(process.execPath, [script], { cwd: root, encoding: "utf8" }); }
+  catch (e) { out = e.stdout ?? ""; }
+  assert.match(out, /important-to-note/);
+});
