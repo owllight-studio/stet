@@ -72,15 +72,16 @@
     <h1>Nobody wrote this.</h1>
     <div class="pair">
       <div>
-        <p class="lede">You can spot it in a paragraph. Sometimes in a line. A cover letter. A
-          property listing. A poem somebody sent their mother. Marketing copy, a novel, the second
-          act of a script. It all sounds the same.</p>
-        <p class="lede">Your writing does not have to sound like that. Seventeen voices come with
-          Stet, and each one was built by reading the real thing. Chandler for noir. Darwin's
-          notebooks for field notes. The Reuters handbook for news. Use one as it is. Edit it. Or
-          describe the voice you want and Stet builds it.</p>
-        <p class="lede">You can also lock a line. A slogan, a testimonial, the sentence you spent an
-          hour on. Stet rewrites everything around it and leaves that line alone.</p>
+        <p class="lede">You can spot it in a paragraph. Sometimes in a line. A cover letter, a
+          property listing, a poem somebody sent their mother, all arriving in the same voice, and
+          it is a voice that has never once been surprised by anything.</p>
+        <p class="lede">So what do you do about it? Seventeen voices come with Stet, and none is
+          a mood you typed into a box. Somebody sat down with Chandler for the noir, Darwin's Beagle
+          notebooks for the field notes, the Reuters handbook for the wire. Then they counted. Take
+          one as it stands, edit it, or describe what you are after.</p>
+        <p class="lede">You can also lock a line. A slogan, a testimonial, the sentence you spent
+          an hour on. Everything around it can be pulled apart and rebuilt twice before lunch, and
+          that line comes back exactly as you left it.</p>
       </div>
       <div class="specimen r-establish">
         <div class="before">
@@ -120,16 +121,17 @@
       <h2>Seventeen voices, and the reading behind them</h2>
       <div class="pair wide-right">
         <div>
-          <p>Everywhere else a voice is an adjective in a prompt. Friendly but professional. Clear
-            and concise. Nobody can check an adjective, so nobody does.</p>
-          <p>These were built the other way round. Somebody read Darwin's fifteen Beagle notebooks.
-            Somebody read Chandler and Hammett and Cain. Somebody read ninety-three pages of
-            Kubernetes documentation.</p>
-          <p>The result is a set of numbers. How long the sentences run. Where the pauses land. How
-            often a hedge shows up. Those numbers sit in the file next to the titles they came from,
-            so drift shows up as a number rather than an opinion.</p>
-          <p>Or describe the voice you want in your own words. The agents do that reading for you.
-            The voice is yours.</p>
+          <p>Ask any other tool for a voice and you get asked for an adjective. Friendly but
+            professional. Clear and concise. Nobody can check an adjective, so nobody does.</p>
+          <p>These were built the other way round, which mostly meant somebody reading for a long
+            time. Fifteen of Darwin's Beagle notebooks. Chandler, Hammett and Cain. Ninety-three
+            pages of Kubernetes documentation.</p>
+          <p>What comes back is a set of numbers. How long the sentences run. Where the pauses
+            land. How often the writing hedges. Each one sits in the file beside the book it was
+            counted off, so when a draft stops sounding like you, you can point at the number that
+            moved.</p>
+          <p>And if you cannot name the voice you want? Most people cannot. Describe it in your
+            own words, badly, and the agents go and do the reading. What comes back is yours.</p>
           <p style="margin-top:20px"><a href="/voices.html">All seventeen, and what each one measures</a></p>
         </div>
         <div>
@@ -174,12 +176,15 @@
       <h2>The tells, named and checked</h2>
       <div class="pair">
         <div>
-          <p>An em dash. “Not X, it is Y.” A preamble announcing that a list is coming. A closing
-            sentence summarising the paragraph above it.</p>
-          <p>Every voice file ends by naming how a fake of it gives itself away. All 102 together
-            are a list of what generated writing does.</p>
-          <p><code>tells</code> is the checker for the worst of them. It runs over a whole project
-            in CI, and it runs over this page.</p>
+          <p>An em dash. “Not X, it is Y.” A small paragraph standing in front of every list to
+            announce that a list is coming. A closing sentence summarising the paragraph you just
+            read.</p>
+          <p>Every voice file ends by naming how a fake of it gives itself away, and across
+            seventeen that comes to 102 separate ways. Put the 102 together and you have a list of what a machine
+            writes.</p>
+          <p>Can a checker catch a voice? No, and <code>tells</code> does not try. It catches the
+            phrases instead, because you can count an em dash and you cannot count a voice. No dependencies, no network, no model,
+            and it ran over this page.</p>
           <p style="margin-top:20px"><a href="/voices.html#tells">The whole catalogue, 102 of them</a></p>
         </div>
         <div class="panel">
@@ -208,14 +213,14 @@
       <h2>The line that has to stand</h2>
       <div class="pair">
         <div>
-          <p>A slogan. A testimonial. A promise the lawyers went over twice. The sentence you spent
-            an hour on.</p>
-          <p>Lock it and the agent may rewrite everything in front of it and everything after it,
-            and not that. Change the voice. Move the section. Rebuild the whole page. The line does
-            not change.</p>
+          <p>A slogan. A testimonial. A promise your lawyers went over twice. The sentence you
+            spent an hour on, threw away, and wrote back almost exactly as it was.</p>
+          <p>Lock it, and the agent can change the voice, move the section, rebuild the page around
+            it and hand you back something you would not recognise from this morning. The line does
+            not move.</p>
           <p>Stet holds it as your words, character for character, rather than as a line number.
-            That is why it survives the page moving around it. Rewrite it yourself and the lock
-            comes off, because they are different words.</p>
+            That is how it survives the page being torn up around it. Change the words yourself and
+            the lock comes off, because they are different words.</p>
           <p>A hook reads that record before the edit lands. It does not advise. It refuses.</p>
           <p style="margin-top:20px"><a href="/ownership.html">Three states, and who may edit what</a></p>
         </div>
@@ -255,11 +260,11 @@
       <h2>The page still has to be true</h2>
       <div class="pair">
         <div>
-          <p>A price on your site went up three weeks ago. The page still says the old one. A study
-            you cited was retracted. The footnote does not know. Two percentages in a paragraph do
-            not add up to the total underneath them.</p>
-          <p>None of that is a matter of taste. It is arithmetic, so a model is not needed to do it.
-            Twenty-five checks run in your build and stop it.</p>
+          <p>A price on your site went up three weeks ago and the page still quotes the old one. A
+            study you cited was retracted in March. Your footnote has no idea. Two percentages in the
+            same paragraph do not add up to the total sitting underneath them.</p>
+          <p>None of that is a matter of taste. It is arithmetic. Ten checks
+            run in your build, and a build that fails is a page that does not ship.</p>
           <p style="margin-top:20px"><a href="/checks.html">Every check, and what it catches</a></p>
         </div>
         <div>
@@ -286,23 +291,23 @@
         <div class="panel">
           <span class="sign">The CLI · 25 commands</span>
           <h3>Questions with one answer</h3>
-          <p>Is this word spelled two ways across the project. Does this figure still match the
+          <p>Is this word spelled two ways across your project. Does this figure still match the
             command that produced it. Was this paper retracted.</p>
-          <p>Nobody has to read anything to answer those. They run in your build, with no
-            dependencies and no network.</p>
+          <p>Nobody has to read anything to answer those. They run in your build with nothing
+            installed.</p>
         </div>
         <div class="panel">
-          <span class="sign">The plugin · 30 commands, 10 agents</span>
+          <span class="sign">The plugin · 7 readings, 10 agents</span>
           <h3>Questions that need reading</h3>
-          <p>Does this source actually support the sentence citing it. Can somebody who is not the
-            author follow this paragraph. What voice is this person reaching for.</p>
-          <p>Those need a reader, so they live where there is one. The help screen says which is
-            which.</p>
+          <p>Does this source actually support the sentence citing it. Can a reader who is not
+            you follow this paragraph. What voice is this person reaching for.</p>
+          <p>Each of those needs somebody to read and decide, so they live where there is a model.
+            The help screen prints them under a heading saying they are not there.</p>
         </div>
       </div>
 
-      <p style="margin:26px 0 14px">Thirty commands in seven groups, and the seven groups are the
-        seven coloured lines on this page.</p>
+      <p style="margin:26px 0 14px">So how much needs a model at your expense? Seven commands of
+        the thirty-two, in the seven groups you have been descending.</p>
 
       <div class="legend">
         <div class="route r-establish">

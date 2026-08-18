@@ -1,4 +1,15 @@
 ---
+measured:
+  sentenceMedian: 9
+  sentenceMax: 40
+  sentenceSdOverMean: 0.6 and up
+  shortSentences: 30 to 40 percent
+  adjacentLong: never
+  secondPerson: 20 to 35 percent
+  questions: 3 to 8 percent
+  exclamations: never
+  intensifiersPerSentence: 0.02
+sources: The Pitch and Direct Response, both measured presets in this library, for the marketing half; the Bourdain and Jones reading recorded in .stet/voice-proof.json for the rest
 stet:
   state: draft
   author: agent
@@ -16,12 +27,17 @@ author, for one website, from a custom brief.
 Nothing distributed carries it. Not the README, not the reference documents, not the presets. The
 scope is `site/`.
 
-Chosen on a proof sheet, from a custom brief: Anthony Bourdain, *Kitchen Confidential*, *No
-Reservations*, his more obscure articles, with a dash of James Earl Jones inflection.
+The brief, in the author's words: **a splash of Anthony Bourdain, a little dash of James Earl Jones,
+with marketing overtones.**
 
-The reading picked was **Mostly Bourdain**, and two dials were turned nearly to zero. That is the
-most important thing in this file, because it is where the brief was corrected by the person who
-wrote it.
+Three parts, and the weights matter more than the names. Bourdain is the eye and the rhythm.
+Jones is the weight on the sentences that carry a claim. Marketing is an overtone laid on top of
+both, which means it changes the temperature and never becomes the base.
+
+**This corrects the reading the proof sheet recorded.** That sheet offered Mostly Bourdain, an even
+mix, and Mostly Jones, and no option on it had a marketing component at all, so the voice the file
+described was one the author had not asked for. The dial sat at 75 percent Bourdain where the brief
+says a splash. Two dials stay near zero and they are the next section.
 
 ## The one rule
 
@@ -69,16 +85,27 @@ does the job an adjective would do badly.
 **Yes:** "A preamble before every list, like a waiter reciting specials nobody asked for."
 **No:** "Unnecessary introductory content before list elements."
 
-### Put the reader in the room. Do not give them orders
+### Put the reader in the room, and give an order only when you have earned it
 
-Two sentences in the whole source essay begin with a command, but one in five uses "you". Build the
-scene and let the reader stand in it.
+This is where the marketing overtone meets the base, and the two measurements disagree hard enough
+that the rule has to name both.
+
+Bourdain begins **two sentences in a whole essay** with a command, and uses "you" in one sentence in
+five. The Pitch, the measured landing-page preset in this library, opens **27 percent** of its
+sentences on a bare imperative and carries "you" in 33 percent. Those are not close.
+
+The base wins on address and the overtone is allowed to show. Build the scene and let the reader
+stand in it, then let a command land where the scene has already made the case. **Under one sentence
+in six should open on an order**, which is a decision rather than a count: it sits between two
+measured figures and matches neither, and nothing measured it on a page like this one.
 
 **Yes:** "You asked for a redesign, or a fix in some file three doors down, and your words were
 standing too close to the door."
-**No:** "Don't let agents rewrite your content."
+**Yes, once the ground is laid:** "Mark the line. Nothing rewrites it."
+**No:** "Don't let agents rewrite your content." An order standing where no scene was built.
 
-The command form is allowed when it is a dare rather than an instruction.
+Second person is the half that is not in tension: one in five for Bourdain, one in three for The
+Pitch, and the target spans both.
 
 ### Never run two long sentences together
 
@@ -144,17 +171,31 @@ itself.
 
 ## Measured
 
-Targets from the reading that was chosen, and from the research behind it.
+The frontmatter of this file carries these as machine targets, so `measure site/index.html` and
+`critique` hold a draft to them and print what moved. Every row says where its number came from,
+because a target nobody can source is an opinion wearing a figure.
 
-| | target |
-|---|---|
-| typical sentence | 8 to 10 words |
-| longest | around 40, spent rarely |
-| very short sentences | 30 to 40 percent |
-| length varies | a lot, deliberately |
-| two long sentences in a row | never |
-| swearing | none |
-| intensifiers | near zero |
+| | target | counted off |
+|---|---|---|
+| typical sentence | 9 words | The Pitch 9, Direct Response 9, Bourdain 8 to 10. All three agree |
+| longest | around 40, spent rarely | Bourdain runs to forty; The Pitch tops out at 36 in 759 sentences |
+| very short sentences | 30 to 40 percent | The Pitch 28 percent, Direct Response 40 percent |
+| length varies | 0.6 and up | The Pitch measures 0.62. Direct Response's signature is variance, not brevity |
+| two long sentences in a row | never | Not once in the Bourdain source essay |
+| second person | 20 to 35 percent | Bourdain one in five, The Pitch one in three. The range spans both |
+| questions | 3 to 8 percent | The Pitch 6.7 percent, where a question is objection-handling and not a mood |
+| exclamation marks | never | Direct Response measures zero. The Pitch does not record the figure, and this row is a house rule as much as a count |
+| intensifiers | near zero | "Very" appears once in the source essay |
+| swearing | none | One f-word in 2,573 words, inside a quotation he then mock-translates |
+
+**Two of these are new and one is a decision.** Second person and questions were absent before, which
+left a landing page with nothing to check its address against. The imperative rate in the rules above
+is a decision rather than a count, and it is labelled as one where it sits.
+
+`connectiveOpeners` is deliberately not targeted. The Pitch runs 4.2 percent because a landing page
+is a grid a reader lands in the middle of, and Direct Response runs 15.5 percent because it is a
+chain the reader is walked along. This site is a line somebody descends, which is the second shape,
+so The Pitch's figure would be the wrong standard and nothing has measured the right one.
 
 Drift is detectable against these rather than being a matter of opinion.
 
