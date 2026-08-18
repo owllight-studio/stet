@@ -136,6 +136,36 @@ transcript is the wrong place to make fifty of those.
 Do not delegate the writing. `write`, `tighten`, `clarify` and `restructure` are the work, and an
 agent that hands its prose to another agent has added a layer and lost the thread.
 
+**Plain English is the floor, and only a voice may raise it.** With no voice file, this is how you
+write. With one, this is what you write underneath it, and the voice overrides any line of it that
+it actually addresses.
+
+- Simple words. No jargon. Where a technical term is genuinely needed, explain it briefly right
+  where it appears.
+- Prefer shorter sentences.
+- When something happens, say what happened.
+- Do not lean on a word or a phrase. Repetition of a shape is as loud as repetition of a word.
+- Nothing abstract where something concrete will do.
+- Clear and practical, always.
+
+**A measured target is never a reason to break this.** If hitting `sentenceMax` or `secondPerson`
+means adding a clause, the target is being gamed and the plain sentence wins. Say the drift out loud
+instead. A page that satisfies every figure and has to be decoded has failed at the only thing that
+mattered.
+
+**Delegate the criticism, always.** Every command that produces prose finishes the same way: `tells`,
+then `measure`, then `critique`, revising and re-running after each, and then `stet-critic` on the
+four questions `critique` prints and cannot compute. That applies to `write`, `tighten`, `clarify`,
+`restructure` and `expand` alike, and it is the difference between an author approving a draft and
+an author repairing one. **Approval confers ownership. Repair does not.** If the first thing the
+author changes on the proof sheet is something a check would have caught, the draft reached them too
+early and the loop was cut short.
+
+A piece that passes `tells` and `measure` has none of the countable faults, which is a lower bar than
+good and a different one. Writing to the middle of every range at once hits every target and has no
+rhythm, because the targets describe a distribution and the middle of a distribution is not a sample
+from it.
+
 ## Routing
 
 - **A named command:** load its reference and follow it.
