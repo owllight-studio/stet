@@ -36,6 +36,11 @@ export function prose(text, markup) {
       // a voice violation nobody had written. Worse, the run-ons masked the real distribution: the
       // same page measured 0.23 short sentences against a floor of 0.30 and was actually at 0.11.
       .replace(/<\/(p|li|h[1-6]|dt|dd|div|section|article|blockquote|figcaption|td|th|tr|caption)\s*>/gi, ".\n\n")
+      // A quotation is not the author's prose. This project's own rule is that quotations keep
+      // their own spelling whatever the style sheet says, and cadence is the same argument: the
+      // homepage carries a 43-word specimen of machine writing on purpose, and measure was holding
+      // the site's voice ceiling against it. `tells` has exempted quoted text since it was written.
+      .replace(/\u201c[^\u201d]{0,600}\u201d/g, " ")
       .replace(/<[^>]+>/g, " ")
       .replace(/&nbsp;|&#160;/gi, " ")
       .replace(/&[a-z]+;|&#\d+;/gi, "");

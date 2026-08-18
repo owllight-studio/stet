@@ -43,8 +43,9 @@
     <h1>Writing that does not sound like a machine.</h1>
     <div class="pair">
       <div>
-        <p class="lede">That is the whole job. 17 voices, ready to use. Each one was
-          built by reading the real thing rather than describing it from memory.</p>
+        <p class="lede">That is the whole job. 17 voices, each built by reading the
+          real thing rather than describing it from memory. Name one and start writing:
+          <code>/stet voice noir</code> is the whole of it.</p>
         <p class="lede">Each one also names how a fake of it gives itself away.</p>
       </div>
       <div>
@@ -63,8 +64,8 @@
   </section>
 
   <section class="voice-group r-establish" id="core">
-    <span class="sign">Core &middot; 7 voices</span>
-    <h2>The registers most writing actually needs. Start here.</h2>
+    <span class="sign">Core &middot; 8 voices</span>
+    <h2>Documentation, a README, release notes, a post, an explanation somebody has to follow. Start here.</h2>
     <div class="voices">
     <article class="voice" id="field-notes">
       <header>
@@ -75,12 +76,32 @@
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>8</dd></div><div><dt>mean sentence</dt><dd>13.5</dd></div><div><dt>sd / mean</dt><dd>1.14</dd></div><div><dt>under 6 words</dt><dd>38%</dd></div><div><dt>long sentences</dt><dd>0.12</dd></div><div><dt>unterminated share</dt><dd>0.84</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>hedges</dt><dd>7%</dd></div><div><dt>softeners per sentence</dt><dd>0.15</dd></div></dl></div>
       <p class="onerule"><b>Delete the subject.</b> The notebook runs first-person pronouns at 87 per 10,000 words. Darwin's own write-up of the same days runs 242, and his published book 177. The &quot;I&quot; is what retrospection adds, because you only narrate yourself once you have stepped back far enough to watch yourself doing it.</p>
       
+      <p class="useit"><code>/stet voice field-notes</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
           <div class="fold"><h4>Rules</h4><ul class="rules"><li>Present tense for the thing in front of you, bare past for what you did</li><li>The doubt is a question mark, not a hedge</li><li>Numbers, at eight to eleven times the write-up's rate</li><li>The colon abuts, it does not argue</li><li>The admin stays in the book</li><li>The date is a header, not a sentence</li><li>One adjective, then stop</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never second person.</b> 9 tokens in 110,671 words, most of them reported speech.</li><li><b>Never state a relation between two observations.</b> The colon abuts. The argument comes later or not at all.</li><li><b>Never close the line.</b> 84 percent of units do not end in terminal punctuation.</li><li><b>Never frame retrospectively.</b> No &quot;as it turned out&quot;, no &quot;in the event&quot;, no summary of the day. Summary is the diary's job and the diary does it 1,661 times.</li><li><b>Never write a paragraph.</b> The notebook's unit median is 10 words. It has lines, not paragraphs.</li><li><b>Never tidy out the admin.</b></li><li><b>Never round a number.</b></li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Pronoun inflation, about three times.</li><li>Hedge inflation, about 2.5 times, on the wrong instrument.</li><li>Second person, 40 to 50 times over.</li><li>Variance collapse.</li><li>Terminal punctuation.</li><li>Numeral starvation.</li><li>Standard deviation over mean.</li><li>First-person pronouns per 100 words.</li></ul></div>
           <p class="sources"><span>Measured from</span> Darwin's 15 Beagle field notebooks, Darwin Online; Darwin, Beagle Diary F1925; Darwin, Voyage of the Beagle; Lewis and Clark journals; Scott, Last Expedition vol I; Thoreau, Journal I</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/field-notes.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="patch-notes">
+      <header>
+        <h3>Patch Notes</h3>
+        <p class="desc">A changelog. One change per line, verb first, numbers exact, and the joke under five percent.</p>
+        <p class="feeling"><span>The feeling</span> Respect, mostly. Occasionally delight, and never at somebody's expense.</p>
+      </header>
+      <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>5%</dd></div><div><dt>softeners per sentence</dt><dd>0.0</dd></div></dl></div>
+      <p class="onerule"><b>The utility carries the voice, never the other way round.</b> A joke reads as funny only against a wall of flat, useful lines. Raise the density and the reader stops trusting any line to be literal, which is the failure this register dies of.</p>
+      
+      <p class="useit"><code>/stet voice patch-notes</code></p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>One change per line</li><li>One grammatical shape per line type</li><li>Numbers exactly, in one convention</li><li>The direction verb carries the nerf</li><li>The order never changes</li><li>Deadpan beats a joke</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never joke on a security, data-loss or breaking-change entry. The funny products are silent exactly where the stakes are highest.</li><li>Never joke on a nerf. It reads as gloating at the player it affects.</li><li>Never write a fake entry. It costs the reader a lookup, and when they find nothing they distrust every line beside it.</li><li>Never explain the joke, and never signal it with an emoji or a wink.</li><li>Never announce enthusiasm. No &quot;we're excited to&quot;, no &quot;thrilled&quot;, no exclamation marks outside a deliberate aside.</li><li>Never use marketing adjectives on your own work: powerful, seamless, revamped, game-changing.</li><li>Never hedge a number.</li><li>Never put justification inside an entry.</li><li>Never use first person for the fix. &quot;Fixed X&quot;, not &quot;we went in and fixed X&quot;.</li><li>Never joke about the team. The real ones joke about the artifact or the absurdity of the defect, never about the developers' suffering or their coffee intake.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>The ratio inverts.</li><li>The joke replaces the fact.</li><li>Length inflation.</li><li>In-jokes needing context the reader lacks.</li><li>Puns on the product name.</li><li>Applied where nothing changed.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Valve (Team Fortress 2, Counter-Strike 2), Blizzard (World of Warcraft, Overwatch), Supergiant (Hades), Slack, Apple, 37signals</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/patch-notes.md">Read the whole file</a></p>
         </div>
       </details>
     </article>
@@ -93,6 +114,7 @@
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>15</dd></div><div><dt>sd / mean</dt><dd>0.55</dd></div><div><dt>longest</dt><dd>45</dd></div><div><dt>under 6 words</dt><dd>30%</dd></div><div><dt>softeners per sentence</dt><dd>0.1</dd></div></dl></div>
       <p class="onerule"><b>Vary hard.</b> Variance is the register, not shortness.</p>
       
+      <p class="useit"><code>/stet voice plainspoken</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -111,6 +133,7 @@
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>18</dd></div><div><dt>mean sentence</dt><dd>21</dd></div><div><dt>sd / mean</dt><dd>0.7</dd></div><div><dt>longest</dt><dd>90</dd></div><div><dt>under 6 words</dt><dd>28%</dd></div><div><dt>softeners per sentence</dt><dd>0.15</dd></div></dl></div>
       <p class="onerule"><b>Make claims as strong as they can be made without becoming false.</b> Graham's dial, and the whole register in a sentence. Weaker than that and the essay is not worth reading. Stronger and it is not worth trusting.</p>
       
+      <p class="useit"><code>/stet voice the-argument</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -129,6 +152,7 @@
       <div class="figures"><dl class="measured"><div><dt>lede ceiling</dt><dd>30</dd></div><div><dt>adjectives / noun</dt><dd>2</dd></div><div><dt>median sentence</dt><dd>18</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>softeners per sentence</dt><dd>0.02</dd></div></dl></div>
       <p class="onerule"><b>Every claim is sourced, and the sourcing verb is &quot;said&quot;.</b> Not &quot;according to&quot;, not &quot;revealed&quot;, not &quot;noted&quot;. Reuters: those verbs &quot;all contain an element of judgment by the reporter.&quot;</p>
       
+      <p class="useit"><code>/stet voice the-broadsheet</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -147,6 +171,7 @@
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>4</dd></div><div><dt>mean sentence</dt><dd>6.9</dd></div><div><dt>sd / mean</dt><dd>1.19</dd></div><div><dt>under 6 words</dt><dd>62%</dd></div><div><dt>finite verb share</dt><dd>0.02</dd></div><div><dt>exact repeat share</dt><dd>0.32</dd></div><div><dt>you</dt><dd>0%</dd></div><div><dt>questions</dt><dd>0</dd></div><div><dt>exclamations</dt><dd>1</dd></div><div><dt>softeners per sentence</dt><dd>0.01</dd></div></dl></div>
       <p class="onerule"><b>The same words, on purpose.</b> Between 23 and 50 percent of the sentences in these documents are verbatim repeats of another sentence in the same document. The commonest way to begin a lot in the 1898 catalogue is the single word &quot;Another.&quot;, which opens 69 of its 301 lots.</p>
       
+      <p class="useit"><code>/stet voice the-catalogue</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -166,6 +191,7 @@ inversions, and both are in the rules above because they are what the register a
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>12</dd></div><div><dt>mean sentence</dt><dd>13.4</dd></div><div><dt>longest</dt><dd>321</dd></div><div><dt>sd / mean</dt><dd>0.73</dd></div><div><dt>under 6 words</dt><dd>20%</dd></div><div><dt>long sentences</dt><dd>0.06</dd></div><div><dt>you</dt><dd>13%</dd></div><div><dt>second person reference</dt><dd>0.035</dd></div><div><dt>second person procedure</dt><dd>0.257</dd></div><div><dt>questions</dt><dd>0.003</dd></div><div><dt>exclamations</dt><dd>0</dd></div><div><dt>softeners per sentence</dt><dd>0.03</dd></div></dl></div>
       <p class="onerule"><b>Complete beats readable.</b> A reference page is not read, it is consulted, by somebody who already has a problem. Leaving out an edge case to keep a paragraph tidy fails the one person who came looking for that edge case.</p>
       
+      <p class="useit"><code>/stet voice the-manual</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -188,6 +214,7 @@ thing this register exists not to do.</li></ul></div><div class="fold"><h4>How p
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>22</dd></div><div><dt>variance</dt><dd>high</dd></div><div><dt>you</dt><dd>14%</dd></div><div><dt>we</dt><dd>38%</dd></div><div><dt>softeners per sentence</dt><dd>0.2</dd></div></dl></div>
       <p class="onerule"><b>Describe the material, never the reader's mind.</b> This is the whole diagnostic for condescension, and it fits in a sentence.</p>
       
+      <p class="useit"><code>/stet voice the-teacher</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -201,7 +228,7 @@ thing this register exists not to do.</li></ul></div><div class="fold"><h4>How p
 
   <section class="voice-group r-compose" id="marketing">
     <span class="sign">Marketing &middot; 2 voices</span>
-    <h2>Written to move someone, and measured on whether they trust it.</h2>
+    <h2>A landing page, an email, anything asking a reader to do something.</h2>
     <div class="voices">
     <article class="voice" id="direct-response">
       <header>
@@ -212,6 +239,7 @@ thing this register exists not to do.</li></ul></div><div class="fold"><h4>How p
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>mean sentence</dt><dd>12</dd></div><div><dt>under 6 words</dt><dd>40%</dd></div><div><dt>sentences / para</dt><dd>2</dd></div><div><dt>numbers / 100 words</dt><dd>2</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl></div>
       <p class="onerule"><b>Every claim carries a number somebody could go and check.</b></p>
       
+      <p class="useit"><code>/stet voice direct-response</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -230,6 +258,7 @@ thing this register exists not to do.</li></ul></div><div class="fold"><h4>How p
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>mean sentence</dt><dd>9.8</dd></div><div><dt>longest</dt><dd>36</dd></div><div><dt>sd / mean</dt><dd>0.62</dd></div><div><dt>under 6 words</dt><dd>28%</dd></div><div><dt>long sentences</dt><dd>0.0013</dd></div><div><dt>blocks one sentence</dt><dd>0.71</dd></div><div><dt>block median words</dt><dd>10</dd></div><div><dt>you</dt><dd>33%</dd></div><div><dt>imperative openers</dt><dd>0.27</dd></div><div><dt>addressed sentences</dt><dd>0.48</dd></div><div><dt>connective openers</dt><dd>0.042</dd></div><div><dt>questions</dt><dd>0.067</dd></div><div><dt>past tense markers</dt><dd>0.009</dd></div><div><dt>semicolons</dt><dd>0</dd></div><div><dt>softeners per sentence</dt><dd>0.04</dd></div></dl></div>
       <p class="onerule"><b>Each block makes one claim, and the blocks do not connect.</b></p>
       
+      <p class="useit"><code>/stet voice the-pitch</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -246,8 +275,8 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
   </section>
 
   <section class="voice-group r-refine" id="genre">
-    <span class="sign">Genre &middot; 4 voices</span>
-    <h2>Fiction registers, for people whose product has a world in it.</h2>
+    <span class="sign">Genre &middot; 5 voices</span>
+    <h2>A novel, a script, a game. Anything with a world in it.</h2>
     <div class="voices">
     <article class="voice" id="epic-fantasy">
       <header>
@@ -258,6 +287,7 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>14</dd></div><div><dt>mean sentence</dt><dd>17.3</dd></div><div><dt>under 6 words</dt><dd>37%</dd></div><div><dt>germanic share</dt><dd>0.766</dd></div><div><dt>latinate suffixes per thousand</dt><dd>5.9</dd></div><div><dt>thou tokens</dt><dd>80</dd></div></dl></div>
       <p class="onerule"><b>A plain language is the noblest of all.</b> Le Guin's line, and the measurements agree with her.</p>
       
+      <p class="useit"><code>/stet voice epic-fantasy</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -276,12 +306,32 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>15</dd></div><div><dt>mean sentence</dt><dd>16</dd></div><div><dt>sentence sd</dt><dd>12</dd></div><div><dt>proper nouns per thousand</dt><dd>35</dd></div><div><dt>under 6 words</dt><dd>15%</dd></div></dl></div>
       <p class="onerule"><b>Assume, do not explain.</b> Jo Walton's phrasing is two words: &quot;Modern SF assumes.&quot;</p>
       
+      <p class="useit"><code>/stet voice hard-sf</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
           <div class="fold"><h4>Rules</h4><ul class="rules"><li>The strange-word density is a constant. The invented share is not.</li><li>A new word gets no gloss, or six words of one</li><li>Read the standard deviation, not the mean</li><li>The brand noun does the adjective's work</li><li>Distance is countable</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never have two characters tell each other what they both already know.</li><li>Never stop the story to lecture. The lexicon names the voice that does it a <b>Stapeldon</b>, and its worst form <b>Dennis Hopper Syndrome</b>, where &quot;a loony character-actor barges into the story and baldly tells the protagonist what's going on by explaining the underlying mystery in a long bug-eyed rant.&quot;</li><li>Never front-load. And never leave it empty either: the opposite failure has its own name, the <b>Nowhere Nowhen Story</b>.</li><li>Never rename a familiar thing to make it exotic. <b>Call a Rabbit a Smeerp:</b> &quot;common elements of the real world are re-named for a fantastic milieu without any real alteration in their basic nature or behavior.&quot;</li><li>Never borrow a setting whole. <b>Used Furniture:</b> &quot;We'll set it in the Star Trek Universe, only we'll call it the Empire instead of the Federation.&quot;</li><li>Never let a brand name replace looking at something. <b>Brand Name Fever:</b> &quot;You can stock a future with Hondas and Sonys and IBM's and still have no idea what it looks like.&quot;</li><li>Never open in a white room. A character who wakes with no surroundings is an author who has not built any.</li><li>Never pre-empt the reader's disbelief. <b>You Can't Fire Me, I Quit:</b> &quot;It's a one-in-a-million chance, but it's so crazy it just might work!&quot;</li><li>Never write the guided tour. <b>The Steam-Grommet Factory</b> is a story that is &quot;entirely a guided tour of a large and elaborate gimmick.&quot;</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>More strange words.</li><li>&quot;Everything is chrome.&quot;</li><li>chrome 14, black 140, neon 31, mirror 29.</li><li>Even sentences mistaken for cool distance.</li><li>The eyeball kick without the telling detail.</li><li>Written from screen memory rather than page memory.</li></ul><p class="detect"><span>Detection</span> take the first 1,200 words and count the capitalised terms, then count how many exist outside the text. The density should be 35 to 50 and the majority should be real. Then find the first appearance of the central invented noun and count the words of gloss attached to it. Six is generous. Zero is the register.</p></div>
           <p class="sources"><span>Measured from</span> Heinlein (Beyond This Horizon), Clarke (Rendezvous with Rama), Le Guin (The Left Hand of Darkness), Gibson (Neuromancer), Robinson (Red Mars), Asimov (five public-domain stories), Jo Walton on reading protocols, Delany, the Turkey City Lexicon</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/hard-sf.md">Read the whole file</a></p>
+        </div>
+      </details>
+    </article>
+    <article class="voice" id="noir">
+      <header>
+        <h3>Noir</h3>
+        <p class="desc">Past tense, first person, flat declaratives. The famous simile is the rarest move in it.</p>
+        <p class="feeling"><span>The feeling</span> Dread, and a grief the narrator will not admit to.</p>
+      </header>
+      <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>10</dd></div><div><dt>longest</dt><dd>97</dd></div><div><dt>similes / 1k words</dt><dd>1.8</dd></div><div><dt>subordinate openers</dt><dd>1%</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl></div>
+      <p class="onerule"><b>The simile is rare.</b> One per 545 words in Chandler, one per 1,969 in Hammett. Once every two pages, and once every seven. The most imitated feature of this register is, inside the register, its scarcest move, and pastiche runs it twenty to forty times too often.</p>
+      
+      <p class="useit"><code>/stet voice noir</code></p>
+      <details>
+        <summary>Open the rules</summary>
+        <div class="detail">
+          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Flat declaratives, and let the range be wide</li><li>Past tense, first person, and the narrator already knows</li><li>Never open on a subordinate clause</li><li>Feeling arrives as a physical fact</li><li>Weather sets a clock, not a mood</li><li>Rooms are inventoried, not evoked</li><li>The narrator loses</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never present tense.</li><li>Never name an emotion as it happens.</li><li>Never explain the joke. The deadpan line is followed by the next piece of business.</li><li>Never use an exclamation mark in narration. One appears in all of <i>The Big Sleep</i>.</li><li>Never stack adjectives. Hammett introduces Spade in nouns and geometry and spends one adjective phrase at the end.</li><li>Never let the narrator state his own decency. Chandler's own rule: honour &quot;by instinct, by inevitability, without thought of it, and certainly without saying it.&quot;</li><li>Never let the narrator come out clean.</li><li>Never use the genre's furniture as scenery. The fedora, the neon and the venetian blinds belong to the adaptations. The prose names dairy trucks, a stamp collection, Twin Oaks Tavern.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Simile inflation, twenty to forty times over.</li><li>No baseline, so no rhythm.</li><li>Vehicle drift.</li><li>Mood substituted for event.</li><li>Costume nouns instead of world nouns.</li><li>Deadpan with no straight man.</li></ul></div>
+          <p class="sources"><span>Measured from</span> Hammett (Red Harvest, The Maltese Falcon), Chandler (The Big Sleep, The High Window, The Little Sister), Cain, Double Indemnity, Sunset Boulevard, Mosley, Keillor</p>
+          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/noir.md">Read the whole file</a></p>
         </div>
       </details>
     </article>
@@ -294,6 +344,7 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>5</dd></div><div><dt>mean sentence</dt><dd>6.5</dd></div><div><dt>under 6 words</dt><dd>51%</dd></div><div><dt>sentence sd</dt><dd>4.7</dd></div><div><dt>logs per script</dt><dd>1.95</dd></div><div><dt>technobabble per script</dt><dd>3</dd></div></dl></div>
       <p class="onerule"><b>Tell the story about people, not about science and gadgetry.</b></p>
       
+      <p class="useit"><code>/stet voice the-bridge</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -312,6 +363,7 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>8</dd></div><div><dt>mean sentence</dt><dd>10</dd></div><div><dt>under 6 words</dt><dd>64%</dd></div><div><dt>long sentences</dt><dd>0.03</dd></div><div><dt>dialogue share</dt><dd>0.43</dd></div><div><dt>adverbs per thousand</dt><dd>21</dd></div><div><dt>clue gap</dt><dd>0.5</dd></div></dl></div>
       <p class="onerule"><b>The clue is on the page, in plain language, and missed.</b></p>
       
+      <p class="useit"><code>/stet voice the-locked-room</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -324,8 +376,8 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
   </section>
 
   <section class="voice-group r-maintain" id="fun">
-    <span class="sign">Fun &middot; 4 voices</span>
-    <h2>For when the constraint is the point.</h2>
+    <span class="sign">Fun &middot; 2 voices</span>
+    <h2>A live commentary, a wildlife film. Registers a reader recognises on sight, for when that is the point.</h2>
     <div class="voices">
     <article class="voice" id="nature-documentary">
       <header>
@@ -336,48 +388,13 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>13</dd></div><div><dt>fronted adverbials</dt><dd>0.24</dd></div><div><dt>first person singular</dt><dd>0.0</dd></div><div><dt>numerals per thousand</dt><dd>7.8</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl></div>
       <p class="onerule"><b>The awe is the measurement.</b> Real narration is dense with numbers, 7.8 numerals per thousand words, because the fact is what produces the feeling. Pastiche reaches for &quot;magnificent&quot;. The real thing reaches for &quot;200 tons&quot;.</p>
       
+      <p class="useit"><code>/stet voice nature-documentary</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
           <div class="fold"><h4>Rules</h4><ul class="rules"><li>Never say &quot;I&quot;</li><li>Present tense, and short</li><li>Locate, then reveal</li><li>Lengths cluster, they do not alternate</li><li>Add, never caption</li><li>Hedge the animal, not yourself</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li><b>Never &quot;I&quot;</b> in the absent-witness register. Zero, in 13,500 words.</li><li><b>Never exclaim.</b> One exclamation mark across three full classic episodes.</li><li><b>Never &quot;Yet&quot; as an opener.</b> Effectively zero in the corpus, and the first word pastiche reaches for.</li><li><b>Never ask rhetorical questions in bulk.</b> Zero to five question marks per episode, and most are genuine setups answered by the next shot.</li><li><b>Never use the past tense for what is happening now.</b></li><li><b>Never restate the image.</b></li><li><b>Never use an intensifier where a number belongs.</b></li><li><b>Never name the narrator's feelings.</b> Awe is produced by the fact, not asserted about the speaker.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>&quot;Here we see&quot; in the first sentence.</li><li>Deliberate long-short alternation.</li><li>Unrelenting irony.</li><li>Mixing the three registers.</li><li>Anthropomorphising with intent rather than with grammar.</li></ul></div>
           <p class="sources"><span>Measured from</span> Attenborough (Blue Planet 2001, Planet Earth 2006, Planet Earth II 2016, Blue Planet II 2017), Herzog, National Geographic house voice, Marlin Perkins</p>
           <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/nature-documentary.md">Read the whole file</a></p>
-        </div>
-      </details>
-    </article>
-    <article class="voice" id="noir">
-      <header>
-        <h3>Noir</h3>
-        <p class="desc">Past tense, first person, flat declaratives. The famous simile is the rarest move in it.</p>
-        <p class="feeling"><span>The feeling</span> Dread, and a grief the narrator will not admit to.</p>
-      </header>
-      <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>10</dd></div><div><dt>longest</dt><dd>97</dd></div><div><dt>similes / 1k words</dt><dd>1.8</dd></div><div><dt>subordinate openers</dt><dd>1%</dd></div><div><dt>exclamations</dt><dd>0</dd></div></dl></div>
-      <p class="onerule"><b>The simile is rare.</b> One per 545 words in Chandler, one per 1,969 in Hammett. Once every two pages, and once every seven. The most imitated feature of this register is, inside the register, its scarcest move, and pastiche runs it twenty to forty times too often.</p>
-      
-      <details>
-        <summary>Open the rules</summary>
-        <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>Flat declaratives, and let the range be wide</li><li>Past tense, first person, and the narrator already knows</li><li>Never open on a subordinate clause</li><li>Feeling arrives as a physical fact</li><li>Weather sets a clock, not a mood</li><li>Rooms are inventoried, not evoked</li><li>The narrator loses</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never present tense.</li><li>Never name an emotion as it happens.</li><li>Never explain the joke. The deadpan line is followed by the next piece of business.</li><li>Never use an exclamation mark in narration. One appears in all of <i>The Big Sleep</i>.</li><li>Never stack adjectives. Hammett introduces Spade in nouns and geometry and spends one adjective phrase at the end.</li><li>Never let the narrator state his own decency. Chandler's own rule: honour &quot;by instinct, by inevitability, without thought of it, and certainly without saying it.&quot;</li><li>Never let the narrator come out clean.</li><li>Never use the genre's furniture as scenery. The fedora, the neon and the venetian blinds belong to the adaptations. The prose names dairy trucks, a stamp collection, Twin Oaks Tavern.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>Simile inflation, twenty to forty times over.</li><li>No baseline, so no rhythm.</li><li>Vehicle drift.</li><li>Mood substituted for event.</li><li>Costume nouns instead of world nouns.</li><li>Deadpan with no straight man.</li></ul></div>
-          <p class="sources"><span>Measured from</span> Hammett (Red Harvest, The Maltese Falcon), Chandler (The Big Sleep, The High Window, The Little Sister), Cain, Double Indemnity, Sunset Boulevard, Mosley, Keillor</p>
-          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/noir.md">Read the whole file</a></p>
-        </div>
-      </details>
-    </article>
-    <article class="voice" id="patch-notes">
-      <header>
-        <h3>Patch Notes</h3>
-        <p class="desc">A changelog. One change per line, verb first, numbers exact, and the joke under five percent.</p>
-        <p class="feeling"><span>The feeling</span> Respect, mostly. Occasionally delight, and never at somebody's expense.</p>
-      </header>
-      <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>5%</dd></div><div><dt>softeners per sentence</dt><dd>0.0</dd></div></dl></div>
-      <p class="onerule"><b>The utility carries the voice, never the other way round.</b> A joke reads as funny only against a wall of flat, useful lines. Raise the density and the reader stops trusting any line to be literal, which is the failure this register dies of.</p>
-      
-      <details>
-        <summary>Open the rules</summary>
-        <div class="detail">
-          <div class="fold"><h4>Rules</h4><ul class="rules"><li>One change per line</li><li>One grammatical shape per line type</li><li>Numbers exactly, in one convention</li><li>The direction verb carries the nerf</li><li>The order never changes</li><li>Deadpan beats a joke</li></ul></div><div class="fold"><h4>Never</h4><ul class="never"><li>Never joke on a security, data-loss or breaking-change entry. The funny products are silent exactly where the stakes are highest.</li><li>Never joke on a nerf. It reads as gloating at the player it affects.</li><li>Never write a fake entry. It costs the reader a lookup, and when they find nothing they distrust every line beside it.</li><li>Never explain the joke, and never signal it with an emoji or a wink.</li><li>Never announce enthusiasm. No &quot;we're excited to&quot;, no &quot;thrilled&quot;, no exclamation marks outside a deliberate aside.</li><li>Never use marketing adjectives on your own work: powerful, seamless, revamped, game-changing.</li><li>Never hedge a number.</li><li>Never put justification inside an entry.</li><li>Never use first person for the fix. &quot;Fixed X&quot;, not &quot;we went in and fixed X&quot;.</li><li>Never joke about the team. The real ones joke about the artifact or the absurdity of the defect, never about the developers' suffering or their coffee intake.</li></ul></div><div class="fold"><h4>How pastiche fails</h4><ul class="tells"><li>The ratio inverts.</li><li>The joke replaces the fact.</li><li>Length inflation.</li><li>In-jokes needing context the reader lacks.</li><li>Puns on the product name.</li><li>Applied where nothing changed.</li></ul></div>
-          <p class="sources"><span>Measured from</span> Valve (Team Fortress 2, Counter-Strike 2), Blizzard (World of Warcraft, Overwatch), Supergiant (Hades), Slack, Apple, 37signals</p>
-          <p class="filelink"><a href="https://github.com/owllight-studio/stet/blob/main/plugin/skills/stet/voices/patch-notes.md">Read the whole file</a></p>
         </div>
       </details>
     </article>
@@ -390,6 +407,7 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
       <div class="figures"><dl class="measured"><div><dt>median sentence</dt><dd>9</dd></div><div><dt>you</dt><dd>2%</dd></div><div><dt>softeners per sentence</dt><dd>0.03</dd></div></dl></div>
       <p class="onerule"><b>Escalation is subtraction.</b> The register does not get bigger at the peak, it gets smaller. Grammar sheds parts in a fixed order: the subject goes, then the copula, then the article, then the verb, until what is left is a noun and a stress. &quot;It is gone.&quot; &quot;They're all gone.&quot;</p>
       
+      <p class="useit"><code>/stet voice the-sportscaster</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -404,9 +422,7 @@ bottom. Keep it as craft advice and do not pretend it describes the register.</l
   <section class="voice-group r-authorship" id="tells">
     <span class="sign">Cross-cutting &middot; 102 named failures</span>
     <h2>Put them together and you have the catalogue.</h2>
-    <p>Every voice file ends by naming how a fake of it gives itself away. On their own they are
-      notes on 17 voices. Together they are a list of what generated writing does.
-      Each one links back to the voice it came from.</p>
+    <p>Each one links back to the voice it was counted off.</p>
     <ul class="telldex">
       <li><span>&quot;Everything is chrome.&quot;</span> <a href="#hard-sf">Hard SF</a></li>
       <li><span>&quot;Here we see&quot; in the first sentence.</span> <a href="#nature-documentary">Nature Documentary</a></li>

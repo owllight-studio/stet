@@ -398,7 +398,7 @@ pre.out i { font-style: normal; color: var(--soft); }
 }
 .voice > header { grid-column: 1; }
 .voice > .figures { grid-column: 2; grid-row: 1 / span 3; }
-.voice > .onerule, .voice > .unresearched, .voice > details { grid-column: 1; }
+.voice > .onerule, .voice > .unresearched, .voice > .useit, .voice > details { grid-column: 1; }
 .voice > details[open] { grid-column: 1 / -1; }
 .voice h3 { font-size: 21px; margin-bottom: 6px; }
 .voice .desc { color: var(--soft); font-size: 15.5px; margin-bottom: 9px; }
@@ -427,6 +427,14 @@ dl.measured dd { margin: 0; font: 700 19px/1 var(--face); letter-spacing: -.032e
 .voice .unresearched {
   font-size: 14px; color: var(--soft);
   border-left: 6px solid var(--rule); padding-left: 14px; margin: 0;
+}
+
+/* The command, on every card. The cost of using a voice was stated once, at the bottom of a
+   7,000 word page, so a reader scrolling the library never learned that picking one is free. */
+.voice .useit { margin: 0; }
+.voice .useit code {
+  display: inline-block; font-size: 13.5px; padding: 3px 8px;
+  border: 1px solid var(--rule); border-radius: 3px; color: var(--ink);
 }
 
 .voice details { margin: 0; }
@@ -492,7 +500,7 @@ footer .last { margin-left: auto; color: var(--soft); font-size: 13.5px; max-wid
 @media (max-width: 900px) {
   .pair, .pair.wide-right, .pair.wide-left { grid-template-columns: minmax(0, 1fr); }
   .voice { grid-template-columns: minmax(0, 1fr); }
-  .voice > header, .voice > .figures, .voice > .onerule,
+  .voice > header, .voice > .figures, .voice > .onerule, .voice > .useit,
   .voice > .unresearched, .voice > details, .voice > details[open] { grid-column: 1; grid-row: auto; }
   .telldex { columns: 1; }
   .trio { grid-template-columns: repeat(2, minmax(0, 1fr)); }

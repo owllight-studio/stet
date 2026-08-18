@@ -10,15 +10,22 @@ The constructions that read as machine-written, found in the content and counted
 
 ```
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/tells.mjs [path ...]
+stet tells [path ...]
 ```
+
+It needs no model, so it ships in the CLI as well as the plugin. Both run the same script.
 
 Writes nothing. Exits 1 when it finds anything, so it can sit in CI, and in this repo it is the last
 step of `npm test`.
 
+There are no flags. Everything after the command name is treated as a path, so `--quiet` is looked
+up as a filename, fails to open and is skipped without a word.
+
 ## Why it exists
 
 A rule in an instruction file is advice, and advice loses. This is the check that makes the rule
-hold. `audit` runs it over a project's content, and Stet runs it over its own.
+hold. `audit` does not run it: `audit` reports on claims, voice drift, structure and typed figures
+and leaves the constructions to this command, which is why `npm test` runs both.
 
 Every pattern earned its place by being a real habit rather than a preference. An em dash is first
 because it is the most recognisable single marker in generated prose, and because its absence costs
@@ -29,11 +36,14 @@ nothing.
 1. Decides which files to read. Paths on the command line are read and nothing else, resolved
    against the working directory. With no paths it reads every file the `content` globs in
    `stet.config.json` match, or, with no config at all, guesses at the usual content directories.
+   Finding nothing is a pass, so a project pointed at the wrong directories reads the same as a
+   clean one.
 2. Reads each file. One it cannot read is skipped in silence.
 3. Skips the whole file if the raw text carries a bare `stet-allow` comment, described below.
    This document cannot write that comment out, because writing it would exempt this document.
 4. Blanks the parts of the text that are not the project's own writing, listed below.
-5. Runs 15 regular expressions over what is left, line by line.
+5. Runs the regular expressions over what is left, line by line: all 15 on a file inside the `prose`
+   globs, the other 12 on anything else. The gate is explained under the table.
 6. Prints the hits under each file, then a total and a count per pattern.
 
 ## What gets blanked first
@@ -71,9 +81,9 @@ Fourteen names over fifteen expressions, since `not-x-but-y` has two.
 | `corporate-abstract` | `unlock`, `leverage`, `elevate`, `drive` or `harness` followed by an abstract noun such as `potential` or `value` |
 | `landscape` | `landscape`, `realm`, `tapestry`, `testament to`, `in today's world`, `ever-evolving` |
 | `important-to-note` | `it is important to note` and its variants |
-| `hedge-stack` | two of `quite`, `rather`, `somewhat`, `fairly`, `relatively` joined by `and` or `but` |
+| `hedge-stack` | one of `quite`, `rather`, `somewhat`, `fairly`, `relatively`, then a word, then `and` or `but`, then a second one of them: `quite good and rather bad` fires, `quite and rather` does not |
 | `in-conclusion` | a line opening `in conclusion`, `to summarize`, `to sum up`, `in summary` or `overall,` |
-| `not-only` | `not only` with a matching `but also` within 60 characters |
+| `not-only` | `not only` with a matching `but also` within 60 characters and no full stop between them |
 | `exclamation` | an exclamation mark, unless preceded by `<` or followed by `=` |
 | `abstract-noun` | `capability`, `functionality`, `offering`, `methodology`, `paradigm`, `ecosystem`, `touchpoint`, `learnings`, `vertical`, `granularity`, `synergy` |
 | `grand-abstraction` | `the essence of`, `at its core`, `fundamentally about`, `a testament to` and their siblings |
@@ -88,15 +98,22 @@ A project with no `prose` list in its config, or no config at all, never runs th
 
 ## What the output means
 
-A file with hits prints its path, then one line per hit: the line number, the pattern name, and the
-line trimmed to 90 characters. The line shown is the stripped line, so quoted text and code have
-already gone from it.
+A file with hits prints a blank line, then its path, then one line per hit: the line number, the
+pattern name, and the line trimmed to 90 characters. The line shown is the stripped line, so quoted
+text and code have already gone from it. Paths are printed relative to the working directory, so a
+file outside the project prints as a chain of `../`.
 
-Then a blank line and one of two endings. `clean: no tells in 61 files` and exit 0, or the total,
+Then a blank line and one of two endings. `clean: no tells in <n> files` and exit 0, or the total,
 then a count per pattern with the advice attached, worst first, and exit 1. The file count is every
-file read, not the number with hits in them.
+path it was given or found, including the ones it could not open, and not the number with hits in
+them.
 
-A pattern that matches twice on one line prints once and counts twice.
+A pattern that matches twice on one line prints once and counts twice. The tally at the end is for
+the whole run rather than per file.
+
+One thing the tally gets wrong. `not-x-but-y` is two expressions under one name, and the summary
+looks the advice up by name, so it always prints `"not X, it is Y". Just say Y.` even when what
+fired was the bare `Not a guideline, a hook` shape. The line numbers above it are still right.
 
 ## Two things to know before trusting a line number
 
@@ -116,6 +133,10 @@ Which leaves one working exemption in this command, and it is blunt. Take the co
 the colon and the reason, and it exempts the entire file: before the marker as well as after, since
 that test runs on the raw text before anything is split into lines. Putting one at the end of a line
 to excuse that line stops the whole file being checked.
+
+Raw text means raw. The bare marker exempts the file from inside a code fence, from inside backticks
+and from inside a quotation, so a document showing a reader what the marker looks like has to write
+it the way this one does, with a colon and a reason.
 
 ## Never
 

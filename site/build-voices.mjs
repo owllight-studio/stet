@@ -19,11 +19,14 @@ const REPO = "https://github.com/owllight-studio/stet/blob/main/plugin/skills/st
 
 /* `route` is which of the site's seven line colours a group is drawn in. The site is a transit
    diagram and colour on it only ever means a route, so a group without one would be decoration. */
+/* Grouped by the job a reader arrives holding, not by where the register was found. The blurbs
+   used to describe the voices ("Fiction registers", "For when the constraint is the point"), which
+   tells somebody browsing nothing about which one is theirs. */
 const GROUPS = [
-  { key: "core", route: "r-establish", title: "Core", blurb: "The registers most writing actually needs. Start here." },
-  { key: "marketing", route: "r-compose", title: "Marketing", blurb: "Written to move someone, and measured on whether they trust it." },
-  { key: "genre", route: "r-refine", title: "Genre", blurb: "Fiction registers, for people whose product has a world in it." },
-  { key: "fun", route: "r-maintain", title: "Fun", blurb: "For when the constraint is the point." },
+  { key: "core", route: "r-establish", title: "Core", blurb: "Documentation, a README, release notes, a post, an explanation somebody has to follow. Start here." },
+  { key: "marketing", route: "r-compose", title: "Marketing", blurb: "A landing page, an email, anything asking a reader to do something." },
+  { key: "genre", route: "r-refine", title: "Genre", blurb: "A novel, a script, a game. Anything with a world in it." },
+  { key: "fun", route: "r-maintain", title: "Fun", blurb: "A live commentary, a wildlife film. Registers a reader recognises on sight, for when that is the point." },
 ];
 
 /* The masthead and the footer are the same on every page of this site. They live here as strings
@@ -245,6 +248,7 @@ function card(v) {
             : `<p class="unresearched partial">Counted, but nobody has catalogued how imitation of
                it fails. The rules are sourced. The tells are missing.</p>`
       }
+      <p class="useit"><code>/stet voice ${esc(v.slug)}</code></p>
       <details>
         <summary>Open the rules</summary>
         <div class="detail">
@@ -339,8 +343,9 @@ ${MASTHEAD}
     <h1>Writing that does not sound like a machine.</h1>
     <div class="pair">
       <div>
-        <p class="lede">That is the whole job. ${voices.length} voices, ready to use. Each one was
-          built by reading the real thing rather than describing it from memory.</p>
+        <p class="lede">That is the whole job. ${voices.length} voices, each built by reading the
+          real thing rather than describing it from memory. Name one and start writing:
+          <code>/stet voice noir</code> is the whole of it.</p>
         <p class="lede">Each one also names how a fake of it gives itself away.</p>
       </div>
       <div>
@@ -362,9 +367,7 @@ ${library}
   <section class="voice-group r-authorship" id="tells">
     <span class="sign">Cross-cutting &middot; ${allTells.length} named failures</span>
     <h2>Put them together and you have the catalogue.</h2>
-    <p>Every voice file ends by naming how a fake of it gives itself away. On their own they are
-      notes on ${voices.length} voices. Together they are a list of what generated writing does.
-      Each one links back to the voice it came from.</p>
+    <p>Each one links back to the voice it was counted off.</p>
     <ul class="telldex">
       ${allTells
         .map(

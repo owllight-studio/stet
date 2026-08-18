@@ -1,6 +1,6 @@
 ---
 name: Patch Notes
-group: fun
+group: core
 description: A changelog. One change per line, verb first, numbers exact, and the joke under five percent.
 feeling: Respect, mostly. Occasionally delight, and never at somebody's expense.
 measured:

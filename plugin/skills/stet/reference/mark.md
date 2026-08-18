@@ -11,10 +11,15 @@ Set `state`, and optionally `author` and `policy`, on content files. The mechani
 
 ```
 node ${CLAUDE_PLUGIN_ROOT}/skills/stet/scripts/mark.mjs <draft|approved|authored> [--author human|agent] [--policy frozen|refresh|open] [path ...]
+stet mark <draft|approved|authored> [--author human|agent] [--policy frozen|refresh|open] [path ...]
 ```
 
-The state is the first argument and is required. With no paths it marks every content file the
-project has.
+It needs no model, so it ships in the CLI as well as the plugin. Both run the same script.
+
+The state is the first argument and is required. Both flags are read from what is left after the
+state has been taken off the front, so they have to come after it: `mark --author human draft
+docs/a.md` reads `--author` as the state, prints the usage line and exits 2. With no paths it marks
+every content file the project has.
 
 ## What it does, in order
 
@@ -26,21 +31,26 @@ project has.
 3. Takes the arguments that are left as file paths, made relative to the working directory. With
    none left, it asks `lib/find.mjs` for the project's content: the `content` globs in
    `stet.config.json`, or the conventional content directories when there is no config.
-4. For each file, reads the existing Stet metadata, keeps every key already there, and sets `state`.
-   Sets `author` and `policy` only when those flags were given.
+4. For each file, reads the existing Stet metadata, keeps the keys it can, and sets `state`. Sets
+   `author` and `policy` only when those flags were given.
 5. Sets `approved` to today's date in UTC when the state is `approved`, and deletes `approved` for
-   the other two states.
+   the other two states. UTC is the whole rule, so a run late in the evening west of Greenwich
+   stamps tomorrow's local date.
 6. Writes the metadata back and prints a line per file.
 
-Existing keys survive. `owned` sentences, `sources` and anything else in the block are carried
-through untouched, and the rest of the file is not rewritten.
+`owned` sentences and `sources` survive. Only the six keys Stet writes are kept: `state`, `author`,
+`approved`, `policy`, `sources` and `owned`. Any other key sitting inside the `stet:` block is read,
+carried and then dropped when the block is written back out. JSON is the exception: the whole `stet`
+object is re-emitted, so a stray key there survives. Frontmatter keys outside the `stet:` block, and
+the body of the file, are left alone.
 
 ## Where the metadata goes
 
-`lib/meta.mjs` decides, by extension. Markdown and the other frontmatter formats get a `stet:` block
-in the frontmatter, added at the top of the file if there was none. JSON gets a `"stet"` key inserted
-as text, so the rest of the document keeps its own formatting. Everything else, HTML included, gets a
-`<file>.stet.yaml` sidecar beside it.
+`lib/meta.mjs` decides, by extension. `.md`, `.markdown` and `.mdx` get a `stet:` block in the
+frontmatter, added at the top of the file if there was none. JSON gets a `"stet"` key inserted as
+text, so the rest of the document keeps its own formatting. Every other extension gets a
+`<file>.stet.yaml` sidecar beside it, including `.mdoc`, `.yaml`, `.yml`, `.html` and `.htm`, which
+`lib/find.mjs` counts as content but which carry no frontmatter of their own.
 
 ## What the output means
 
@@ -55,9 +65,15 @@ One indented line per file, the state then the path:
 Closed to an agent. Approval is what made them the author's.
 ```
 
-`(frontmatter added)` means the file had no frontmatter and a block was put at the top of it.
-`FAILED` means the write threw, usually a path that does not exist or JSON that will not parse. The
-count line says how many of the attempted files were written.
+`(frontmatter added)` means the file had no frontmatter and a block was put at the top of it. It is
+printed on the Markdown path only, so a run that creates a new `<file>.stet.yaml` sidecar prints a
+bare line and gives no sign that a second file appeared on disk. `FAILED` means the write threw,
+usually a path that does not exist or JSON that will not parse. The count line says how many of the
+attempted files were written.
+
+Every one of those lines goes to stdout, `FAILED` included. Only the usage line and the policy error
+go to stderr, so redirecting stdout to a log hides the failures and leaves the argument errors on
+the terminal.
 
 The closing line depends on the state: `authored` says the files are closed and may not be edited or
 regenerated, `approved` says they are closed and approval is what made them the author's, `draft`
@@ -70,9 +86,10 @@ includes a run where every file failed. Read the lines rather than the exit code
 
 ## What it does not check
 
-**It does not validate the combination.** `policy.mjs set` refuses a policy on a draft, `refresh`
-with no sources and `frozen` with sources. `mark` accepts all three and writes them. Run
-`policy.mjs check` afterwards if the policy came from here.
+**It does not validate the combination.** `policy.mjs set` refuses two of them: a policy other than
+`open` on a draft, and `refresh` with no sources. `frozen` on a file that cites a source is not
+refused there either, and is reported by `policy.mjs check`. `mark` accepts all three and writes
+them, so run `policy.mjs check` afterwards if the policy came from here.
 
 **It does not check who owns the file.** The state of the file being marked is read for its other
 keys and never consulted as permission, so `mark draft` on somebody's authored page will write. The
@@ -91,7 +108,9 @@ that no glob covers.
   record.
 - Never mark `draft` to get past a refusal. Releasing closed content is the author's decision, and
   the refusal is the model working.
-- Never run it with no paths to fix one file. With no paths it marks the whole project.
+- Never run it with no paths to fix one file. With no paths it marks the whole project, and
+  `lib/find.mjs` counts `.stet.yaml` sidecars as content, so a second run gives you
+  `page.html.stet.yaml.stet.yaml`.
 - Never use it to set a policy on a draft. Approve the file first, then `policy.mjs set`, which will
   tell you when the combination is inert.
 
