@@ -85,7 +85,6 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `mark` | Authorship | Set state, author and policy directly | [reference/mark.md](reference/mark.md) |
 | `proof` | Authorship | Read what an agent wrote, block by block, and decide | [reference/proof.md](reference/proof.md) |
 | `policy` | Authorship | What may be done to them, and what they depend on | [reference/policy.md](reference/policy.md) |
-| `mark` | Authorship | Set the state, the author and the policy on a file | [reference/mark.md](reference/mark.md) |
 | `audit` | Evaluate | The sweep: stale claims, typed figures, orphans, voice breaks | [reference/audit.md](reference/audit.md) |
 | `critique` | Evaluate | A scored review of one piece | [reference/critique.md](reference/critique.md) |
 | `cite` | Evaluate | Does the source exist, is it retracted, is it the version to cite | [reference/cite.md](reference/cite.md) |
@@ -106,7 +105,6 @@ edit, what it sounds like and what to do next. Without it you discover all four 
 | `context` | Operate | What an agent needs to know before touching a word | [reference/context.md](reference/context.md) |
 | `scan` | Operate | What content exists, and how much of it | [reference/scan.md](reference/scan.md) |
 | `owner` | Operate | Who a file belongs to, and what may be done to it | [reference/owner.md](reference/owner.md) |
-| `owner` | Operate | Who a file belongs to and what may be done to it | [reference/owner.md](reference/owner.md) |
 | `admin` | Operate | When the hook is in your way: unlock, relock, and the record of why | [reference/admin.md](reference/admin.md) |
 | `pin` | Operate | Make one command its own slash command | [reference/pin.md](reference/pin.md) |
 

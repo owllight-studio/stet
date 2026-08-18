@@ -104,9 +104,10 @@ The CLI half is designed to sit in CI, where a stale figure or a retracted citat
 
 ## Capabilities and Constraints
 
-Thirty documented commands in seven groups: Establish, Compose, Authorship, Evaluate, Refine,
-Maintain, Operate. That is 28 rows in the `SKILL.md` table, because `claim`, `release` and `approve`
-share one. Twenty-five of the thirty also ship in the CLI, which is the subset that needs no model.
+Thirty-six commands in seven groups: Establish, Compose, Authorship, Evaluate, Refine, Maintain,
+Operate. Twenty-five of them ship in the CLI, which is the subset that needs no model, and seven
+need one. Eight of the thirty-six shipped with no reference document and no row in the table until
+`doctor` was taught to check per command rather than per file.
 Ten agents for work too large for the conversation or too close to it to judge.
 
 **Voice works two ways and both are the product.** There is a library of presets, currently 17, each
