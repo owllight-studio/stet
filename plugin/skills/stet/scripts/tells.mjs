@@ -71,12 +71,34 @@ for (const file of files) {
   const stripBanSections = (t) =>
     t.replace(/^#{1,6}\s*(never|do not|don't|avoid|banned)\b[\s\S]*?(?=^#{1,6}\s|$(?![\s\S]))/gim, "");
 
+  // The fourth instance, and the first one in HTML. voices.html is generated out of the voice
+  // files, so it carries their never lists onto a page, and both exemptions above missed it: the
+  // markdown headings are gone by then, and &quot; hid a quoted bad example from the quoted-text
+  // rule. Decode the entities, then drop any list item that opens by forbidding something.
+  const decodeEntities = (t) =>
+    t
+      .replace(/&quot;|&#34;/g, '"')
+      .replace(/&ldquo;|&#8220;/g, "“")
+      .replace(/&rdquo;|&#8221;/g, "”")
+      .replace(/&apos;|&#39;/g, "'")
+      .replace(/&amp;/g, "&");
+
+  const stripBanItems = (t) =>
+    t.replace(/<li\b[^>]*>[\s\S]*?<\/li>/gi, (item) =>
+      /^(never|do not|don't|avoid|banned)\b/i.test(item.replace(/<[^>]*>/g, "").trim()) ? "" : item,
+    );
+
   const prose = stripBanSections(
-    text
+    stripBanItems(decodeEntities(text))
       .replace(/```[\s\S]*?```/g, "")
       .replace(/`[^`]*`/g, "")
       .replace(/"[^"]{0,120}"/g, '""')
-      .replace(/\u201c[^\u201d]{0,120}\u201d/g, ""),
+      // Curly quotes are unambiguous about which end is which, so the character class already
+      // stops the match at the closing mark and no length cap is needed to keep it from running
+      // away. The old cap of 120 was inherited from the straight-quote rule above, where a lone
+      // stray quote really can pair with the wrong one. It cost the site its own exhibit: a
+      // specimen of agent prose, correctly quoted, was reported as a tell for being long.
+      .replace(/\u201c[^\u201d]{0,400}\u201d/g, ""),
   );
   const lines = prose.split("\n");
 
