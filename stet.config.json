@@ -13,7 +13,11 @@
     "site/VOICE.md"
   ],
   "format": "auto",
-  "voice": "VOICE.md",
+  "voice": {
+    "site/**": "site/VOICE.md",
+    "*": "VOICE.md"
+  },
+  "voiceNote": "Two registers, because this project writes for two readers. `site/` is written to sell and carries its own voice, defined by the author from a custom brief. Everything else is reference an agent reads and measurement tables a writer checks against, and holding those to a landing page's register would destroy what makes them useful. First matching glob wins.",
   "note": "Stet's own content, governed by Stet. `content` is everything the hook protects, and most of it is reference: measurement tables and rule lists an agent reads to decide what to do. `prose` is the subset written to be read by a person choosing whether to use this, and it is the only thing a voice should ever be applied to. Rewriting a column of sentence-length figures in somebody's house voice destroys the thing that made it useful.",
   "prose": [
     "site/index.html",

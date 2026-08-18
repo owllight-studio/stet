@@ -92,9 +92,17 @@ for (const glob of cfg.prose ?? []) {
   }
 }
 
-const voicePath = cfg.voice ?? "VOICE.md";
-if (!existsSync(join(root, voicePath))) {
-  say(2, "no voice file", `config points at ${voicePath}, which is not there`, "run voice, or fix the path");
+/* `voice` is one path, or a map of glob to path for a project writing in more than one register.
+   Every declared voice has to exist: a map with one bad entry silently falls back to the root voice
+   and the pages under that glob get measured against a register nobody chose for them. */
+const voicePaths = typeof cfg.voice === "object" && cfg.voice !== null
+  ? Object.entries(cfg.voice).map(([glob, path]) => [path, glob])
+  : [[cfg.voice ?? "VOICE.md", null]];
+
+for (const [voicePath, glob] of voicePaths) {
+  if (existsSync(join(root, voicePath))) continue;
+  const where = glob ? ` for ${glob}` : "";
+  say(2, "no voice file", `config points at ${voicePath}${where}, which is not there`, "run voice, or fix the path");
 }
 
 /* Code caught by a content glob. Marking a source file as prose is a mess to undo and the hook will

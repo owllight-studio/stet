@@ -18,7 +18,7 @@
  */
 
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { measure, targets, verdict, normalise, markupOf } from "./lib/prose.mjs";
 
 const root = process.cwd();
@@ -32,7 +32,6 @@ async function stdin() {
   return s;
 }
 
-const { path: voicePath, targets: want } = targets(root);
 const piped = args.length ? null : await stdin();
 
 if (!args.length && !piped) {
@@ -44,6 +43,8 @@ const jobs = piped ? [["stdin", piped]] : args.map((f) => [f, readFileSync(join(
 const report = [];
 let drifted = 0;
 
+let anyTargets = false;
+
 for (const [name, raw] of jobs) {
   const got = measure(raw, markupOf(name));
   if (!got) {
@@ -51,13 +52,17 @@ for (const [name, raw] of jobs) {
     continue;
   }
 
+  // Per file, because a project may declare more than one voice and say where each applies.
+  const { path: voicePath, targets: want } = targets(root, name);
+  if (Object.keys(want).length) anyTargets = true;
+
   const rows = Object.entries(got)
     .filter(([k]) => k !== "sentences" && k !== "words")
     .map(([k, v]) => ({ metric: k, value: v, ...verdict(v, normalise(k, want[k])) }));
 
   report.push({ file: name, sentences: got.sentences, words: got.words, rows });
   if (!json) {
-    console.log(`${name}  ${got.sentences} sentences, ${got.words} words`);
+    console.log(`${name}  ${got.sentences} sentences, ${got.words} words  ·  ${relative(root, voicePath) || voicePath}`);
     if (!Object.keys(want).length) {
       console.log(`  no targets in ${voicePath}, so these are facts rather than a verdict`);
     }
@@ -71,7 +76,7 @@ for (const [name, raw] of jobs) {
 }
 
 if (json) console.log(JSON.stringify(report, null, 2));
-else if (Object.keys(want).length) {
+else if (anyTargets) {
   console.log(drifted ? `${drifted} off target.` : "On target.");
 }
 

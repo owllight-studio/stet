@@ -57,3 +57,46 @@ test("a register qualified by modals no longer reads as unqualified", () => {
   assert.equal(m.softenersPerSentence, 0, "the old list sees nothing here");
   assert.ok(m.modalsPerSentence > 0.9, "and the register is qualified in every sentence");
 });
+
+/* --- which voice governs which file --------------------------------------- */
+
+import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { voiceFor } from "../plugin/skills/stet/scripts/lib/prose.mjs";
+
+function project(voice) {
+  const root = mkdtempSync(join(tmpdir(), "stet-voice-"));
+  mkdirSync(join(root, "site"));
+  writeFileSync(join(root, "stet.config.json"), JSON.stringify({ voice }));
+  return root;
+}
+
+test("one voice as a string still governs the whole project", () => {
+  const root = project("VOICE.md");
+  assert.equal(voiceFor(root, "site/index.html"), "VOICE.md");
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+});
+
+test("a glob sends its own subtree to its own voice", () => {
+  const root = project({ "site/**": "site/VOICE.md", "*": "VOICE.md" });
+  assert.equal(voiceFor(root, "site/index.html"), "site/VOICE.md");
+  assert.equal(voiceFor(root, "site/deep/nested/page.html"), "site/VOICE.md");
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+});
+
+test("an absolute path resolves the same as a relative one", () => {
+  const root = project({ "site/**": "site/VOICE.md", "*": "VOICE.md" });
+  assert.equal(voiceFor(root, join(root, "site/index.html")), "site/VOICE.md");
+});
+
+test("the star entry is the fallback and never wins over a real glob", () => {
+  const root = project({ "*": "VOICE.md", "site/**": "site/VOICE.md" });
+  assert.equal(voiceFor(root, "site/index.html"), "site/VOICE.md");
+});
+
+test("no config and no map both fall back to the root voice", () => {
+  const root = project({ "docs/**": "docs/VOICE.md" });
+  assert.equal(voiceFor(root, "README.md"), "VOICE.md");
+  assert.equal(voiceFor(root, "stdin"), "VOICE.md");
+});

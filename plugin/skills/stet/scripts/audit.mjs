@@ -110,17 +110,19 @@ if (Object.keys(specs).length) {
  * and cannot see the drift. Together they say the useful thing: this page is off-voice and nobody
  * may fix it without asking first.
  */
-const { targets: want } = targets(root);
-if (Object.keys(want).length) {
-  for (const f of files.filter(isProse)) {
-    const d = drift(text.get(f), f, want);
-    if (!d || !d.off.length) continue;
-    const said = d.off.map((r) => `${r.metric} ${r.value} (${r.want})`).join(", ");
-    if (!mayEdit(meta.get(f))) {
-      add(2, "closed and off-voice", f, said, "it cannot be fixed without the author releasing it");
-    } else if (d.off.length >= 3) {
-      add(3, "off-voice", f, said, "tighten, clarify, or accept that this page is a different register");
-    }
+for (const f of files.filter(isProse)) {
+  // Resolved per file, because a project may declare more than one voice and say where each
+  // applies. Hoisting this out of the loop measured every page against whichever voice the root
+  // happened to name, which for a project with a separate site voice is the wrong one everywhere.
+  const { targets: want } = targets(root, f);
+  if (!Object.keys(want).length) continue;
+  const d = drift(text.get(f), f, want);
+  if (!d || !d.off.length) continue;
+  const said = d.off.map((r) => `${r.metric} ${r.value} (${r.want})`).join(", ");
+  if (!mayEdit(meta.get(f))) {
+    add(2, "closed and off-voice", f, said, "it cannot be fixed without the author releasing it");
+  } else if (d.off.length >= 3) {
+    add(3, "off-voice", f, said, "tighten, clarify, or accept that this page is a different register");
   }
 }
 

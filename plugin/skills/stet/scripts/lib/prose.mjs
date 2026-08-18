@@ -7,8 +7,9 @@
  */
 
 import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, isAbsolute, sep } from "node:path";
 import { config } from "./find.mjs";
+import { matches } from "./glob.mjs";
 
 /* --- the prose, with the not-prose taken out ------------------------------ */
 
@@ -154,8 +155,36 @@ export function target(raw) {
   return { about: nums[0] };
 }
 
-export function targets(root) {
-  const path = join(root, config(root)?.voice ?? "VOICE.md");
+/**
+ * Which voice governs this file.
+ *
+ * `voice` in the config is either one path, meaning the whole project writes in one register, or a
+ * map of glob to path for a project that does not. A site is the case that forced it: `site/` is
+ * written to sell and the reference material is written to be checked against, and holding a
+ * landing page to the register of a measurement table would wreck it. Before this, `site/VOICE.md`
+ * was protected content that no command could read, so the one part of this project written to a
+ * declared voice was the one part nothing could hold to it.
+ *
+ * First matching glob wins, so the config author sets precedence by ordering, and a `*` entry at
+ * the end is the fallback. No map, or nothing matching, means VOICE.md at the root.
+ */
+export function voiceFor(root, file) {
+  const declared = config(root)?.voice;
+  if (!declared) return "VOICE.md";
+  if (typeof declared === "string") return declared;
+
+  if (file && file !== "stdin") {
+    const abs = isAbsolute(file) ? file : join(root, file);
+    const rel = relative(root, abs).split(sep).join("/");
+    for (const [glob, path] of Object.entries(declared)) {
+      if (glob !== "*" && matches(rel, glob)) return path;
+    }
+  }
+  return declared["*"] ?? "VOICE.md";
+}
+
+export function targets(root, file) {
+  const path = join(root, voiceFor(root, file));
   if (!existsSync(path)) return { path, targets: {} };
   const text = readFileSync(path, "utf8");
 
