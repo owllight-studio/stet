@@ -74,8 +74,11 @@ try {
 
 // 2. Only what the project declared as content.
 const { matchesAny } = await import("./lib/glob.mjs");
-const globs = Array.isArray(config?.content) ? config.content : [];
-if (!matchesAny(file, globs)) allow();
+/* One glob written as a string rather than a list is a mistake the config parser accepts, and this
+   line used to turn it into no globs at all, which means the hook silently guards nothing. Failing
+   open on a malformed config is defensible; failing open on a config that plainly declares content
+   is not. `matchesAny` takes either shape. */
+if (!matchesAny(file, config?.content)) allow();
 
 // 3. New content is a draft.
 if (!existsSync(abs)) allow();

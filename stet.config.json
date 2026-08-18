@@ -51,6 +51,11 @@
       "run": "node scripts/count-measurements.mjs",
       "as": "number",
       "note": "How many measured values the 17 presets hold. Declared after the homepage shipped 114, which was what a buggy regex counted rather than what the library contains."
+    },
+    "sums.relations": {
+      "run": "node scripts/count-relations.mjs",
+      "as": "number",
+      "note": "The relation count in the sums panel on checks.html. The panel shows a real run and the figure in it went stale as the corpus grew."
     }
   }
 }

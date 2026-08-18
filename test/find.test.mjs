@@ -108,3 +108,29 @@ test("owner honours the unlock record, the same file the hook reads", () => {
   assert.match(out, /^YES/m, "an unlocked file answers yes, because the hook would let it through");
   assert.match(out, /fixing a false figure/, "and it says why it was opened");
 });
+
+test("the hook still guards content declared as one glob string", async () => {
+  const root = mkT(j(tmp(), "stet-hook-"));
+  wF(j(root, "stet.config.json"), JSON.stringify({ content: "*.md" }));
+  wF(j(root, "a.md"), "---\nstet:\n  state: approved\n---\n\nClosed.\n");
+  const hook = j(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "hook-before-edit.mjs");
+  const input = JSON.stringify({ cwd: root, tool_name: "Edit", tool_input: { file_path: j(root, "a.md") } });
+  const out = execFileSync(process.execPath, [hook], { cwd: root, input, encoding: "utf8" });
+  assert.match(out, /deny/, "a string content must still protect, not silently guard nothing");
+});
+
+test("policy honours the unlock record too, so it cannot disagree with the hook", () => {
+  const root = mkT(j(tmp(), "stet-pol-"));
+  wF(j(root, "stet.config.json"), JSON.stringify({ content: ["*.md"] }));
+  wF(j(root, "a.md"), "---\nstet:\n  state: approved\n---\n\nClosed.\n");
+  const script = j(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "policy.mjs");
+
+  const closed = execFileSync(process.execPath, [script, "a.md"], { cwd: root, encoding: "utf8" });
+  assert.match(closed, /may not touch/);
+
+  mkD(j(root, ".stet"), { recursive: true });
+  wF(j(root, ".stet", "admin.json"), JSON.stringify({ unlocked: { "a.md": { reason: "a false figure" } } }));
+  const open = execFileSync(process.execPath, [script, "a.md"], { cwd: root, encoding: "utf8" });
+  assert.match(open, /unlocked/);
+  assert.match(open, /a false figure/);
+});

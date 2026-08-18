@@ -31,10 +31,13 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { config } from "./lib/find.mjs";
+import { voiceFor } from "./lib/prose.mjs";
 import { TOKENS } from "./lib/sheet.mjs";
 
 const root = process.cwd();
-const voicePath = join(root, config(root)?.voice ?? "VOICE.md");
+/* `voice` may be a map of glob to path. Joining an object onto a path throws, and this is the
+   sheet an author reads their own voice on. `voiceFor` resolves either shape. */
+const voicePath = join(root, voiceFor(root, process.argv[2]));
 
 if (!existsSync(voicePath)) {
   console.log(`No voice file at ${voicePath}. Run voice first.`);

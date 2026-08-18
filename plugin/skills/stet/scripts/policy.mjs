@@ -16,6 +16,8 @@
  *   node policy.mjs check                      combinations that mean nothing
  */
 
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { findContent } from "./lib/find.mjs";
 import { read as readMeta, write as writeMeta, mayEdit, mayRefresh, ownedSpans, POLICIES } from "./lib/meta.mjs";
 import { declared } from "./lib/sources.mjs";
@@ -25,6 +27,22 @@ const argv = process.argv.slice(2);
 
 /* --- what it permits, in words -------------------------------------------- */
 
+/*
+ * The unlock record, read the way the hook reads it.
+ *
+ * This command's whole promise is that it works the answer out from the same rules the hook runs,
+ * so what it says and what the hook does cannot drift apart. They drifted: the hook has honoured
+ * `.stet/admin.json` since it was written, and this command had never heard of it, so a file opened
+ * with `admin unlock` was still reported here as one an agent may not touch.
+ */
+let adminRecord = {};
+try {
+  const p = join(root, ".stet", "admin.json");
+  if (existsSync(p)) adminRecord = JSON.parse(readFileSync(p, "utf8"));
+} catch {
+  /* A corrupt admin file must not open the gate, which is what the hook does with it too. */
+}
+
 function explain(file) {
   const m = readMeta(root, file);
   const specs = declared(root);
@@ -32,6 +50,19 @@ function explain(file) {
   const owned = ownedSpans(m);
 
   const lines = [];
+
+  if (adminRecord?.hook?.off) {
+    lines.push(`state ${m?.state ?? "unset"}, and the hook is off`);
+    lines.push(`an agent may edit anything. Recorded: ${adminRecord.hook.reason ?? "no reason given"}`);
+    return { file, meta: m, lines };
+  }
+  if (adminRecord?.unlocked?.[file]) {
+    lines.push(`state ${m?.state ?? "unset"}, and this file is unlocked`);
+    lines.push(`an agent may edit it. Recorded: ${adminRecord.unlocked[file]?.reason ?? "no reason given"}`);
+    lines.push(`relock it when the work is done: admin relock ${file}`);
+    return { file, meta: m, lines };
+  }
+
   if (!m) {
     lines.push("carries no state at all, so nothing is decided and nothing is protected");
     return { file, meta: m, lines };

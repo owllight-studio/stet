@@ -5,12 +5,12 @@
     "seen": "2026-08-18"
   },
   "suite.tests": {
-    "value": "152",
+    "value": "154",
     "as": "number",
     "seen": "2026-08-18"
   },
   "corpus.words": {
-    "value": "101062",
+    "value": "101071",
     "as": "number",
     "seen": "2026-08-18"
   },
@@ -21,6 +21,11 @@
   },
   "library.measurements": {
     "value": "132",
+    "as": "number",
+    "seen": "2026-08-18"
+  },
+  "sums.relations": {
+    "value": "8",
     "as": "number",
     "seen": "2026-08-18"
   }
