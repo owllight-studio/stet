@@ -67,10 +67,12 @@
       <h2>What each one catches</h2>
       <div class="pair wide-right">
         <div>
-          <p>Ten of them do the work you would notice. The other fifteen are plumbing: what content
-            exists, who owns it, what the style sheet decided, what to set on a file.</p>
-          <p>Each one was run over this whole repository and tuned until it stopped crying wolf. A
-            check that fires on work you got right is a check you switch off, and then it protects
+          <p>Ten of them are the checks. The other fifteen are what the checks stand on: what
+            content exists, who owns it, what the style sheet decided, what to set on a file, and
+            <code>refresh</code>, which changes a stale figure and leaves every other word
+            alone.</p>
+          <p>Every one was run over this repository and tuned until it stopped crying wolf. A
+            check that fires on work you got right is a check you switch off. Then it protects
             nothing.</p>
           <p><code>stet help &lt;command&gt;</code> prints the full reference for any of them.</p>
         </div>
@@ -80,9 +82,9 @@
               <tr><th scope="col">Command</th><th scope="col">The thing it catches</th></tr>
             </thead>
             <tbody>
-              <tr><td>check</td><td>A product name spelled two ways across forty files</td></tr>
+              <tr><td>check</td><td>Your product name spelled two ways across forty files</td></tr>
               <tr><td>audit</td><td>The sweep, ranked by what it costs you</td></tr>
-              <tr><td>verify</td><td>A number typed by hand where a source was declared</td></tr>
+              <tr><td>verify</td><td>A number you typed by hand where a source was declared</td></tr>
               <tr><td>sums</td><td>Parts that do not make their total, and statistics that disagree with their own p-values</td></tr>
               <tr><td>cite</td><td>A citation to a withdrawn paper, or to a preprint since published</td></tr>
               <tr><td>standing</td><td>A URL that still resolves and no longer says what you cited it for</td></tr>
@@ -101,10 +103,14 @@
       <h2>Why this is worth a build step</h2>
       <div class="pair wide-right">
         <div>
-          <p>Somebody counted all four of these. The numbers are worse than anyone guesses.</p>
-          <p>The link one catches people out. A URL that still returns 200 has not necessarily kept
-            the sentence you cited it for. The page looks fine. Nothing on it says the paragraph
-            you quoted came out two years ago.</p>
+          <p>Somebody counted all four of these, and none of them is about your website. They are
+            about journals, because journals are where anyone bothered to count. Your pages rot the
+            same way.</p>
+          <p>Does any of that reach a pricing page? The link row does. A URL that still returns
+            200 has not necessarily kept the sentence you cited it for. The page looks fine. Nothing
+            on it says the paragraph you quoted came out two years ago. That is the same failure as
+            a product name spelled two ways across forty files, and the same reason nobody
+            notices.</p>
           <p>So <code>standing</code> writes down what a source said the first time you cited it,
             and tells you what has changed since.</p>
         </div>
@@ -145,13 +151,12 @@
       <h2>Running it</h2>
       <div class="pair">
         <div>
-          <p>You start with one file, <code>stet.config.json</code>. It says which files are your
-            words. It can also say where a figure comes from, which is a shell command.</p>
-          <p>The record then lives in the content itself. In the frontmatter where the format has
-            it, in a <code>stet</code> key for JSON, in a small file alongside for everything else.
-            Nothing else in the file moves.</p>
+          <p>What does it cost to set up? One file. <code>stet.config.json</code> says which
+            files are your words. It can also say where a figure comes from, which is a shell
+            command.</p>
           <p>Stet touches your words and nothing else. No components, no routing, no CSS. Put it on
-            Next, Astro, Hugo or a folder of Markdown and it behaves the same.</p>
+            Next, Astro, Hugo or a folder of Markdown and it behaves the same, and the checks that
+            need no network never open one.</p>
         </div>
         <div class="panel">
           <span class="sign">In a build</span>

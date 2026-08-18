@@ -41,12 +41,12 @@
     <h1>Whose words these are</h1>
     <div class="pair">
       <div>
-        <p class="lede">Every other tool hands you a text box and hopes. Nothing in the file says
-          who wrote what, so nothing can protect it.</p>
+        <p class="lede">Stet is a plugin for Claude Code. You mark the lines you wrote, and the
+          agent stops being able to touch them. Not by being asked. By being refused.</p>
       </div>
       <div>
-        <p class="lede">Here every file says. Who wrote it. What may still be done to it. Which
-          sentences belong to a person.</p>
+        <p class="lede">Every file carries three answers. Who wrote it. What may still be done to
+          it. Which sentences are yours rather than the machine's.</p>
       </div>
     </div>
   </section>
@@ -58,13 +58,11 @@
       <h2>Three states, three behaviours</h2>
       <div class="pair wide-right">
         <div>
-          <p>Three labels would be decoration. These are three behaviours, and each answers the two
-            questions an agent is about to act on.</p>
-          <p><strong>Reading a draft and accepting it is what makes it yours.</strong> Until then it
-            belongs to the agent that wrote it. Not time. Not the writing being good. Not you having
-            typed every word of it.</p>
-          <p>Approved and authored are both closed, and the difference is who did the typing. It
-            matters when you ask for a rebuild. An approved page can be rebuilt. An authored one is
+          <p><strong>So what makes a page yours?</strong> Reading it and accepting it. Not time.
+            Not the writing being good. Not you having typed every word of it. Until you accept it,
+            it belongs to the agent that wrote it.</p>
+          <p>Approved and authored are both closed. The difference is who did the typing, and it
+            shows up when you ask for a rebuild. An approved page can be rebuilt. An authored one is
             yours to replace and nobody else's.</p>
         </div>
         <div class="scroll">
@@ -93,12 +91,12 @@
       <div class="pair">
         <div>
           <p>A file's state covers the whole file. Under it sits a list of the sentences a person
-            wrote, kept as their exact words.</p>
+            wrote. Not line numbers. The words themselves.</p>
           <p>That is the whole trick. Keep a line number and the lock breaks the moment a paragraph
             lands above it. Keep the words and the lock holds while the section moves, the voice
             changes and the page is rebuilt.</p>
-          <p>Rewrite the sentence yourself and the lock comes off. That is right, because they are
-            different words.</p>
+          <p>Rewrite the sentence yourself and the lock comes off. That is right. They are
+            different words now.</p>
           <p>Most pages end up mixed. The agent wrote nearly all of it. Three lines are yours. The
             agent works around those three.</p>
         </div>
@@ -112,12 +110,13 @@
             <div class="row">
               <span class="sign">Yours · held</span>
               <div class="held">
-                <p>The reason I started this project is not a thing an agent gets to paraphrase.</p>
+                <p>We started this because a client asked us to change one word and got back a
+                  page nobody recognised.</p>
               </div>
             </div>
             <div class="row regen">
               <span class="sign">Agent</span>
-              <p>The editing surface is the conversation. The store is the project's own files.</p>
+              <p>You edit in the chat. Everything is saved into the project's own files.</p>
             </div>
           </div>
           <p style="margin-top:14px; color:var(--soft); font-size:14.5px">Edit around them. Nothing
@@ -132,15 +131,15 @@
       <div class="pair wide-right">
         <div>
           <p>State says whose the words are. Policy says what may still happen to them once they
-            are closed. You need both to know where you stand.</p>
+            are closed.</p>
           <div class="note-block r-maintain" style="margin:18px 0">
             <span class="sign">The one worth knowing</span>
             <p><strong>Authored plus refresh.</strong> These are my words. Keep the numbers in them
               true. Change the figure, leave the sentence.</p>
           </div>
-          <p>Ask <code>policy</code> about any file and it tells you in plain English. It works the
-            answer out from the same code the hook runs, never from a table somebody wrote once. If
-            the two ever disagree, the answer is the bug.</p>
+          <p>Ask <code>policy</code> about any file and it tells you in plain English. It works
+            the answer out by calling the same code the hook calls, so what it tells you and what
+            the hook will do cannot drift apart.</p>
         </div>
         <div class="scroll">
           <table class="plain">
@@ -149,7 +148,7 @@
             </thead>
             <tbody>
               <tr><td>draft</td><td>any</td><td>Rewrite freely. Nobody has accepted it</td></tr>
-              <tr><td>approved or authored</td><td>none or frozen</td><td>Nothing, including figures that moved</td></tr>
+              <tr><td>approved or authored</td><td>no policy, or frozen</td><td>Nothing, including figures that moved</td></tr>
               <tr><td>approved or authored</td><td>refresh</td><td>Update the named figures. Change no other word</td></tr>
               <tr><td>approved or authored</td><td>open</td><td>Rewrite the words. Ownership does not move</td></tr>
             </tbody>
@@ -164,14 +163,19 @@
       <div class="pair">
         <div>
           <p>Put the rule in a prompt and it holds until it does not, and nothing tells you which
-            turn that was. This project exists because its author watched an agent break its own
-            written rules inside a single session, while telling him it was following them.</p>
+            turn that was. This exists because we watched an agent break its own written rules
+            inside one session, while telling us it was following them.</p>
           <p>So the rule is a <code>PreToolUse</code> hook instead. It reads the record before the
             edit lands and answers before the file moves. It does not advise.</p>
-          <p>A file nobody has claimed gets a no. That is the safe answer and the honest one. The
-            first thing <code>ingest</code> does in a new project is read everything already there
-            and mark all of it as yours, because a person wrote it and that person was not the
-            agent.</p>
+          <p>A file nobody has claimed gets a no. So does that mean it starts refusing edits all
+            over your project? No, and here is exactly where it stops. A project with no
+            <code>stet.config.json</code> is not using Stet and the hook does nothing at all, so
+            installing it changes nothing until you say so. Only the paths you list as content are
+            considered, and your code passes straight through. A file that does not exist yet is new
+            writing, so it is always allowed.</p>
+          <p>Inside those lines the no is the safe answer. The first thing <code>ingest</code> does
+            in a new project is read what is already there and mark it as yours, because a person
+            wrote it and that person was not the agent.</p>
         </div>
         <div>
           <div class="verdict">
@@ -202,8 +206,8 @@
       <h2>Getting the hook out of your way</h2>
       <div class="pair">
         <div>
-          <p>Sooner or later you will want an agent to edit a closed file. You should be able to
-            allow that without switching the whole thing off.</p>
+          <p>Sooner or later you will want an agent to edit a closed file. Does that mean turning
+            the whole thing off? No. You open one file.</p>
           <p><code>admin unlock</code> opens one file, and it will not do it without a reason.
             <code>admin relock</code> shuts it again. While a file is open, <code>admin status</code>
             says which one, since when, and why.</p>

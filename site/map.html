@@ -41,21 +41,24 @@
     <h1>Thirty commands. Seven lines.</h1>
     <div class="pair">
       <div>
-        <p class="lede">Work out what the project is. Write to it. Say whose the words are. Hold it
-          against its sources. Cut it down. Keep it current.</p>
-        <p class="lede">Then five more that keep the rest running.</p>
+        <p class="lede">Work out what the project is. Write to it. Say whose the words are. Hold
+          it against its sources. Cut it down. Keep it current.</p>
+        <p class="lede">Those six sentences are the six coloured lines below, in that order. The
+          seventh is the one you start every session on. Which one do you need? Whichever of those
+          six describes your afternoon.</p>
       </div>
       <div class="panel">
         <span class="sign">stet context, run on this repository</span>
-        <pre class="out">STET  a site, 61 files, 91,112 words
+        <pre class="out">STET  a site, 61 files, 91,349 words
 
 WHAT YOU MAY EDIT
   59 open, 2 closed.
 <i>  Ask before editing anything closed.
   Do not release it yourself.</i></pre>
-        <p style="margin-top:14px; color:var(--soft); font-size:14px">Run <code>context</code>
-          first, every session. One call tells the agent what is enforced, what it may edit, what
-          the project sounds like and what to do next.</p>
+        <p style="margin-top:14px; color:var(--soft); font-size:14px">Why first? Because the hook
+          will refuse an edit you had no way to see coming, and this is the one call that tells you
+          which files are closed before you waste a turn finding out, along with what the project
+          sounds like and what to do next.</p>
       </div>
     </div>
   </section>
@@ -66,7 +69,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">E</span>
         <h3>Establish</h3>
-        <p>What this project is, what it sounds like, what is already in it</p>
+        <p>You have just arrived, and nothing here knows what this project is or how it should sound</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>init</b><em>What this project is, who reads it, what it must do</em></li>
@@ -81,7 +84,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">C</span>
         <h3>Compose</h3>
-        <p>Author in the voice, to the architecture</p>
+        <p>There is a blank page, and a house voice you would rather not break on the first draft</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>outline</b><em>Plan a piece before writing it</em></li>
@@ -94,7 +97,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">A</span>
         <h3>Authorship</h3>
-        <p>Whose words these are, and what may be done to them</p>
+        <p>Somebody wrote a line that has to survive everything you do to the page around it</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>claim</b><em>These words are mine</em></li>
@@ -109,7 +112,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">V</span>
         <h3>Evaluate</h3>
-        <p>Held against its sources, its figures and its own arithmetic</p>
+        <p>The page reads fine, and you have no idea whether any of it is still true</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>audit</b><em>The sweep, ranked by what it costs</em></li>
@@ -126,7 +129,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">R</span>
         <h3>Refine</h3>
-        <p>Cut, make it land, move it about</p>
+        <p>It says the thing, eventually, and reads as though nobody was in the room</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>tighten</b><em>Cut</em></li>
@@ -139,7 +142,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">M</span>
         <h3>Maintain</h3>
-        <p>Change the figure, leave the sentence</p>
+        <p>Months have gone by and something underneath the page has moved</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>refresh</b><em>Bring the named figures current, and change no other word</em></li>
@@ -151,7 +154,7 @@ WHAT YOU MAY EDIT
       <div class="route-head">
         <span class="bullet lg" aria-hidden="true">O</span>
         <h3>Operate</h3>
-        <p>What an agent needs before touching a word, and how to get out of its way</p>
+        <p>Not a stage. The line every other line passes through, and where you start each session</p>
       </div>
       <ol class="stations">
         <li><span class="dot" aria-hidden="true"></span><b>context</b><em>The whole project in one call. Run it first</em></li>
@@ -170,13 +173,10 @@ WHAT YOU MAY EDIT
       <h2>Ten agents</h2>
       <div class="pair wide-right">
         <div>
-          <p>Each one is here for the same two reasons. The job is too big to fit in the
-            conversation, or it is too close to the conversation to be judged straight. Reading
-            somebody's whole back catalogue is the first kind. Deciding whether their page works is
-            the second.</p>
-          <p>The writing itself is never handed off. <code>write</code>, <code>tighten</code>,
-            <code>clarify</code> and <code>restructure</code> are the job. An agent that passes its
-            prose to another agent has lost the thread.</p>
+          <p>So why not just ask the agent you already have? Because two jobs do not fit in a
+            conversation. Reading your whole back catalogue is too big for one. Deciding whether
+            your page works is too close to it, since the thing being judged is the thing that
+            wrote it.</p>
         </div>
         <div class="scroll">
           <table class="plain">
@@ -206,12 +206,17 @@ WHAT YOU MAY EDIT
       <div class="pair">
         <div>
           <p>A novel. A research paper. A screenplay, a documentation tree, an album's worth of
-            lyrics.</p>
-          <p>The states, the voice and every measurement work the same on all of them. A line of a
-            lyric and a line of marketing copy are both somebody's words, and whether an agent may
-            rewrite them has one answer.</p>
-          <p>A few checks only make sense for a website. Tell Stet what you are writing with
-            <code>kinds</code> and those switch themselves off.</p>
+            lyrics. None of that is a marketing page, and if you write one of them your first
+            question is whether any of this was built with you in mind.</p>
+          <p>Some checks only make sense for a website, so you tell Stet what you are writing with
+            <code>kinds</code> and those switch themselves off. What is left works the same on all of
+            them.</p>
+          <p>A line of your lyric and a line of your marketing copy are both somebody's words, and
+            whether an agent may rewrite them has one answer.</p>
+          <p>The voice measurements are the part worth arguing about, and the honest answer is that
+            they were counted off the register you pick. Choose Noir and you are held to Chandler
+            and Hammett. Choose The Pitch and you are held to sixteen software home pages. Neither
+            number means anything on the other one, which is why there are seventeen.</p>
         </div>
         <div class="panel">
           <span class="sign">Adding it</span>
