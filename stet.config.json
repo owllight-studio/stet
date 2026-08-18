@@ -46,6 +46,11 @@
       "run": "node scripts/count-files.mjs",
       "as": "number",
       "note": "The file count in the context panel on map.html. Declared after the panel shipped with a current word count beside a stale file count."
+    },
+    "library.measurements": {
+      "run": "node scripts/count-measurements.mjs",
+      "as": "number",
+      "note": "How many measured values the 17 presets hold. Declared after the homepage shipped 114, which was what a buggy regex counted rather than what the library contains."
     }
   }
 }

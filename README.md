@@ -39,7 +39,7 @@ Everywhere else a voice is an adjective in a prompt. Friendly but professional. 
 Nobody can check an adjective, so nobody does.
 
 These were built the other way round. Somebody read the work and wrote down what it does: how long
-the sentences run, where the pauses land, how often a hedge shows up. There are 114 of those
+the sentences run, where the pauses land, how often a hedge shows up. There are 132 of those
 measurements across the library, and every one of the seventeen names the work it came from.
 
 So drift shows up as a number rather than an opinion, and `measure` reports it.

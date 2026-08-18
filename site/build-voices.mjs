@@ -82,13 +82,16 @@ function frontmatter(text) {
   for (const raw of m[1].split("\n")) {
     const line = raw.replace(/\s+$/, "");
     if (!line) continue;
-    const top = line.match(/^([a-zA-Z_]+)\s*:\s*(.*)$/);
+    const top = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
     if (top) {
       nest = top[2] === "" ? (out[top[1]] = {}) : null;
       if (top[2] !== "") out[top[1]] = top[2].replace(/^["']|["']$/g, "");
       continue;
     }
-    const pair = line.match(/^\s+([a-zA-Z_]+)\s*:\s*(.*)$/);
+    // A key may carry a digit: sentenceP95, modalsPer10kWords, fieldsPer100Words. Excluding them
+    // silently dropped 18 real measurements, and the page then reported 114 as the library's count
+    // when it holds 132. Nobody noticed, because a hand check written the same way agreed with it.
+    const pair = line.match(/^\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
     if (pair && nest) nest[pair[1]] = pair[2].replace(/^["']|["']$/g, "");
   }
   return out;

@@ -44,6 +44,7 @@ test("a sidecar is not mistaken for a copy of the file it describes", () => {
    asked for, and both were found by an agent fuzzing the commands rather than by a test. */
 
 import { mkdtempSync as mkT, writeFileSync as wF, mkdirSync as mkD } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { tmpdir as tmp } from "node:os";
 import { join as j } from "node:path";
 import { matchesAny } from "../plugin/skills/stet/scripts/lib/glob.mjs";
@@ -88,4 +89,22 @@ test("a content glob that is neither a string nor a list becomes no globs, and n
   wF(j(root, "a.md"), "# a\n");
   assert.deepEqual(config(root).content, []);
   assert.deepEqual(findContent(root).files, []);
+});
+
+test("owner honours the unlock record, the same file the hook reads", () => {
+  const root = mkT(j(tmp(), "stet-unlock-"));
+  wF(j(root, "stet.config.json"), JSON.stringify({ content: ["*.md"] }));
+  wF(j(root, "a.md"), "---\nstet:\n  state: approved\n---\n\nClosed words.\n");
+  const script = j(import.meta.dirname, "..", "plugin", "skills", "stet", "scripts", "owner.mjs");
+
+  let closed = 0;
+  try { execFileSync(process.execPath, [script, "a.md"], { cwd: root, encoding: "utf8" }); }
+  catch (e) { closed = e.status; }
+  assert.equal(closed, 1, "approved content answers no");
+
+  mkD(j(root, ".stet"), { recursive: true });
+  wF(j(root, ".stet", "admin.json"), JSON.stringify({ unlocked: { "a.md": { reason: "fixing a false figure" } } }));
+  const out = execFileSync(process.execPath, [script, "a.md"], { cwd: root, encoding: "utf8" });
+  assert.match(out, /^YES/m, "an unlocked file answers yes, because the hook would let it through");
+  assert.match(out, /fixing a false figure/, "and it says why it was opened");
 });
