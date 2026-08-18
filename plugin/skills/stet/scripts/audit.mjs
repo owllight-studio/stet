@@ -156,8 +156,20 @@ for (const [f, body] of text) {
   for (const m of body.matchAll(/\[[^\]]*\]\(([^)#?\s]+)[^)]*\)|href="([^"#?]+)/g)) {
     const href = m[1] ?? m[2];
     if (!href || /^(https?:|mailto:|#)/.test(href)) continue;
-    const target = relative(root, resolve(root, here, href));
-    if (files.includes(target)) linked.add(target);
+    /*
+     * A root-absolute href is relative to the web root, and the web root is not the repository
+     * root when the site lives in a subdirectory. Every internal link on this project's own site
+     * is written "/map.html", and resolve() treats a leading slash as the filesystem root, so not
+     * one of them ever matched and every page but the entry point was reported as an orphan.
+     * Try it against the linking file's directory as well, and take whichever names real content.
+     */
+    const targets = href.startsWith("/")
+      ? [resolve(root, here, `.${href}`), resolve(root, href.slice(1))]
+      : [resolve(root, here, href)];
+    for (const t of targets) {
+      const target = relative(root, t);
+      if (files.includes(target)) linked.add(target);
+    }
   }
 }
 /* Orphans mean nothing outside a linked structure. In a manuscript nothing links to chapter nine,

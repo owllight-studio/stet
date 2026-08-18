@@ -144,6 +144,7 @@ const LABELS = [
   [/longest/i, "sentenceMax"],
   [/varies|variance|sd ?\/ ?mean|standard deviation/i, "sentenceSdOverMean"],
   [/very short|under (six|6)|short sentences/i, "shortSentences"],
+  [/long sentences|long tail/i, "longSentences"],
   [/two long|adjacent long|long sentences in a row/i, "adjacentLong"],
   [/paragraph length,? median|paragraph/i, "paragraphMedian"],
   [/second person/i, "secondPerson"],
@@ -252,8 +253,15 @@ const CEILINGS = new Set(["sentenceMax", "sentenceP95", "sentenceP90"]);
 
 export function normalise(metric, t) {
   if (!t) return t;
-  if (CEILINGS.has(metric) && t.about !== undefined && t.max === undefined) {
-    t = { ...t, max: Math.round(t.about * 1.25), about: undefined };
+  if (CEILINGS.has(metric)) {
+    if (t.about !== undefined && t.max === undefined) {
+      t = { ...t, max: Math.round(t.about * 1.25), about: undefined };
+    }
+    /* A maximum cannot carry a minimum. The project voice writes "Longest 5%: 35 words and up",
+       meaning its tail reaches 35, and the label table sent that to `sentenceMax` as a floor, so a
+       page whose longest sentence ran to 33 failed for not being long enough. A voice that wants a
+       long tail should say so with `longSentences`, which is a share and can be a floor. */
+    if (t.min !== undefined && t.max === undefined) t = { ...t, min: undefined };
   }
   if (!RATIOS.has(metric)) return t;
   const scale = (n) => (n === undefined ? undefined : n > 1 ? n / 100 : n);

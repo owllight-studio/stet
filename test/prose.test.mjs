@@ -189,3 +189,17 @@ test("the floor is a real check, not a note in a file", () => {
   assert.match(out, /abstract-noun|unglossed-jargon|grand-abstraction/);
   assert.doesNotMatch(out, /docs\/ref\.md/, "reference material keeps its own register");
 });
+
+test("a bare floor on a ceiling metric is meaningless and is dropped", () => {
+  // The project voice writes "Longest 5%: 35 words and up", which the label table sends to
+  // sentenceMax. Read as a floor it failed a page whose longest sentence ran to 33 words.
+  const t = normalise("sentenceMax", target("35 words and up"));
+  assert.equal(verdict(33, t).state, "ok");
+  assert.equal(verdict(12, t).state, "ok");
+});
+
+test("a voice can still ask for a long tail, using the metric that is a share", () => {
+  const t = normalise("longSentences", target("5 percent or more"));
+  assert.equal(verdict(0.02, t).state, "under");
+  assert.equal(verdict(0.08, t).state, "ok");
+});
