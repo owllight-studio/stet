@@ -5,8 +5,8 @@
       "state": "current",
       "title": "Continued use of retracted papers: Temporal trends in citations and (lack of) awareness of retractions shown in citation contexts in biomedicine",
       "anchors": [],
-      "file": "docs/source-integrity.md",
-      "line": 55,
+      "file": "docs/plans/source-integrity.md",
+      "line": 846,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-17",
       "since": "2026-08-17"
@@ -15,8 +15,8 @@
       "state": "current",
       "title": "Scholarly Context Adrift: Three out of Four URI References Lead to Changed Content",
       "anchors": [],
-      "file": "plugin/skills/stet/reference/standing.md",
-      "line": 38,
+      "file": "docs/plans/source-integrity.md",
+      "line": 1065,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-17",
       "since": "2026-08-17"
@@ -24,11 +24,11 @@
     "url:https://github.com/owllight-studio/stet": {
       "state": "live",
       "title": "GitHub - owllight-studio/stet: Content that knows who owns it. A Claude Code plugin that stops agents rewriting your words, helps with IA, and so much more. · GitHub",
-      "digest": "c3fefcacbc4bd001",
+      "digest": "8983f58f518a4cf5",
       "host": "github.com",
       "anchors": [],
-      "file": "site/index.html",
-      "line": 24,
+      "file": "site/checks.html",
+      "line": 27,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-17",
       "since": "2026-08-17"
@@ -43,6 +43,79 @@
       "line": 244,
       "firstSeen": "2026-08-17",
       "lastChecked": "2026-08-17",
+      "since": "2026-08-17"
+    },
+    "doi:10.3758/s13428-015-0664-2": {
+      "anchors": [],
+      "file": "docs/plans/sums.md",
+      "line": 24,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "current",
+      "title": "The prevalence of statistical reporting errors in psychology (1985–2013)",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/checks.html": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "dead",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio/stet/blob/main/README.md": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 209,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "live",
+      "title": "stet/README.md at main · owllight-studio/stet · GitHub",
+      "digest": "f246ac51f843f37c",
+      "host": "github.com",
+      "since": "2026-08-17"
+    },
+    "url:https://github.com/owllight-studio/stet/blob/main/LICENSE": {
+      "anchors": [],
+      "file": "site/checks.html",
+      "line": 210,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "live",
+      "title": "stet/LICENSE at main · owllight-studio/stet · GitHub",
+      "digest": "49a9c23263d1ec0c",
+      "host": "github.com",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/": {
+      "anchors": [],
+      "file": "site/index.html",
+      "line": 31,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "live",
+      "title": "Stet, words that know whose they are",
+      "digest": "fefa0e5fbf9c96e7",
+      "host": "stet.style",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/map.html": {
+      "anchors": [],
+      "file": "site/map.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "dead",
+      "since": "2026-08-17"
+    },
+    "url:https://stet.style/ownership.html": {
+      "anchors": [],
+      "file": "site/ownership.html",
+      "line": 9,
+      "firstSeen": "2026-08-17",
+      "lastChecked": "2026-08-17",
+      "state": "dead",
       "since": "2026-08-17"
     }
   }

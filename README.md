@@ -6,138 +6,167 @@ stet:
 
 # Stet
 
-**Content that knows who owns it.** A Claude Code plugin that stops agents rewriting your words and
-keeps the rest true.
+**Nobody wrote this.** You can spot it in a paragraph, sometimes in a line. A cover letter. A
+property listing. Marketing copy, a novel, the second act of a script. It all sounds the same.
+
+Stet is a Claude Code plugin, and a CLI with no dependencies, for writing that does not sound like
+that.
 
 *stet*, the proofreader's mark meaning **let it stand**. Ignore the correction; the original is
 right.
 
 ---
 
-## The problem
+## What you get
 
-You point Claude at a content codebase. Three things go wrong.
+**Seventeen voices, and each one was built by reading the real thing.** Chandler for noir. Darwin's
+fifteen Beagle notebooks for field notes. The Reuters handbook for news. Use one as it is, edit it,
+or describe the voice you want and have one built for you.
 
-**It writes too much.** Every paragraph is a sentence and a half doing the work of a sentence. Every
-list has a preamble. Nothing is ever just said. You end up spending more time unwinding the slop
-than you would have spent writing it, which is the opposite of the deal, and the time it takes comes
-out of the work only you can do.
+**A lock for the lines you wrote yourself.** A slogan, a testimonial, the sentence you spent an hour
+on. Mark it and the agent rewrites everything around it and leaves that line alone.
 
-**It rewrites what it should not touch.** The paragraph you agonised over comes back "improved". You
-did not ask. You asked for a redesign, or a fix three files away, and your words were collateral.
+**Checks that keep the rest true.** A price that moved. A citation to a retracted paper. Two
+percentages that do not add up to the total underneath them.
 
-**It leaves what it should refresh.** A sentence quotes a number that moved three weeks ago. Nothing
-in the file says that number came from anywhere, so nothing knows it went stale, and the page keeps
-stating it with a straight face.
+    /plugin marketplace add owllight-studio/stet
 
-The last two are one missing thing: **content carries no record of who owns it or what may be done
-to it.** Every CMS ever built hands you a text box and hopes.
+Then `/stet` in any project. Node 20 or newer. MIT.
 
-The first is a missing standard. A voice defined once, derived from writing you already did, applied
-every time, and checked. Not a note in a prompt that survives eleven turns.
+## Why a voice needs numbers
 
-## What Stet does
+Everywhere else a voice is an adjective in a prompt. Friendly but professional. Clear and concise.
+Nobody can check an adjective, so nobody does.
 
-Every block of content carries an owner and a policy:
+These were built the other way round. Somebody read the work and wrote down what it does: how long
+the sentences run, where the pauses land, how often a hedge shows up. There are 114 of those
+measurements across the library, and every one of the seventeen names the work it came from.
+
+So drift shows up as a number rather than an opinion, and `measure` reports it.
+
+Each voice file also names how a fake of it gives itself away. All 102 of those together are a list
+of what generated writing does, and `tells` is the checker for the worst of them.
+
+Ten voices written from instinct early on all had their central mechanic backwards. That is why the
+reading half is not decoration.
+
+## How the lock works
+
+Content carries a record. In the frontmatter where the format has one, in a `stet` key for JSON, in
+a small file alongside for everything else.
 
 ```yaml
 ---
-owner: human          # mine. let it stand.
+stet:
+  state: authored
+  policy: refresh
+  owned:
+    - "The reason I started this project is not a thing an agent gets to paraphrase."
 ---
-The reason I started this project is not a thing an agent gets to paraphrase.
 ```
 
-```yaml
----
-owner: agent
-voice: house
-sources: [corpus.rampShare]
-policy: refresh-on-change
----
-Ramp casts are {{rampShare}} of what you press before a spike.
+`state` says whose the words are. `policy` says what may still happen to them. `owned` lists the
+sentences a person wrote, kept as their exact words rather than as line numbers, which is why a lock
+holds while the section moves and the page is rebuilt around it. Rewrite the line yourself and the
+lock comes off, because they are different words.
+
+`authored` plus `refresh` is the combination worth knowing. *These are my words. Keep the numbers in
+them true.* Change the figure, leave the sentence.
+
+### Why a hook and not a rule
+
+Put the rule in a prompt and it lasts about eleven turns. This project exists because its author
+watched an agent break its own written rules inside a single session, while telling him it was
+following them.
+
+So a `PreToolUse` hook reads the record before the edit lands and answers before the file moves. It
+does not advise. It refuses:
+
+```
+site/index.html contains a sentence the author wrote.
+
+  "The reason I started this project is not a thing an agent gets to paraphrase."
+
+Those words are theirs, character for character. Everything else in this file is still
+open to you: edit around them.
 ```
 
-The first is a wall. When an agent reaches for it, a `PreToolUse` hook **refuses the edit**. Not a
-guideline in a prompt it might forget on turn ninety. A hook that says no.
+## Half of it does not need a model
 
-The second is a standing instruction. `/stet refresh` checks the claim against its source and
-updates it, and only it.
+Is this word spelled two ways across the project. Does this figure still match the command that
+produced it. Was this paper retracted. Nobody has to read anything to answer those.
 
-## Why a hook and not a rule
+So 25 of the commands ship as a CLI with no dependencies. They run in your build and they stop it.
 
-Because rules in a prompt are advice, and advice loses. This project exists because its author
-watched an agent break its own documented conventions repeatedly inside a single session, while
-sincerely believing it was following them.
-
-Ownership has to be enforced by something that is not the model.
-
-## What it is
-
-A Claude Code plugin. Skills, agents, hooks and scripts. **No rendering code**, on purpose: Stet
-governs content files and never owns your components, which is what lets it run on Next, Astro,
-Hugo, a docs folder, or a pile of Markdown.
-
-Your project tells Stet where content lives and how to fetch a fact. Stet does the rest.
-
-## Two halves, and only one of them needs a model
-
-Most of what Stet does is arithmetic. Whether a figure still matches the command that produced it,
-whether the corpus spells a word two ways, whether a cited paper has been retracted, whether a file
-carrying ownership metadata is actually covered by a glob: none of that is a reading.
-
-So the checks also ship as a command with no dependencies and no model:
-
-    npm install -g stet
-    stet                     the commands
+    stet                     both halves, including what it cannot do
     stet check               where the content disagrees with the style sheet
-    stet audit               the sweep, ranked by what it costs
-    stet help style          the reference document for a command
+    stet audit               the sweep, ranked by what it costs you
+    stet sums                the arithmetic a document does on itself
+    stet standing            what each cited source was last time, and what moved
+    stet help <command>      the full reference for any of them
 
-That half runs in CI. It will tell you a figure is stale and it will never tell you whether the
-sentence around it still argues what you meant, because **that is a reading and a reading needs a
-reader**. `init`, `voice`, `ia`, `ingest`, `write`, `tighten` and `clarify` are readings, so they
-stay in the plugin where there is a model to do them. `stet` with no arguments prints both lists,
-including what it deliberately cannot do.
+The readings stay in the plugin, where there is a model to do them. Whether a source supports the
+sentence citing it. Whether somebody who is not the author can follow a paragraph. What voice a
+person is reaching for when they cannot name one. `stet` with no arguments prints both lists.
 
-## Commands
+## The commands
 
-Establish a project, then work in it.
+Thirty of them, in seven groups.
 
-    ingest    read what is there, claim it for you, report what it found
-    init      what this is, who reads it, what it must never be
-    voice     derive the house voice from what you have already written
-    ia        what exists, how it relates, where the next page goes
+    init · style · voice · ia · ingest              establish
+    outline · write · expand                        compose
+    claim · release · approve · proof · policy      authorship
+    audit · critique · cite · standing · verify ·
+      sums · claims                                 evaluate
+    tighten · clarify · restructure                 refine
+    refresh · doctor                                maintain
+    context · sheets · kinds · admin · pin          operate
 
-    write · outline · expand                      compose
-    claim · release · policy                      authorship
-    audit · critique · verify · standing · sums   evaluate
-    tighten · clarify · restructure               refine
-    refresh · doctor                              maintain
+Run `context` first, every session. In a project that already has writing in it, the order is
+`ingest`, `init`, `voice`, `ia`. Read it before describing it, and derive the voice rather than
+asking for one: nobody can describe their own voice, and everybody can correct a wrong description
+of it.
 
-The order for a project that already has content is `ingest`, `init`, `voice`, `ia`. Read it before
-you describe it, and derive the voice rather than asking for it: nobody can describe their own
-voice, but everybody can correct a wrong description of it.
+Ten agents sit behind those, for work too big to fit in the conversation or too close to it to be
+judged straight. Reading a whole back catalogue is the first kind. Deciding whether a finished page
+works is the second.
+
+## It is not only for websites
+
+A novel. A research paper. A screenplay, a documentation tree, an album's worth of lyrics.
+
+The states, the voice and every measurement work the same on all of them. A line of a lyric and a
+line of marketing copy are both somebody's words, and whether an agent may rewrite them has one
+answer. A few checks only make sense for a website; tell Stet what you are writing with `kinds` and
+those switch themselves off.
+
+Stet touches your words and nothing else. No components, no routing, no CSS. That is what lets it
+sit on Next, Astro, Hugo, a folder of Markdown or a manuscript and behave the same.
 
 ## Stet governs Stet
 
 This repository is its own first user. `stet.config.json` declares its content, `VOICE.md` was
-derived from its writing rather than written for it, and both checks run clean over all of it: zero
-em dashes, zero exclamations, zero of the usual tells, median sentence 13 words.
+derived from its own writing rather than written for it, and the hook enforces ownership over all of
+it. The checks run clean: no em dashes, no exclamations, none of the usual tells across 61 files.
 
-Two bugs came out of pointing it at itself on the first day. The tell checker flagged the file that
-lists the tells, because naming a construction is not committing it; quoted text is skipped now. And
-the default of claiming everything as `owner: human` does not fit a repository an agent wrote under
-direction, which is a gap in the ownership model rather than a bug in the code.
+Two bugs came out of pointing it at itself. The tell checker flagged the file that lists the tells,
+because naming a construction is not committing it, so quoted text is skipped now. And claiming
+everything as the author's on ingest does not fit a repository an agent wrote under direction, which
+was a gap in the model rather than a bug in the code.
 
 ## Status
 
 Early, and honest about it.
 
-Built: the Establish group (`ingest`, `init`, `voice`, `ia`), the ownership model, and the hook
-that enforces it. Designed and not written: everything else.
+Built and tested: 30 commands, 10 agents, 17 voices, the ownership model and the hook that enforces
+it. 130 tests, zero runtime dependencies.
 
-Stet's own content is marked `draft`, not `approved`, because the author has directed it and not
-read it line by line. Marking it approved would be the exact failure the model exists to prevent.
+The npm package is not published yet, so the CLI ships inside the plugin and `node bin/stet.mjs`
+from a clone does the same thing.
+
+Most of Stet's own content is marked `draft` rather than `approved`, because the author has directed
+it and not read every line. Marking it approved would be the exact failure the model exists to
+prevent.
 
 ## Licence
 

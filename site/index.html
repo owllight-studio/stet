@@ -1,250 +1,404 @@
 <!doctype html>
-<html lang="en">
+<!--
+  DIRECTION CONTRACT  ·  stet.style  ·  transit signage system
+
+  THESIS         The proofreader's stet mark is a row of dots laid under a line of text.
+                 A transit line with stations is a row of dots on a rule. Same drawing.
+                 The site is built out of that one mark, because the product's claim is
+                 that the diagram survives while the city around it is rebuilt.
+  OWN-WORLD      Transit signage, not a developer landing page. One face at every size.
+                 Colour only ever means a route. Rules and reversal carry rank. No cards,
+                 no shadows, no gradients. Seven command groups, seven lines, seven colours.
+  GRID           Two columns everywhere: the claim on the left, the evidence on the right.
+                 Nothing sits in a narrow column with empty page beside it.
+  STORY          Descend the line. Authorship, voice, the checks, the two halves, the count.
+                 The route changes colour under you at each station, the way a map shows
+                 an interchange.
+  STORY ORDER    The problem is that you can spot generated writing on sight. The answer is
+                 seventeen voices somebody actually read for. The tells are named and checked.
+                 Marking the lines you wrote is the feature on top of that, not the pitch.
+  COPY           Plain before clever. No metaphor a reader has to unpack, and no internal
+                 process worn as a benefit: name what somebody gets, and keep the measurement
+                 underneath as the evidence.
+  FIRST VIEWPORT The recognition, the turn, and a before-and-after: the same claim written by
+                 an agent and written to a voice.
+  FORM           Static HTML and CSS. No framework, no external font, no tracking, no
+                 request that leaves the origin. One 40-line script for the mode switch.
+  FINISH         Copy is measured against site/VOICE.md, not eyeballed. The only prose here
+                 allowed to sound generated is inside a labelled specimen.
+-->
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stet, words that know whose they are</title>
-<meta name="description" content="A Claude Code plugin. It keeps agents off your sentences and keeps everything else honest. Three states, one hook, no rendering code.">
-<meta property="og:title" content="Stet">
-<meta property="og:description" content="Words that know whose they are. A Claude Code plugin that keeps agents off your sentences and keeps everything else honest.">
+<title>Stet · nobody wrote this</title>
+<meta name="description" content="Seventeen writing voices built by reading the real thing: Chandler, Darwin's notebooks, the Reuters wire. Take one as it stands or have one built to your brief, then mark the lines an agent may never touch.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://stet.style/">
+<meta property="og:title" content="Stet · nobody wrote this">
+<meta property="og:description" content="Seventeen writing voices built by reading the real thing, and a way to mark the lines an agent may never touch.">
+<meta property="og:url" content="https://stet.style/">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='25' x='2' font-size='22' font-family='monospace' fill='%232c6d9e'>s</text></svg>">
-<link rel="stylesheet" href="stet.css">
+<link rel="stylesheet" href="/stet.css">
+<script>(function(){try{var t=localStorage.getItem("stet-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
-    <span class="mark"><b>stet</b></span>
-    <nav>
-      <a href="#problem">The problem</a>
-      <a href="#states">States</a>
-      <a href="#voice">Voice</a>
-      <a href="#commands">Commands</a>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="inner">
+    <a class="wordmark" href="/" aria-label="Stet, home">
+      <svg viewBox="0 0 133 98" role="img" aria-hidden="true" focusable="false"><g fill="currentColor"><text x="0" y="70" textLength="133" lengthAdjust="spacing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">stet</text><rect x="0" y="84" width="133" height="7" rx="3.5"/><circle cx="10" cy="87.5" r="10"/><circle cx="47.67" cy="87.5" r="10"/><circle cx="85.33" cy="87.5" r="10"/><circle cx="123" cy="87.5" r="10"/></g></svg>
+    </a>
+    <nav class="routes" aria-label="Sections">
+      <a class="r-authorship" href="/ownership.html">Ownership</a>
+      <a class="r-operate" href="/map.html">The map</a>
+      <a class="r-evaluate" href="/checks.html">Checks</a>
+      <a class="r-establish" href="/voices.html">Voices</a>
       <a href="https://github.com/owllight-studio/stet">GitHub</a>
     </nav>
-  </header>
-
-  <div class="hero">
-    <h1 class="measure">Words that know whose they are.</h1>
-    <p class="lede measure">
-      A Claude Code plugin. It keeps agents off your sentences and keeps everything else honest.
-    </p>
-
-    <div class="proof">
-      <span class="margin-mark">stet</span>
-      <p>
-        The reason I started this was not a thing I want paraphrased. It took me four attempts and
-        a walk to find the sentence.
-      </p>
-      <p>
-        <span class="kept">Every word of that paragraph is mine, and no agent gets to improve it.</span>
-      </p>
-      <p>
-        Ramp casts are 47% of what you press before a spike. That figure came from a query this
-        morning, and it will be right again tomorrow without anyone remembering to check.
-      </p>
+    <div class="modes" role="group" aria-label="Colour scheme">
+      <button type="button" data-mode="light" aria-pressed="false">Light</button>
+      <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+      <button type="button" data-mode="auto" aria-pressed="true">Auto</button>
     </div>
-    <p class="proof-note">
-      stet &nbsp;/stet/ &nbsp;&nbsp; proofreader's mark: let it stand. Ignore the correction.
-    </p>
   </div>
-</div>
+</header>
 
-<div class="wrap">
-  <section id="problem">
-    <p class="eyebrow">The problem</p>
-    <h2 class="measure">Point an agent at your writing. Three things go wrong.</h2>
+<main id="main">
 
-    <div class="failures">
-      <div class="failure">
-        <h3>It writes too much</h3>
-        <p>
-          Every sentence turns up with half another sentence stapled to it, and no list arrives
-          without a small paragraph standing in front of it to announce that a list is coming. So
-          you cut. Unwinding it takes longer than writing the thing yourself would have taken, and
-          the hours come out of the one job nobody can do in your place.
-        </p>
+  <section class="hero">
+    <h1>Nobody wrote this.</h1>
+    <div class="pair">
+      <div>
+        <p class="lede">You can spot it in a paragraph. Sometimes in a line. A cover letter. A
+          property listing. A poem somebody sent their mother. Marketing copy, a novel, the second
+          act of a script. It all sounds the same.</p>
+        <p class="lede">Your writing does not have to sound like that. Seventeen voices come with
+          Stet, and each one was built by reading the real thing. Chandler for noir. Darwin's
+          notebooks for field notes. The Reuters handbook for news. Use one as it is. Edit it. Or
+          describe the voice you want and Stet builds it.</p>
+        <p class="lede">You can also lock a line. A slogan, a testimonial, the sentence you spent an
+          hour on. Stet rewrites everything around it and leaves that line alone.</p>
       </div>
-      <div class="failure">
-        <h3>It rewrites what is not its own</h3>
-        <p>
-          It goes into paragraphs that were never its business. You worked that one over and it
-          comes back improved. Nobody asked. You asked for a redesign, or a fix in some file three
-          doors down, and your words were standing too close to the door.
-        </p>
+      <div class="specimen r-establish">
+        <div class="before">
+          <span class="sign">What an agent writes</span>
+          <p>“It is important to note that this tool provides a comprehensive set of capabilities
+            for maintaining content ownership and accuracy.”</p>
+        </div>
+        <div class="after">
+          <span class="sign">Patch Notes · median 9 words</span>
+          <p>Blocked agent edits to any sentence a person approved.</p>
+          <p>Checked every figure against the command that produced it.</p>
+        </div>
+        <div class="after">
+          <span class="sign">The Broadsheet · median 18 words</span>
+          <p>Agents may not edit a sentence its author has approved, the project's documentation
+            said. Every figure in the file is checked against the shell command that produced it,
+            and a stale one is reported rather than replaced.</p>
+        </div>
+        <div class="count">
+          <p>One claim, three times. Two of the seventeen voices, and the number beside each name
+            was counted off the books it came from.</p>
+        </div>
       </div>
-      <div class="failure">
-        <h3>It leaves what it should refresh</h3>
-        <p>
-          A sentence quotes a number that moved three weeks ago. Nothing in the file says where
-          that number came from, so nothing noticed. The page says it anyway, with a straight
-          face.
-        </p>
-      </div>
+    </div>
+    <div class="strip" style="margin-top:30px">
+      <span class="cap">Install</span>
+      <code>/plugin marketplace add owllight-studio/stet</code>
+      <span class="note">Then <code>/stet</code> in any project. Zero dependencies. MIT.</span>
     </div>
   </section>
 
-  <section id="states">
-    <p class="eyebrow">The model</p>
-    <h2 class="measure">Every piece of writing carries a state. Approval is what makes it yours.</h2>
-    <p class="measure">
-      A draft belongs to the agent until somebody reads it and takes it. Nothing else hands it
-      over. Not time. Not the writing being good. Not the agent having written every word.
-    </p>
+  <div class="line">
 
-    <dl class="states">
-      <div class="state">
-        <dt>draft</dt>
-        <dd>An agent wrote it and nobody has approved it. <b>An agent may rewrite it freely.</b></dd>
+    <!-- ------------------------------------------------------------- establish -->
+    <section class="stop r-establish">
+      <span class="sign">Line E · Establish</span>
+      <h2>Seventeen voices, and the reading behind them</h2>
+      <div class="pair wide-right">
+        <div>
+          <p>Everywhere else a voice is an adjective in a prompt. Friendly but professional. Clear
+            and concise. Nobody can check an adjective, so nobody does.</p>
+          <p>These were built the other way round. Somebody read Darwin's fifteen Beagle notebooks.
+            Somebody read Chandler and Hammett and Cain. Somebody read ninety-three pages of
+            Kubernetes documentation.</p>
+          <p>The result is a set of numbers. How long the sentences run. Where the pauses land. How
+            often a hedge shows up. Those numbers sit in the file next to the titles they came from,
+            so drift shows up as a number rather than an opinion.</p>
+          <p>Or describe the voice you want in your own words. The agents do that reading for you.
+            The voice is yours.</p>
+          <p style="margin-top:20px"><a href="/voices.html">All seventeen, and what each one measures</a></p>
+        </div>
+        <div>
+          <div class="scroll">
+            <table class="plain">
+              <thead>
+                <tr><th scope="col">Preset</th><th scope="col">Median</th><th scope="col">Counted off</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Field Notes</td><td>8</td>
+                  <td>Darwin's 15 Beagle notebooks, the Lewis and Clark journals, Scott's <i>Last Expedition</i>, Thoreau</td>
+                </tr>
+                <tr>
+                  <td>Noir</td><td>10</td>
+                  <td>Hammett, Chandler, Cain, <i>Sunset Boulevard</i>, Mosley</td>
+                </tr>
+                <tr>
+                  <td>The Manual</td><td>12</td>
+                  <td>93 Kubernetes pages, 78 Raspberry Pi pages, 72 GitHub Docs pages, 18 man pages, GNU coreutils</td>
+                </tr>
+                <tr>
+                  <td>Plainspoken</td><td>15</td>
+                  <td>Orwell, Hemingway, GOV.UK content guidance, Butterick, Paul Graham</td>
+                </tr>
+                <tr>
+                  <td>The Broadsheet</td><td>18</td>
+                  <td>The Reuters handbook, the AP statement of news values, the BBC styleguide, <i>The Economist</i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:14px; color:var(--soft); font-size:14.5px">114 measurements across
+            the library. Every one of the seventeen names the work it came from.</p>
+        </div>
       </div>
-      <div class="state">
-        <dt>approved</dt>
-        <dd>An agent wrote it and a person accepted it. <b>Closed.</b> Rebuilt only if asked, each time.</dd>
+    </section>
+
+    <!-- ---------------------------------------------------------------- refine -->
+    <section class="stop r-refine">
+      <span class="sign">Line R · Refine</span>
+      <h2>The tells, named and checked</h2>
+      <div class="pair">
+        <div>
+          <p>An em dash. “Not X, it is Y.” A preamble announcing that a list is coming. A closing
+            sentence summarising the paragraph above it.</p>
+          <p>Every voice file ends by naming how a fake of it gives itself away. All 102 together
+            are a list of what generated writing does.</p>
+          <p><code>tells</code> is the checker for the worst of them. It runs over a whole project
+            in CI, and it runs over this page.</p>
+          <p style="margin-top:20px"><a href="/voices.html#tells">The whole catalogue, 102 of them</a></p>
+        </div>
+        <div class="panel">
+          <span class="sign">stet tells, on one bad paragraph</span>
+<pre class="out">     3  corporate          use the plain word
+     3  corporate-abstract an abstract noun
+                           doing no work
+     5  in-conclusion      a summary of what
+                           the reader just read
+     5  exclamation        exclamation mark
+
+<i>6 tells in 1 files</i></pre>
+          <div class="finding r-refine" style="margin-top:18px">
+            <p>Readers told a headline was AI-generated rated it less accurate and were less
+              willing to share it. That held whether or not the headline was true, and whether or
+              not a machine wrote it.</p>
+            <p class="cite">Altay and Gilardi, <i>PNAS Nexus</i>, 2024. Preregistered, n=4,976.</p>
+          </div>
+        </div>
       </div>
-      <div class="state">
-        <dt>authored</dt>
-        <dd>A person wrote it. <b>Closed, and never regenerated at all.</b> Only its author replaces it.</dd>
+    </section>
+
+    <!-- ------------------------------------------------------------ authorship -->
+    <section class="stop r-authorship">
+      <span class="sign">Line A · Authorship</span>
+      <h2>The line that has to stand</h2>
+      <div class="pair">
+        <div>
+          <p>A slogan. A testimonial. A promise the lawyers went over twice. The sentence you spent
+            an hour on.</p>
+          <p>Lock it and the agent may rewrite everything in front of it and everything after it,
+            and not that. Change the voice. Move the section. Rebuild the whole page. The line does
+            not change.</p>
+          <p>Stet holds it as your words, character for character, rather than as a line number.
+            That is why it survives the page moving around it. Rewrite it yourself and the lock
+            comes off, because they are different words.</p>
+          <p>A hook reads that record before the edit lands. It does not advise. It refuses.</p>
+          <p style="margin-top:20px"><a href="/ownership.html">Three states, and who may edit what</a></p>
+        </div>
+        <div>
+          <div class="doc">
+            <div class="row regen">
+              <span class="sign">Agent</span>
+              <p>Every block of content carries an owner and a policy.</p>
+            </div>
+            <div class="row">
+              <span class="sign">Yours · locked</span>
+              <div class="held">
+                <p>The reason I started this project is not a thing an agent gets to paraphrase.</p>
+              </div>
+            </div>
+            <div class="row regen">
+              <span class="sign">Agent</span>
+              <p>The record is read before the edit lands.</p>
+            </div>
+          </div>
+          <div class="verdict">
+            <div class="flag" aria-hidden="true"></div>
+            <div class="body">
+              <span class="sign">The hook, refusing</span>
+              <p>“Those words are theirs, character for character. Everything else in this file is
+                still open to you: edit around them.”</p>
+              <code>PreToolUse · permissionDecision: deny</code>
+            </div>
+          </div>
+        </div>
       </div>
-    </dl>
+    </section>
 
-    <p class="measure" style="margin-top:1.75rem">
-      Ownership runs per sentence, not per file. Fix one line on the proof sheet and that line is
-      yours. The paragraph around it stays open. Sentences are held by their own words rather than
-      by where they sit, so yours survive everything around them moving, and they lapse the moment
-      the words change. You own what you wrote. Nothing more, and nothing less.
-    </p>
-
-    <p class="measure">
-      Policy sits alongside it and says what may still be done to closed writing.
-      <code>authored</code> plus <code>refresh</code> is the pair the whole thing exists to make
-      sayable. These are my words and I want the numbers in them kept true. Change the figure. Leave
-      the sentence.
-    </p>
-
-    <pre>---
-stet:
-  state: <b>authored</b>
-  policy: <b>refresh</b>
-  sources: [corpus.rampShare]
----
-
-Ramp casts are 47% of what you press before a spike.</pre>
-  </section>
-
-  <section id="enforcement">
-    <p class="eyebrow">Enforcement</p>
-    <h2 class="measure">A hook that refuses. Not a rule that asks.</h2>
-    <p class="measure">
-      Every other part of this is an instruction, and instructions are advice. Advice loses. A
-      PreToolUse hook reads the state before any edit lands and refuses the ones that were never the
-      agent's to make.
-    </p>
-    <pre>VOICE.md is authored. You may not edit it.
-
-A person wrote this. Do not edit it and do not regenerate it.
-
-You may propose a rewrite in your reply. Show it to the author.
-Do not put it in the file.</pre>
-    <p class="measure">
-      Three boundaries keep it out of your way. No config means the project is not using Stet, so
-      the hook has no opinion. Only declared paths count, so code goes straight through. A file that
-      does not exist yet is new, which is a draft, which is fine.
-    </p>
-  </section>
-
-  <section id="voice">
-    <p class="eyebrow">Voice</p>
-    <h2 class="measure">The other half. Writing that does not read as though a machine wrote it.</h2>
-    <p class="measure">
-      Ownership stops your words being changed. It does nothing about the words an agent adds, and
-      that is the half readers actually notice. Tell somebody a headline was written by AI and they
-      rate it less accurate and are less willing to pass it on. That holds whether the headline was
-      true and whether a machine wrote it at all. The penalty lands on how the writing reads. So
-      prose that merely sounds generated pays it, with no label on it and nobody to appeal to.
-    </p>
-    <p class="measure">
-      So Stet ships a library of registers. Every one of them is a machine for producing a
-      particular feeling, and every one says how that feeling gets onto the page rather than naming
-      it and stopping. Noir never lets the narrator say he is frightened. It says he could not hear
-      his own footsteps. Bourdain piles up the cruel words and lets them collapse into something
-      kind inside the same sentence, so the contempt is always the setup and never the ending.
-      Warmth in a technical explanation turns out to be one rule: describe the material, never the
-      reader's mind.
-    </p>
-    <p class="measure">
-      What the library will not do is hand you an adjective. "Warm" and "confident" cannot be
-      followed and cannot be broken, so they are not rules. Somebody went and counted the actual
-      books instead. Orwell breaks modern plain-English guidance inside his own manifesto, at a mean
-      sentence of 25.9 words. Chandler's famous simile turns up once every 545 words, roughly forty
-      times rarer than the people copying him run it. Tolkien writes shorter sentences than
-      Fitzgerald. You do not get any of that by sitting there describing the style to yourself.
-    </p>
-    <p class="measure">
-      Four ways to have one. Pick a preset. Describe your own in a sentence, feeling included. Point
-      it at writing you already did. Or let it read the project and work out the house voice from
-      what is there.
-    </p>
-    <p class="measure">
-      <a class="more" href="voices.html">Explore the library</a>
-    </p>
-  </section>
-
-  <section id="commands">
-    <p class="eyebrow">Commands</p>
-    <h2 class="measure">Set the project up. Then work in it.</h2>
-    <p class="measure">
-      For a project that already has writing in it, the order is <code>ingest</code>,
-      <code>init</code>, <code>voice</code>, <code>ia</code>. Read it before you describe it.
-    </p>
-
-    <div class="cmds">
-      <div class="cmd">
-        <h3>ingest</h3>
-        <p>Reads everything already there, claims all of it for you, and tells you what it found. What exists, how it sounds, and every claim in it that will go stale.</p>
+    <!-- -------------------------------------------------------------- evaluate -->
+    <section class="stop r-evaluate">
+      <span class="sign">Line V · Evaluate</span>
+      <h2>The page still has to be true</h2>
+      <div class="pair">
+        <div>
+          <p>A price on your site went up three weeks ago. The page still says the old one. A study
+            you cited was retracted. The footnote does not know. Two percentages in a paragraph do
+            not add up to the total underneath them.</p>
+          <p>None of that is a matter of taste. It is arithmetic, so a model is not needed to do it.
+            Twenty-five checks run in your build and stop it.</p>
+          <p style="margin-top:20px"><a href="/checks.html">Every check, and what it catches</a></p>
+        </div>
+        <div>
+          <table class="plain">
+            <thead>
+              <tr><th scope="col">Counted</th><th scope="col">Of what</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>76.35%</td><td>References that had drifted from what was cited. Jones and others, <i>PLOS ONE</i>, 2016</td></tr>
+              <tr><td>70%+</td><td>URLs in the <i>Harvard Law Review</i> no longer reaching the material. Zittrain, Albert and Lessig, 2014</td></tr>
+              <tr><td>49.6%</td><td>Psychology papers with a p-value that disagrees with its own test statistic. Nuijten and others, 2015</td></tr>
+              <tr><td>5.4%</td><td>Citations to retracted work that mention the retraction. Hsiao and Schneider, 2021</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="cmd">
-        <h3>init</h3>
-        <p>What this is, who reads it, and what it must never be. Nobody volunteers that last one. It is the answer worth most.</p>
+    </section>
+
+    <!-- --------------------------------------------------------------- operate -->
+    <section class="stop r-operate">
+      <span class="sign">Line O · Operate</span>
+      <h2>Half of it does not need a model at all</h2>
+      <div class="pair">
+        <div class="panel">
+          <span class="sign">The CLI · 25 commands</span>
+          <h3>Questions with one answer</h3>
+          <p>Is this word spelled two ways across the project. Does this figure still match the
+            command that produced it. Was this paper retracted.</p>
+          <p>Nobody has to read anything to answer those. They run in your build, with no
+            dependencies and no network.</p>
+        </div>
+        <div class="panel">
+          <span class="sign">The plugin · 30 commands, 10 agents</span>
+          <h3>Questions that need reading</h3>
+          <p>Does this source actually support the sentence citing it. Can somebody who is not the
+            author follow this paragraph. What voice is this person reaching for.</p>
+          <p>Those need a reader, so they live where there is one. The help screen says which is
+            which.</p>
+        </div>
       </div>
-      <div class="cmd">
-        <h3>voice</h3>
-        <p>Works the house voice out of writing you already did, because nobody can describe their own. Rules with your own sentences as the examples, and a counter-example for each one.</p>
+
+      <p style="margin:26px 0 14px">Thirty commands in seven groups, and the seven groups are the
+        seven coloured lines on this page.</p>
+
+      <div class="legend">
+        <div class="route r-establish">
+          <span class="bullet" aria-hidden="true">E</span>
+          <h3>Establish</h3>
+          <p class="run"><b>init</b> · <b>style</b> · <b>voice</b> · <b>ia</b> · <b>ingest</b><br>What this project is, what it sounds like, what is already in it</p>
+        </div>
+        <div class="route r-compose">
+          <span class="bullet" aria-hidden="true">C</span>
+          <h3>Compose</h3>
+          <p class="run"><b>outline</b> · <b>write</b> · <b>expand</b><br>Author in the voice, to the architecture</p>
+        </div>
+        <div class="route r-authorship">
+          <span class="bullet" aria-hidden="true">A</span>
+          <h3>Authorship</h3>
+          <p class="run"><b>claim</b> · <b>release</b> · <b>approve</b> · <b>proof</b> · <b>policy</b><br>Whose words these are, and what may be done to them</p>
+        </div>
+        <div class="route r-evaluate">
+          <span class="bullet" aria-hidden="true">V</span>
+          <h3>Evaluate</h3>
+          <p class="run"><b>audit</b> · <b>critique</b> · <b>cite</b> · <b>standing</b> · <b>verify</b> · <b>sums</b> · <b>claims</b><br>Held against its sources, its figures and its own arithmetic</p>
+        </div>
+        <div class="route r-refine">
+          <span class="bullet" aria-hidden="true">R</span>
+          <h3>Refine</h3>
+          <p class="run"><b>tighten</b> · <b>clarify</b> · <b>restructure</b><br>Cut, make it land, move it about</p>
+        </div>
+        <div class="route r-maintain">
+          <span class="bullet" aria-hidden="true">M</span>
+          <h3>Maintain</h3>
+          <p class="run"><b>refresh</b> · <b>doctor</b><br>Change the figure, leave the sentence</p>
+        </div>
+        <div class="route r-operate">
+          <span class="bullet" aria-hidden="true">O</span>
+          <h3>Operate</h3>
+          <p class="run"><b>context</b> · <b>sheets</b> · <b>kinds</b> · <b>admin</b> · <b>pin</b><br>What an agent needs before touching a word, and how to get out of its way</p>
+        </div>
       </div>
-      <div class="cmd">
-        <h3>ia</h3>
-        <p>What exists, what job each page does, and where the next one goes. Without that last part every new page is a fresh argument.</p>
+      <p style="margin-top:20px"><a href="/map.html">The whole map, station by station</a></p>
+    </section>
+
+    <!-- -------------------------------------------------------------- maintain -->
+    <section class="stop r-maintain">
+      <span class="sign">Line M · Maintain</span>
+      <h2>What is in the box</h2>
+
+      <div class="counts">
+        <div><b>30</b><span>commands, seven groups</span></div>
+        <div><b>10</b><span>agents</span></div>
+        <div><b>17</b><span>measured voices</span></div>
+        <div><b>130</b><span>tests</span></div>
+        <div><b>0</b><span>dependencies</span></div>
       </div>
-      <div class="cmd">
-        <h3>claim &middot; release &middot; approve</h3>
-        <p>Whose words these are. Only the author approves; the agent records it.</p>
+
+      <div class="pair" style="margin-top:26px">
+        <div>
+          <p>Stet touches your words and nothing else. No components, no routing, no CSS. Put it on
+            Next, Astro, Hugo, a folder of Markdown or a manuscript, and it behaves the same.</p>
+          <p>Node 20 or newer. MIT.</p>
+        </div>
+        <div class="panel">
+          <span class="sign">Adding it</span>
+<pre class="out">/plugin marketplace add \
+        owllight-studio/stet
+
+<i># then, in any project</i>
+/stet</pre>
+          <p style="margin-top:16px; color:var(--soft); font-size:14.5px">It runs
+            <code>context</code> first and tells you what it found.</p>
+        </div>
       </div>
-      <div class="cmd">
-        <h3>audit &middot; verify &middot; refresh</h3>
-        <p>Stale claims, figures somebody typed by hand, orphaned pages, voice breaks. Then it checks each claim against its actual source and brings current only what policy allows.</p>
-      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <div class="col">
+      <h4>Lines</h4>
+      <a href="/ownership.html">Ownership</a>
+      <a href="/map.html">The map</a>
+      <a href="/checks.html">Checks</a>
+      <a href="/voices.html">Voices</a>
     </div>
-  </section>
+    <div class="col">
+      <h4>Source</h4>
+      <a href="https://github.com/owllight-studio/stet">GitHub</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/README.md">README</a>
+      <a href="https://github.com/owllight-studio/stet/blob/main/LICENSE">MIT licence</a>
+    </div>
+    <p class="last"><i>stet</i>, the proofreader's mark meaning let it stand. Ignore the
+      correction; the original is right.</p>
+  </div>
+</footer>
 
-  <section id="install">
-    <p class="eyebrow">Install</p>
-    <h2 class="measure">Early, and honest about it.</h2>
-    <pre>/plugin marketplace add owllight-studio/stet
-/plugin install stet@stet</pre>
-    <p class="measure">
-      The Establish group, the authorship model and the hook are built. The rest is designed and
-      not written. Stet's own writing sits at <code>draft</code> rather than <code>approved</code>,
-      because its author has directed it and has not yet read it line by line. Marking it approved
-      would be the exact failure the whole thing exists to stop.
-    </p>
-  </section>
-
-  <footer class="foot">
-    <span>Stet</span>
-    <span>An <a href="https://github.com/owllight-studio">Owllight Studio</a> project</span>
-    <span class="right"><a href="https://github.com/owllight-studio/stet">Source</a></span>
-  </footer>
-</div>
-
+<script src="/mode.js" defer></script>
 </body>
 </html>

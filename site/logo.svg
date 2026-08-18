@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133 98" role="img" aria-label="stet">
+  <title>stet</title>
+  <!--
+    The proofreader's stet mark is a row of dots laid under the text: let it stand.
+    A transit line with stations is a row of dots on a rule. They are the same drawing,
+    so the mark is both at once and the site is built out of it.
+
+    currentColor throughout, so it inverts for dark mode with no second file.
+    textLength pins the word to the rule at exactly 133 units, which keeps the mark
+    aligned whether the machine has Helvetica Neue, Helvetica or Arial.
+  -->
+  <g fill="currentColor">
+    <text x="0" y="70" textLength="133" lengthAdjust="spacing"
+          font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+          font-size="80" font-weight="700" letter-spacing="-3">stet</text>
+    <rect x="0" y="84" width="133" height="7" rx="3.5"/>
+    <circle cx="10" cy="87.5" r="10"/>
+    <circle cx="47.67" cy="87.5" r="10"/>
+    <circle cx="85.33" cy="87.5" r="10"/>
+    <circle cx="123" cy="87.5" r="10"/>
+  </g>
+</svg>
